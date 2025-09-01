@@ -1,4 +1,17 @@
-﻿# Shelf Market
+﻿# Reol marked projekt (Shelf Market project)
+A WPF application for managing a shelf market, built with .NET 9 and following Clean Architecture principles.
+
+## About
+This project is a sample implementation of a shelf market management system using WPF for the user interface and .NET 9 for the backend.
+It adheres to Clean Architecture principles, ensuring a clear separation of concerns and maintainability.
+
+## Getting Started
+### Prerequisites
+- .NET 9 SDK
+- MSSQL Server or SQL Server Express
+
+### Installation
+
 
 ## Clean Architecture Folder Structure
 The following folder structure is designed to follow the principles of Clean Architecture, promoting separation of concerns and maintainability. Each layer has a specific responsibility, and dependencies flow inward.
@@ -25,12 +38,12 @@ ShelfMarket/
 │   │   ├── ExternalServices/           # Integrations with external systems
 │   │   └── Configuration/              # Infrastructure configurations
 │   │
-│   ├── ShelfMarket.UI/
-│   │   ├── Views/                      # UI views and pages
-│   │   │   └── UserControls/           # Reusable UI components
-│   │   ├── ViewModels/                 # UI logic and data binding
-│   │   ├── Commands/                   # UI commands and actions
-│   │   └── Helpers/                    # UI utility classes
+│   └── ShelfMarket.UI/
+│       ├── Views/                      # UI views and pages
+│       │   └── UserControls/           # Reusable UI components
+│       ├── ViewModels/                 # UI logic and data binding
+│       ├── Commands/                   # UI commands and actions
+│       └── Helpers/                    # UI utility classes
 │
 ├── tests/
 │   ├── ShelfMarket.Domain.Tests/
