@@ -24,6 +24,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Application.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Infrastructure.Tests", "tests\ShelfMarket.Infrastructure.Tests\ShelfMarket.Infrastructure.Tests.csproj", "{84C38453-AD57-4035-AC80-1CF160294FC9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sprint-001", "Sprint-001", "{8F7DE6B1-569A-4F56-9DCC-FDA047307427}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AddANewShelf", "UseCase001-AddANewShelf", "{3E02A45F-A74B-43BF-A82F-E5488C5B96C3}"
+	ProjectSection(SolutionItems) = preProject
+		docs\sprint-1\UseCase001-AddANewShelf\UserStory.md = docs\sprint-1\UseCase001-AddANewShelf\UserStory.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +73,8 @@ Global
 		{5B309D40-EB9D-4D34-80E0-8CEAAAC90090} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{0666CBF1-A075-4307-A488-E9755E8BBE55} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{84C38453-AD57-4035-AC80-1CF160294FC9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{8F7DE6B1-569A-4F56-9DCC-FDA047307427} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
+		{3E02A45F-A74B-43BF-A82F-E5488C5B96C3} = {8F7DE6B1-569A-4F56-9DCC-FDA047307427}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E3670BE-F107-4641-8608-598441D3E901}
