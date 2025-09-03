@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AddANewShelf", "
 	ProjectSection(SolutionItems) = preProject
 		docs\sprint-1\UseCase001-AddANewShelf\UseCase-Brief.md = docs\sprint-1\UseCase001-AddANewShelf\UseCase-Brief.md
 		docs\sprint-1\UseCase001-AddANewShelf\UseCase-Casual.md = docs\sprint-1\UseCase001-AddANewShelf\UseCase-Casual.md
+		docs\sprint-1\UseCase001-AddANewShelf\UseCase-SSD.mmd = docs\sprint-1\UseCase001-AddANewShelf\UseCase-SSD.mmd
 		docs\sprint-1\UseCase001-AddANewShelf\UserStory.md = docs\sprint-1\UseCase001-AddANewShelf\UserStory.md
 	EndProjectSection
 EndProject

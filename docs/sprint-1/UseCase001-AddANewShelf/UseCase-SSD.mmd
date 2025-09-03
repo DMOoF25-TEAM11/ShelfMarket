@@ -1,0 +1,20 @@
+﻿sequenceDiagram
+    actor Ejer
+    participant System
+
+    Ejer->>+System: Åbner applikationen og navigerer til "Administration → Reol"
+    System-->>Ejer: Viser formular til oprettelse af reol (placering, type)
+
+    Ejer->>System: Indtaster placering og vælger type
+    System-->>Ejer: Fremhæver påkrævede felter og validerer input
+
+    alt Placering er unik og type er valgt
+        Ejer->>System: Klikker "Tilføj"
+        System-->>Ejer: Reolen oprettes og gemmes
+        System-->>Ejer: Bekræftelsesbesked og opdateret reolliste
+    else Placering er ikke unik
+        System-->>Ejer: Fejlmeddelelse: "Placeringen er allerede i brug"
+    else Systemfejl under oprettelse
+        System-->>Log: Log teknisk fejl til support
+        System-->>-Ejer: Fejlmeddelelse: "Reolen kunne ikke oprettes. Prøv igen senere."
+    end
