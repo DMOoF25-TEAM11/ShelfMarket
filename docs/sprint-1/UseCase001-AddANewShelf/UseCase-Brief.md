@@ -10,8 +10,9 @@
 **Preconditions:** Ejer er logget ind og har åbnet Windows-applikationen  
 **Postconditions:** En ny reol er tilføjet til systemet  
 **Main success scenario:**  
-1. Ejer vælger "Tilføj reol" i applikationen
-1. Applikationen viser en formular til indtastning af reoloplysninger
-1. Ejer indtaster de nødvendige oplysninger og bekræfter
-1. Applikationen opretter den nye reol og viser en bekræftelse
-1. Den nye reol vises i reollisten
+1. Ejer åbner programmet pg navigerer til administrations -> reol
+2. Systemet viser en formular med felter for placering og type
+3. Ejeren indtaster oplysninger og klikker “Tilføj”
+4. Systemet validerer input
+5. Systemet opretter reolen og gemmer den i databasen.
+6. Systemet viser en bekræftelse og opdaterer reollisten.
