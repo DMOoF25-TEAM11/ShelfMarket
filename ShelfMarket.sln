@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Domain", "src\S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Application", "src\ShelfMarket.Application\ShelfMarket.Application.csproj", "{821E646B-E542-407C-B216-E821BB382EDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.InfraStructure", "src\ShelfMarket.InfraStructure\ShelfMarket.InfraStructure.csproj", "{547E2184-C704-40A2-ADEB-0FB5E8C8AB85}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Infrastructure", "src\ShelfMarket.InfraStructure\ShelfMarket.Infrastructure.csproj", "{547E2184-C704-40A2-ADEB-0FB5E8C8AB85}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.UI", "src\ShelfMarket.UI\ShelfMarket.UI.csproj", "{9CF2D90F-732E-4F80-8780-1D6E1861DDC8}"
 EndProject
@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Infrastructure.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sprint-001", "Sprint-001", "{8F7DE6B1-569A-4F56-9DCC-FDA047307427}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AddANewShelf", "UseCase001-AddANewShelf", "{3E02A45F-A74B-43BF-A82F-E5488C5B96C3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AdministrateShelf", "UseCase001-AdministrateShelf", "{3E02A45F-A74B-43BF-A82F-E5488C5B96C3}"
 	ProjectSection(SolutionItems) = preProject
 		docs\sprint-1\UseCase001-AddANewShelf\UseCase-Brief.md = docs\sprint-1\UseCase001-AddANewShelf\UseCase-Brief.md
 		docs\sprint-1\UseCase001-AddANewShelf\UseCase-Casual.md = docs\sprint-1\UseCase001-AddANewShelf\UseCase-Casual.md
