@@ -16,7 +16,7 @@ public sealed class DbContextConnectionTest
             .Build();
 
         // Use the production connection string (change to "ShelfMarketDb_Development" if needed)
-        var connectionString = config.GetConnectionString("ShelfMarketDb");
+        var connectionString = config.GetConnectionString("ShelfMarketDb_Development");
 
         var options = new DbContextOptionsBuilder<ShelfMarketDbContext>()
             .UseSqlServer(connectionString)
