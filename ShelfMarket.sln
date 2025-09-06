@@ -21,24 +21,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Infrastructure.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93399C27-1127-489C-9E8F-7C803315DE2A}"
 	ProjectSection(SolutionItems) = preProject
+		docs\DatabaseSchema.md = docs\DatabaseSchema.md
+		docs\DatabaseSchema.mmd = docs\DatabaseSchema.mmd
 		docs\DCD.mmd = docs\DCD.mmd
+		docs\DDL.sql = docs\DDL.sql
 		docs\DomainModel.mmd = docs\DomainModel.mmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-1", "sprint-1", "{523051B1-BB5E-40F5-822A-1F3EB4921370}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AddANewShelf", "UseCase001-AddANewShelf", "{1BC20C78-DCF8-4E66-9101-BDE5E3E1465E}"
-	ProjectSection(SolutionItems) = preProject
-		docs\sprint-1\UseCase001-AddANewShelf\DomainModel.mmd = docs\sprint-1\UseCase001-AddANewShelf\DomainModel.mmd
-		docs\sprint-1\UseCase001-AddANewShelf\OC001-AddShelf.md = docs\sprint-1\UseCase001-AddANewShelf\OC001-AddShelf.md
-		docs\sprint-1\UseCase001-AddANewShelf\OC002-EditShelf.md = docs\sprint-1\UseCase001-AddANewShelf\OC002-EditShelf.md
-		docs\sprint-1\UseCase001-AddANewShelf\OC003-DeleteShelf.md = docs\sprint-1\UseCase001-AddANewShelf\OC003-DeleteShelf.md
-		docs\sprint-1\UseCase001-AddANewShelf\OC004-NavigateToFrontPage.md = docs\sprint-1\UseCase001-AddANewShelf\OC004-NavigateToFrontPage.md
-		docs\sprint-1\UseCase001-AddANewShelf\UseCase-Brief.md = docs\sprint-1\UseCase001-AddANewShelf\UseCase-Brief.md
-		docs\sprint-1\UseCase001-AddANewShelf\UseCase-Casual.md = docs\sprint-1\UseCase001-AddANewShelf\UseCase-Casual.md
-		docs\sprint-1\UseCase001-AddANewShelf\UseCase-SSD.mmd = docs\sprint-1\UseCase001-AddANewShelf\UseCase-SSD.mmd
-		docs\sprint-1\UseCase001-AddANewShelf\UserStory.md = docs\sprint-1\UseCase001-AddANewShelf\UserStory.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase005-AdministrateShelfType", "UseCase005-AdministrateShelfType", "{D9BD81E6-E5D0-43A7-8DA6-675A177B603D}"
 	ProjectSection(SolutionItems) = preProject
@@ -100,7 +92,6 @@ Global
 		{0666CBF1-A075-4307-A488-E9755E8BBE55} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{84C38453-AD57-4035-AC80-1CF160294FC9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{523051B1-BB5E-40F5-822A-1F3EB4921370} = {93399C27-1127-489C-9E8F-7C803315DE2A}
-		{1BC20C78-DCF8-4E66-9101-BDE5E3E1465E} = {523051B1-BB5E-40F5-822A-1F3EB4921370}
 		{D9BD81E6-E5D0-43A7-8DA6-675A177B603D} = {523051B1-BB5E-40F5-822A-1F3EB4921370}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
