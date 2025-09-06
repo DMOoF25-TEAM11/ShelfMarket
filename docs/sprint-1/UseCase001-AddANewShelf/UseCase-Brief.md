@@ -1,6 +1,6 @@
 ﻿# Use Case 001 brief - Administrere reoler
 
-**Use case name:** Administrere reoler
+**Use case name:** UseCase001-AddANewShelf
 **Scope:** Systemet er under udvikling  
 **Level:** User goal  
 **Primary Actors:** Ejer  

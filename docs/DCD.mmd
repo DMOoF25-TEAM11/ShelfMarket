@@ -1,0 +1,91 @@
+﻿classDiagram
+    namespace ShelfMarket.Domain.Entities {
+        class ShelfType {
+            +Guid Id
+            +string Name
+            +string Description
+        }
+
+        class Shelf {
+            +Guid Id
+            +int Number
+            +Guid ShelfTypeId
+        }
+    }
+
+    namespace ShelfMarket.Application.Interfaces {
+        class IRepository~TEntity~ {
+            +Task<TEntity> GetByIdAsync(Guid id)
+            +Task<List<TEntity>> GetAllAsync()
+            +Task AddAsync(TEntity entity)
+            +Task UpdateAsync(TEntity entity)
+            +Task DeleteAsync(Guid id)
+        }
+        class IShelfTypeRepository {
+            +Task<ShelfType> GetByIdAsync(Guid id)
+            +Task<List<ShelfType>> GetAllAsync()
+            +Task AddAsync(ShelfType shelfType)
+            +Task UpdateAsync(ShelfType shelfType)
+            +Task DeleteAsync(Guid id)
+        }
+
+        class IShelfRepository {
+            +Task<Shelf> GetByIdAsync(Guid id)
+            +Task<List<Shelf>> GetAllAsync()
+            +Task AddAsync(Shelf shelf)
+            +Task UpdateAsync(Shelf shelf)
+            +Task DeleteAsync(Guid id)
+        }
+    }
+
+    namespace ShelfMarket.Infrastructure.Repositories {
+        class Repository~TEntity~ {
+            #ShelfMarketDbContext _context
+            #DbSet~TEntity~ _dbSet
+
+            +Repository(ShelfMarketDbContext context)
+            +Task SaveChangesAsync()
+        }
+
+        class ShelfRepository {
+            +ShelfRepository(ShelfMarketDbContext context)
+            +Task<Shelf> GetByIdAsync(Guid id)
+            +Task<List<Shelf>> GetAllAsync()
+            +Task AddAsync(Shelf shelf)
+            +Task UpdateAsync(Shelf shelf)
+            +Task DeleteAsync(Guid id)
+        }
+
+        class ShelfTypeRepository {
+            +ShelfTypeRepository(ShelfMarketDbContext context)
+            +Task<ShelfType> GetByIdAsync(Guid id)
+            +Task<List<ShelfType>> GetAllAsync()
+            +Task AddAsync(ShelfType shelfType)
+            +Task UpdateAsync(ShelfType shelfType)
+            +Task DeleteAsync(Guid id)
+        }
+    }
+
+    <<Interfaces>> IRepository~TEntity~
+    <<interface>> IShelfTypeRepository
+    <<interface>> IShelfRepository
+
+    <<abstract>> Repository~TEntity~
+
+    %% Associations
+    Shelf --* ShelfRepository : manages
+    ShelfType --* ShelfTypeRepository : manages
+
+    %% Composition
+    Shelf --* ShelfType : has a
+
+    %% Inheritance and Implementation
+    ShelfRepository --|> IShelfRepository : implements
+    ShelfTypeRepository --|> IShelfTypeRepository : implements
+    Repository --|> IRepository : implements
+
+    IShelfRepository --|> IRepository : implements
+    IShelfTypeRepository --|> IRepository : implements
+
+    ShelfRepository ..|> Repository : inheritance
+    ShelfTypeRepository ..|> Repository : inheritance

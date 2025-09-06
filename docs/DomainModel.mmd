@@ -1,5 +1,10 @@
 ﻿classDiagram
     class reol {
         Reol nummer
-        Reol type
     }
+    class ReolType {
+        ReolType navn
+        ReolType beskrivelse
+    }
+
+    reol "0..*" -- "1" ReolType : har
