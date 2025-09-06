@@ -1,0 +1,47 @@
+﻿sequenceDiagram
+    actor Ejer as actor
+    participant UI
+    participant VM as EditShelfTypeViewModel
+    participant Repo as ShelfTypeRepository
+    participant DB
+
+    Ejer->>UI: Clicks "Add/Edit ShelfType"
+    UI->>VM: Calls LoadAsync()
+    VM->>Repo: Calls GetAllAsync()
+    Repo->>DB: Queries ShelfTypes
+    DB-->>Repo: Returns ShelfTypes
+    Repo-->>VM: Returns ShelfTypes
+    VM-->>UI: Populates ShelfType list
+
+    alt Add ShelfType
+        Ejer->>UI: Fills form and clicks "Add"
+        UI->>VM: Calls AddShelfType(ShelfType newShelfType)
+        VM->>Repo: Calls AddAsync(ShelfType newShelfType)
+        Repo->>DB: Inserts new ShelfType
+        DB-->>Repo: Confirms insertion
+        Repo-->>VM: Returns success
+        VM-->>UI: Updates ShelfType list
+    else Edit ShelfType
+        Ejer->>UI: Selects ShelfType
+        UI->>VM: Calls LoadAsync(Guid ShelfTypeId)
+        VM->>Repo: Calls GetByIdAsync(Guid ShelfTypeId)
+        Repo->>DB: Queries ShelfType
+        DB-->>Repo: Returns ShelfType
+        Repo-->>VM: Returns ShelfType
+        VM-->>UI: Populates form with ShelfType data
+        Ejer->>UI: Modifies form and clicks "Save"
+        UI->>VM: Calls EditShelfType(ShelfType updatedShelfType)
+        VM->>Repo: Calls UpdateAsync(ShelfType updatedShelfType)
+        Repo->>DB: Updates ShelfType
+        DB-->>Repo: Confirms update
+        Repo-->>VM: Returns success
+        VM-->>UI: Updates ShelfType list
+    else Delete ShelfType
+        Ejer->>UI: Selects ShelfType and clicks "Delete"
+        UI->>VM: Calls DeleteShelfType(Guid ShelfTypeId)
+        VM->>Repo: Calls DeleteAsync(Guid ShelfTypeId)
+        Repo->>DB: Deletes ShelfType
+        DB-->>Repo: Confirms deletion
+        Repo-->>VM: Returns success
+        VM-->>UI: Updates ShelfType list
+    end
