@@ -39,6 +39,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AdministrateShel
 		docs\sprint-1\UseCase001-AddANewShelf\UserStory.md = docs\sprint-1\UseCase001-AddANewShelf\UserStory.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase005-AdministrateShelfType", "UseCase005-AdministrateShelfType", "{D9BD81E6-E5D0-43A7-8DA6-675A177B603D}"
+	ProjectSection(SolutionItems) = preProject
+		docs\sprint-1\UseCase005-AdministrateShelfType\DomainModel.mmd = docs\sprint-1\UseCase005-AdministrateShelfType\DomainModel.mmd
+		docs\sprint-1\UseCase005-AdministrateShelfType\UseCase-Brief.md = docs\sprint-1\UseCase005-AdministrateShelfType\UseCase-Brief.md
+		docs\sprint-1\UseCase005-AdministrateShelfType\UseCase-Casual.md = docs\sprint-1\UseCase005-AdministrateShelfType\UseCase-Casual.md
+		docs\sprint-1\UseCase005-AdministrateShelfType\UserStory.md = docs\sprint-1\UseCase005-AdministrateShelfType\UserStory.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

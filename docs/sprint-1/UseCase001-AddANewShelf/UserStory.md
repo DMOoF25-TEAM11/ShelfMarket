@@ -1,4 +1,4 @@
-﻿# User Story - Tilføj en ny reol
+﻿# User Story - Administere reoler
 Som ejer
-Ønsker jeg at kunne tilføje en ny reol til systemet
-Så jeg kan gøre den tilgængelig for standlejere, administrere dens placering.
+Ønsker jeg at kunne tilføje, redigere og slette reoler til systemet
+Så jeg kan gøre dem tilgængelige/fjerne for standlejere, administrere deres placering.
