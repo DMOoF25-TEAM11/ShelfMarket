@@ -2,67 +2,61 @@
     actor Ejer
     participant System
 
-    Ejer->>+System: Åbner applikationen og navigerer til "Administration → Reol"
-    System-->>Ejer: Viser reol-administrationssiden med eksisterende reolliste og i tilføj mode
+    Ejer->>+System: navigererTilAdminReol()
 
     loop for valg af handling (tilføj, rediger, slet)
 
-        alt vælger tilføj mode
-            System-->>Ejer: Viser formular til oprettelse af reol (placering, type)
-            Ejer->>System: Indtaster reolnummer og vælger type
-            System-->>Ejer: Fremhæver påkrævede felter og validerer input
+        alt tilføj mode
 
             alt Reolnummer er unik og type er valgt
-                System-->>Ejer: Aktiverer "Tilføj" knap
-                Ejer->>System: Vælger "Tilføj"
-                System-->>Ejer: Reolen oprettes og gemmes
-                System-->>Ejer: Bekræftelsesbesked og opdateret reolliste
+                System-->>Ejer: TilføjKnap
+                Ejer->>System: Tilføj(ReolNummer, ReolType)
+                System-->>Ejer: SuccesBesked
+                System-->>Ejer: Nulstil
             else Valgt Nulstil
-                Ejer->>System: Vælger "Nulstil"
-                System-->>Ejer: Nulstiller formularfelter
+                Ejer->>System: Nulstil()
             else Reolnummer er ikke unik
-                System-->>Ejer: Fejlmeddelelse: "Reolnummer er allerede i brug"
+                System-->>Ejer: Fejlmeddelelse
             else Systemfejl under oprettelse
-                System-->>-Ejer: Fejlmeddelelse: "Reolen kunne ikke oprettes. Prøv igen senere."
+                System-->>-Ejer: Fejlmeddelelse
             end
+
         end
 
         alt rediger mode vælges
-            Ejer->>+System: Vælger på reolen i listen der skal redigeres
-            System-->>Ejer: Viser formular med felter der kan redigeres (reolnummer, type)
-            Ejer->>System: Ændrer Reolnummer og type
+
+            Ejer->>+System: Rediger(ReolId)
+            System-->>Ejer: ReolNummer, ReolType
+
             alt Reolnummer er unik og type er valgt
-                System-->>Ejer: Aktiverer "Gem"
-                Ejer->>System: vælger "Gem"
-                System-->>Ejer: Reolen opdateres
-                System-->>Ejer: Bekræftelsesbesked og opdateret reolliste
+                System-->>Ejer: GemKnap
+                Ejer->>System: Gem(ReolId, ReolNummer, ReolType)
+                System-->>Ejer: SuccesBesked
+                System-->>Ejer: Nulstil
             else Valgt annulere
-                Ejer->>System: Vælger "Annulere"
-                System-->>Ejer: Sætter form i tilføj reol tilstand og nulstiller felter
+                Ejer->>System: Annulere()
+                System-->>Ejer: TilføjMode
             else Reolnummer er ikke unik
-                System-->>Ejer: Fejlmeddelelse: "Reolnummer er allerede i brug"
+                System-->>Ejer: Fejlmeddelelse
             else Systemfejl under oprettelse
-                System-->>-Ejer: Fejlmeddelelse: "Reolen kunne ikke gemmes. Prøv igen senere."
+                System-->>-Ejer: Fejlmeddelelse
             end
+
         end
 
         alt sletning vælges
-            Ejer->>+System: Vælger slet
-            System-->>Ejer: Viser bekræftelsesdialog
-            Ejer->>System: Bekræfter sletning
+            Ejer->>+System: slet(ReolId)
             alt Reolen kan slettes (ingen afhængigheder)
-                System-->>Ejer: Reolen slettes
-                System-->>Ejer: Bekræftelsesbesked og opdateret reolliste
+                System-->>Ejer: SuccesBesked
+                System-->>Ejer: Nulstil
             else Reolen kan ikke slettes (har afhængigheder)
-                System-->>Ejer: Fejlmeddelelse: "Reolen kan ikke slettes, da den har afhængigheder"
+                System-->>Ejer: Fejlmeddelelse
             else Systemfejl under sletning
-                System-->>-Ejer: Fejlmeddelelse: "Reolen kunne ikke slettes. Prøv igen senere."
+                System-->>Ejer: Fejlmeddelelse
             end
         end
 
         alt navigerer væk fra reol-administrationssiden
-            Ejer->>+System: Navigerer væk fra reol-administrationssiden ved valg af forside eller anden sektion
+            Ejer->>+System: NavigerTilForside()
         end
     end
-
-    System-->>Ejer: Viser forside eller valgt sektion
