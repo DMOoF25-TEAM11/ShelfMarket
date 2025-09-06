@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ShelfMarket.Application.Interfaces;
 using ShelfMarket.Infrastructure.Persistence;
+using ShelfMarket.Infrastructure.Repositories;
 
 namespace ShelfMarket.Infrastructure;
 
@@ -21,6 +23,8 @@ public static class DependencyInjection
         services.AddDbContext<ShelfMarketDbContext>(options =>
             options.UseSqlServer(connectionString));
         // Register infrastructure services here
+        services.AddSingleton<IShelfRepository, ShelfRepository>();
+        services.AddSingleton<IShelfTypeRepository, ShelfTypeRepository>();
         return services;
     }
 }
