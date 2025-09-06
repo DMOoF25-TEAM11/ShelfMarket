@@ -1,13 +1,13 @@
 ﻿erDiagram
     SHELFTTYPE {
         Guid Id PK
-        string Name "UNIQUE"
+        string Name
         string Description
     }
 
     SHELF {
         Guid Id PK
-        int Number "UNIQUE"
+        int Number
         Guid ShelfTypeId FK
     }
 
