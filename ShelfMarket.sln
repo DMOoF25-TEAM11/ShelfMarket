@@ -28,6 +28,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sprint-001", "Sprint-001", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AdministrateShelf", "UseCase001-AdministrateShelf", "{3E02A45F-A74B-43BF-A82F-E5488C5B96C3}"
 	ProjectSection(SolutionItems) = preProject
+		docs\sprint-1\UseCase001-AddANewShelf\OC001-AddShelf.md = docs\sprint-1\UseCase001-AddANewShelf\OC001-AddShelf.md
+		docs\sprint-1\UseCase001-AddANewShelf\OC002-EditShelf.md = docs\sprint-1\UseCase001-AddANewShelf\OC002-EditShelf.md
+		docs\sprint-1\UseCase001-AddANewShelf\OC003-DeleteShelf.md = docs\sprint-1\UseCase001-AddANewShelf\OC003-DeleteShelf.md
+		docs\sprint-1\UseCase001-AddANewShelf\OC004-NavigateToFrontPage.md = docs\sprint-1\UseCase001-AddANewShelf\OC004-NavigateToFrontPage.md
 		docs\sprint-1\UseCase001-AddANewShelf\UseCase-Brief.md = docs\sprint-1\UseCase001-AddANewShelf\UseCase-Brief.md
 		docs\sprint-1\UseCase001-AddANewShelf\UseCase-Casual.md = docs\sprint-1\UseCase001-AddANewShelf\UseCase-Casual.md
 		docs\sprint-1\UseCase001-AddANewShelf\UseCase-SSD.mmd = docs\sprint-1\UseCase001-AddANewShelf\UseCase-SSD.mmd
