@@ -3,11 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
-	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Domain", "src\ShelfMarket.Domain\ShelfMarket.Domain.csproj", "{F9823B59-6D95-4873-A5E4-62CE253E14F2}"
@@ -24,9 +19,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Application.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Infrastructure.Tests", "tests\ShelfMarket.Infrastructure.Tests\ShelfMarket.Infrastructure.Tests.csproj", "{84C38453-AD57-4035-AC80-1CF160294FC9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sprint-001", "Sprint-001", "{8F7DE6B1-569A-4F56-9DCC-FDA047307427}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93399C27-1127-489C-9E8F-7C803315DE2A}"
+	ProjectSection(SolutionItems) = preProject
+		docs\DCD.mmd = docs\DCD.mmd
+		docs\DomainModel.mmd = docs\DomainModel.mmd
+	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AdministrateShelf", "UseCase001-AdministrateShelf", "{3E02A45F-A74B-43BF-A82F-E5488C5B96C3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-1", "sprint-1", "{523051B1-BB5E-40F5-822A-1F3EB4921370}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AddANewShelf", "UseCase001-AddANewShelf", "{1BC20C78-DCF8-4E66-9101-BDE5E3E1465E}"
 	ProjectSection(SolutionItems) = preProject
 		docs\sprint-1\UseCase001-AddANewShelf\DomainModel.mmd = docs\sprint-1\UseCase001-AddANewShelf\DomainModel.mmd
 		docs\sprint-1\UseCase001-AddANewShelf\OC001-AddShelf.md = docs\sprint-1\UseCase001-AddANewShelf\OC001-AddShelf.md
@@ -89,8 +90,9 @@ Global
 		{5B309D40-EB9D-4D34-80E0-8CEAAAC90090} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{0666CBF1-A075-4307-A488-E9755E8BBE55} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{84C38453-AD57-4035-AC80-1CF160294FC9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{8F7DE6B1-569A-4F56-9DCC-FDA047307427} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
-		{3E02A45F-A74B-43BF-A82F-E5488C5B96C3} = {8F7DE6B1-569A-4F56-9DCC-FDA047307427}
+		{523051B1-BB5E-40F5-822A-1F3EB4921370} = {93399C27-1127-489C-9E8F-7C803315DE2A}
+		{1BC20C78-DCF8-4E66-9101-BDE5E3E1465E} = {523051B1-BB5E-40F5-822A-1F3EB4921370}
+		{D9BD81E6-E5D0-43A7-8DA6-675A177B603D} = {523051B1-BB5E-40F5-822A-1F3EB4921370}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E3670BE-F107-4641-8608-598441D3E901}
