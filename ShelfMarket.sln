@@ -21,14 +21,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.Infrastructure.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93399C27-1127-489C-9E8F-7C803315DE2A}"
 	ProjectSection(SolutionItems) = preProject
+		docs\DatabaseSchema.md = docs\DatabaseSchema.md
+		docs\DatabaseSchema.mmd = docs\DatabaseSchema.mmd
 		docs\DCD.mmd = docs\DCD.mmd
+		docs\DDL.sql = docs\DDL.sql
 		docs\DomainModel.mmd = docs\DomainModel.mmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-1", "sprint-1", "{523051B1-BB5E-40F5-822A-1F3EB4921370}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AddANewShelf", "UseCase001-AddANewShelf", "{1BC20C78-DCF8-4E66-9101-BDE5E3E1465E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase001-AdministrateShelf", "UseCase001-AdministrateShelf", "{1BC20C78-DCF8-4E66-9101-BDE5E3E1465E}"
 	ProjectSection(SolutionItems) = preProject
+		docs\sprint-1\UseCase001-AddANewShelf\DatabaseSchema.md = docs\sprint-1\UseCase001-AddANewShelf\DatabaseSchema.md
+		docs\sprint-1\UseCase001-AddANewShelf\DatabaseSchema.mmd = docs\sprint-1\UseCase001-AddANewShelf\DatabaseSchema.mmd
+		docs\sprint-1\UseCase001-AddANewShelf\DDL.sql = docs\sprint-1\UseCase001-AddANewShelf\DDL.sql
 		docs\sprint-1\UseCase001-AddANewShelf\DomainModel.mmd = docs\sprint-1\UseCase001-AddANewShelf\DomainModel.mmd
 		docs\sprint-1\UseCase001-AddANewShelf\OC001-AddShelf.md = docs\sprint-1\UseCase001-AddANewShelf\OC001-AddShelf.md
 		docs\sprint-1\UseCase001-AddANewShelf\OC002-EditShelf.md = docs\sprint-1\UseCase001-AddANewShelf\OC002-EditShelf.md
