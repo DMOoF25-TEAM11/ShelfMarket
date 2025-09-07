@@ -24,9 +24,37 @@
         <Setter Property="Foreground" Value="{StaticResource ControlForegroundBrush}" />
     </Style>
 
+    <!-- UserControl -->
+    <Style TargetType="UserControl">
+        <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource ControlForegroundBrush}" />
+    </Style>
+
     <!-- StackPanel Style -->
     <Style TargetType="StackPanel">
         <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+    </Style>
+
+    <!-- TextBlock Style -->
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource ControlForegroundBrush}" />
+    </Style>
+
+    <!-- Menu Style -->
+    <Style TargetType="Menu">
+        <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource ControlForegroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+    </Style>
+
+    <!-- Style for the Title TextBlock -->
+    <Style x:Key="TitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{StaticResource ControlForegroundBrush}" />
     </Style>
 
 </ResourceDictionary>

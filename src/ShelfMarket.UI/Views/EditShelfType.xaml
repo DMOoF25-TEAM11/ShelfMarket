@@ -9,6 +9,27 @@
       Title="EditShelfType">
 
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <!-- Title row -->
+            <RowDefinition Height="Auto"/>
+            <!-- Form row-->
+            <RowDefinition Height="*"/>
+            <!-- ListView or BoxView row-->
+            <RowDefinition Height="Auto"/>
+            <!-- Error and status messages -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" VerticalAlignment="Top">
+            <TextBlock Text="Tilføj og rediger reol typer" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" VerticalAlignment="Top">
+            <!-- Form elements go here -->
+        </StackPanel>
+        <StackPanel Grid.Row="2" VerticalAlignment="Top">
+            <!-- ListView or BoxView elements go here -->
+        </StackPanel>
+        <StackPanel Grid.Row="3" VerticalAlignment="Top">
+            <!-- Error and status messages go here -->
+        </StackPanel>
     </Grid>
 </Page>
