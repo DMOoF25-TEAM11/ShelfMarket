@@ -1,0 +1,32 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Dark Theme Colors -->
+    <Color x:Key="WindowBackgroundColor">#FF232323</Color>
+    <Color x:Key="ControlBackgroundColor">#FF2D2D30</Color>
+    <Color x:Key="ControlForegroundColor">#FFF1F1F1</Color>
+    <Color x:Key="AccentColor">#FF007ACC</Color>
+
+    <!-- Brushes -->
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource WindowBackgroundColor}" />
+    <SolidColorBrush x:Key="ControlBackgroundBrush" Color="{StaticResource ControlBackgroundColor}" />
+    <SolidColorBrush x:Key="ControlForegroundBrush" Color="{StaticResource ControlForegroundColor}" />
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+
+    <!-- Window Style -->
+    <Style TargetType="Window">
+        <Setter Property="Background" Value="{StaticResource WindowBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource ControlForegroundBrush}" />
+    </Style>
+
+    <!-- Frame Style -->
+    <Style TargetType="Frame">
+        <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource ControlForegroundBrush}" />
+    </Style>
+
+    <!-- StackPanel Style -->
+    <Style TargetType="StackPanel">
+        <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+    </Style>
+
+</ResourceDictionary>
