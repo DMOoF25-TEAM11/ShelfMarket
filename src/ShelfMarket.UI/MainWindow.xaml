@@ -7,7 +7,8 @@
         xmlns:views="clr-namespace:ShelfMarket.UI.Views"
         xmlns:controls="clr-namespace:ShelfMarket.UI.Views.UserControls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        WindowState="Maximized">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>  <!-- Top menu -->
@@ -20,11 +21,24 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <!-- Side menu width -->
+                    <ColumnDefinition Width="200"/>
+                    <!-- Main content takes remaining space -->
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <controls:SideMenu x:Name="SideMenu"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <!-- Frame for navigation -->
+                    <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+                </StackPanel>
+            </Grid>
             <StackPanel Orientation="Vertical">
                 <!-- UserControl files under UserControls-->
-                <controls:SideMenu x:Name="SideMenu"/>
                 <!-- Page files under Views-->
-                <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
             </StackPanel>
         </StackPanel>
 
