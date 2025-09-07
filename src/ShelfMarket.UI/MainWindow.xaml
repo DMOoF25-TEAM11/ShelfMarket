@@ -4,9 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ShelfMarket.UI"
+        xmlns:views="clr-namespace:ShelfMarket.UI.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <StackPanel>
+            <Frame x:Name="MainMenu" NavigationUIVisibility="Hidden"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical">
+                <!-- UserControl files under UserControls-->
+                <Frame x:Name="SideMenu" NavigationUIVisibility="Hidden"/>
+                <!-- Page files under Views-->
+                <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+            </StackPanel>
+        </StackPanel>
+        <!-- Status bar at the bottom -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+            <TextBlock Text="Status: " FontWeight="Bold" Margin="5"/>
+            <TextBlock x:Name="StatusTextBlock" Text="Ready" Margin="5"/>
+        </StackPanel>
     </Grid>
 </Window>

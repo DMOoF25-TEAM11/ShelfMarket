@@ -12,6 +12,7 @@ public class ShelfType
 
     public ShelfType(string name, string description)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Description = description;
     }
