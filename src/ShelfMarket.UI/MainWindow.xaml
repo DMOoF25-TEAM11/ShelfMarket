@@ -5,24 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ShelfMarket.UI"
         xmlns:views="clr-namespace:ShelfMarket.UI.Views"
+        xmlns:controls="clr-namespace:ShelfMarket.UI.UserControls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <StackPanel>
-            <Frame x:Name="MainMenu" NavigationUIVisibility="Hidden"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>  <!-- Top menu -->
+            <RowDefinition Height="*"/>     <!-- Main content -->
+            <RowDefinition Height="Auto"/>  <!-- Status bar -->
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" VerticalAlignment="Top">
+            <controls:MainMenu x:Name="MainMenu"/>
         </StackPanel>
-        <StackPanel Orientation="Horizontal">
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
             <StackPanel Orientation="Vertical">
                 <!-- UserControl files under UserControls-->
-                <Frame x:Name="SideMenu" NavigationUIVisibility="Hidden"/>
+                <controls:SideMenu x:Name="SideMenu"/>
                 <!-- Page files under Views-->
                 <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
             </StackPanel>
         </StackPanel>
-        <!-- Status bar at the bottom -->
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-            <TextBlock Text="Status: " FontWeight="Bold" Margin="5"/>
-            <TextBlock x:Name="StatusTextBlock" Text="Ready" Margin="5"/>
+
+        <!-- Status bar at the bottom of the window -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <TextBlock Text="Status: " FontWeight="Bold"/>
+            <TextBlock x:Name="StatusTextBlock" Text="Ready"/>
         </StackPanel>
     </Grid>
 </Window>
