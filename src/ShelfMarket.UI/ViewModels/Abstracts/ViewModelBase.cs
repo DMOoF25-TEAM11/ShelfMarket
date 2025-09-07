@@ -12,7 +12,12 @@ namespace ShelfMarket.UI.ViewModels.Abstracts;
 public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     where TRepos : notnull
 {
+    protected const string _errorPrefix = "Fejl: ";
+    protected const string _infoPrefix = "Info: ";
+
     private const int _infoMessageDuration = 3000; // Duration in milliseconds
+
+    protected Guid? _currentId;
 
     /// <summary>
     /// The repository instance used by the view model.
@@ -145,7 +150,6 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     }
 
     #region Load method
-    // Intentionally left blank for derived classes to implement loading logic.
     #endregion
 
     #region CanXXX methods

@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using ShelfMarket.UI.UserControls;
+using ShelfMarket.UI.Views.UserControls;
 
 namespace ShelfMarket.UI;
 
@@ -12,5 +12,6 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         MainMenu.Content = new MainMenu();
+        SideMenu.Content = new SideMenu();
     }
 }

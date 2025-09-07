@@ -57,7 +57,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc />
     public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await UpdateAsync(entity, cancellationToken);
+        _dbSet.Update(entity);
         await _context.SaveChangesAsync(cancellationToken);
     }
 

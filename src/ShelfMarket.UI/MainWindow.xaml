@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ShelfMarket.UI"
         xmlns:views="clr-namespace:ShelfMarket.UI.Views"
-        xmlns:controls="clr-namespace:ShelfMarket.UI.UserControls"
+        xmlns:controls="clr-namespace:ShelfMarket.UI.Views.UserControls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>

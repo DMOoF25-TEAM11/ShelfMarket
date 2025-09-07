@@ -45,6 +45,7 @@ public class ShelfTypeRepositoryTests
         _context.Dispose();
     }
 
+    [DoNotParallelize]
     [TestMethod]
     public async Task AddAsync_AddsEntity()
     {
@@ -57,6 +58,7 @@ public class ShelfTypeRepositoryTests
         Assert.AreEqual("Description1", result.Description);
     }
 
+    [DoNotParallelize]
     [TestMethod]
     public async Task AddRangeAsync_AddsEntities()
     {
@@ -72,6 +74,7 @@ public class ShelfTypeRepositoryTests
         Assert.AreEqual(2, count);
     }
 
+    [DoNotParallelize]
     [TestMethod]
     public async Task UpdateAsync_UpdatesEntity()
     {
@@ -86,6 +89,7 @@ public class ShelfTypeRepositoryTests
         Assert.AreEqual("UpdatedDesc", updated.Description);
     }
 
+    [DoNotParallelize]
     [TestMethod]
     public async Task DeleteAsync_DeletesEntity()
     {
@@ -101,4 +105,3 @@ public class ShelfTypeRepositoryTests
         Assert.IsNull(deleted);
     }
 }
-

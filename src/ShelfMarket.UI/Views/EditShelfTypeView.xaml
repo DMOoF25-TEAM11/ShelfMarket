@@ -1,0 +1,63 @@
+﻿<Page x:Class="ShelfMarket.UI.Views.EditShelfTypeView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:controls="clr-namespace:ShelfMarket.UI.Views.UserControls"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Tilføj / rediger reol typer">
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Title row -->
+            <RowDefinition Height="Auto"/>
+            <!-- Form row-->
+            <RowDefinition Height="*"/>
+            <!-- Buttons -->
+            <RowDefinition Height="Auto"/>
+            <!-- ListView or BoxView row-->
+            <RowDefinition Height="Auto"/>
+            <!-- Error and status messages -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" VerticalAlignment="Top">
+            <TextBlock Text="Tilføj og rediger reol typer" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" VerticalAlignment="Top">
+            <!-- Form elements go here -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Name:"/>
+                <TextBox
+                        Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                        MaxHeight="20"
+                        MinWidth="250"/>
+                <TextBlock Text="Description:"/>
+                <TextBox
+                        Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                        MaxHeight="20"
+                        MinWidth="250"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="2" VerticalAlignment="Top" Orientation="Horizontal" HorizontalAlignment="Center">
+            <!-- Buttons go here -->
+            <Button Content="Tilføj" Width="80" Command="{Binding AddCommand}"
+                    Visibility="{Binding IsAddMode, Converter={StaticResource BoolToVis}}"/>
+            <Button Content="Gem" Width="80" Command="{Binding SaveCommand}"
+                    Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVis}}"/>
+            <Button Content="Slet" Width="80" Command="{Binding DeleteCommand}"
+                    Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVis}}"/>
+            <Button Content="Nulstil" Width="80" Command="{Binding ResetCommand}"
+                    Visibility="{Binding IsAddMode, Converter={StaticResource BoolToVis}}"/>
+            <Button Content="Annuller" Width="80" Command="{Binding CancelCommand}"/>
+
+        </StackPanel>
+        <StackPanel Grid.Row="3">
+            <!-- ListView or BoxView elements go here -->
+            <controls:ListShelfTypeView x:Name="ShelfTypesListControl"/>
+        </StackPanel>
+        <StackPanel Grid.Row="4">
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="Bold" />
+                <TextBlock Text="{Binding StatusMessage}" Foreground="Green" FontWeight="Bold" />
+        </StackPanel>
+    </Grid>
+</Page>
