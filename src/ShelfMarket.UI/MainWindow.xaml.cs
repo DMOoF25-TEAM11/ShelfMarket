@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Infrastructure.Persistence;
-using ShelfMarket.UI.Views.UserControls;
 
 namespace ShelfMarket.UI;
 
@@ -43,8 +42,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        MainMenu.Content = new MainMenu();
-        SideMenu.Content = new SideMenu();
+        //MainMenu.Content = new MainMenu();
+        //SideMenu.Content = new SideMenu();
 
         Loaded += MainWindow_Loaded;
     }

@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <!-- Title -->
-        <TextBlock Grid.Row="0" Text="Tilføj og rediger reol typer" Style="{StaticResource TitleStyle}" 
+        <TextBlock Grid.Row="0" Text="Tilføj og rediger reol typer"
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
         <!-- Form -->

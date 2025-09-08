@@ -19,8 +19,8 @@ public partial class MainMenu : UserControl
 
     private void MenuViews_ShelfType(object sender, System.Windows.RoutedEventArgs e)
     {
-        var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
-        mainWindow?.MainFrame.Navigate(new EditShelfTypeView());
+        //var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
+        //mainWindow?.MainFrame.Navigate(new EditShelfTypeView());
     }
 
 }
