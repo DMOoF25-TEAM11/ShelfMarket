@@ -306,6 +306,26 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     protected async Task OnSaveAsync()
     {
         if (!CanSave()) return;
+        IsSaving = true;
+        Error = null;
+        try
+        {
+            if (_currentEntity is null) throw new InvalidOperationException("No current entity to save.");
+            await OnSaveFormAsync();
+            await _repository.UpdateAsync(_currentEntity);
+            EntitySaved?.Invoke(this, _currentEntity);
+            InfoMessage = _infoSaved;
+            await OnResetAsync();
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+        }
+        finally
+        {
+            IsSaving = false;
+            RefreshCommandStates();
+        }
         await Task.CompletedTask;
     }
 
@@ -384,6 +404,7 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// </summary>
     /// <returns>The newly created entity.</returns>
     protected abstract Task<TEntity> OnAddFormAsync();
+    protected abstract Task OnSaveFormAsync();
 
     #endregion
 

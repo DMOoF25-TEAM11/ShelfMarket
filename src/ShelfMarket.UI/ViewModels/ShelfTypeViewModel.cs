@@ -144,6 +144,18 @@ public sealed class ShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, She
         await Task.CompletedTask;
         return shelfType;
     }
+
+    protected override async Task OnSaveFormAsync()
+    {
+        if (CurrentEntity == null)
+        {
+            Error = _errorEntityNotFound;
+            return;
+        }
+        CurrentEntity.Name = Name;
+        CurrentEntity.Description = Description;
+        await Task.CompletedTask;
+    }
     #endregion
 
     /// <summary>
