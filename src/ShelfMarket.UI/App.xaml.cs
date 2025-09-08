@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ShelfMarket.Application;
 using ShelfMarket.Infrastructure;
+using ShelfMarket.UI.ViewModels;
 
 namespace ShelfMarket.UI;
 
@@ -25,6 +26,11 @@ public partial class App : System.Windows.Application
 
                 // Register MainWindow
                 services.AddTransient<MainWindow>();
+
+                // ShelfType
+                services.AddTransient<ShelfTypeListViewModel>();
+                services.AddTransient<ShelfTypeViewModel>();
+
             })
             .Build();
 

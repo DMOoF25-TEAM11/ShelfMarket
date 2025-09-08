@@ -1,0 +1,34 @@
+﻿-- Create database if it does not exist
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'ShelfMarked_Test')
+BEGIN
+    CREATE DATABASE ShelfMarked_Test;
+END
+GO
+
+-- Use the database
+USE ShelfMarked_Test;
+GO
+
+-- Create table if it does not exist
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'SHELFTYPE')
+BEGIN
+    CREATE TABLE SHELFTYPE (
+        Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+        Name NVARCHAR(255) NOT NULL UNIQUE,
+        Description NVARCHAR(200) NULL
+    );
+END
+GO
+
+-- Create SHELF table if it does not exist
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'SHELF')
+BEGIN
+    CREATE TABLE SHELF (
+        Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+        Number INT NOT NULL UNIQUE,
+        ShelfTypeId UNIQUEIDENTIFIER NOT NULL,
+        CONSTRAINT FK_SHELF_SHELFTTYPE FOREIGN KEY (ShelfTypeId)
+            REFERENCES SHELFTTYPE(Id)
+    );
+END
+GO

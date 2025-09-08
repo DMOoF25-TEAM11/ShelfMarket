@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+
     <None Remove="Views\Graphic\Reolmarkedet-logo.png" />
   </ItemGroup>
 

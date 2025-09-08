@@ -34,11 +34,17 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     /// <inheritdoc />
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
-        => await _dbSet.AddAsync(entity, cancellationToken);
+    {
+        await _dbSet.AddAsync(entity, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 
     /// <inheritdoc />
     public async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
-        => await _dbSet.AddRangeAsync(entities, cancellationToken);
+    {
+        await _dbSet.AddRangeAsync(entities, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 
     /// <inheritdoc />
     public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
@@ -52,7 +58,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _dbSet.Update(entity);
-        await Task.CompletedTask;
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc />
@@ -61,5 +67,6 @@ public class Repository<TEntity> : IRepository<TEntity>
         var entity = await GetByIdAsync(id, cancellationToken);
         if (entity != null)
             _dbSet.Remove(entity);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }
