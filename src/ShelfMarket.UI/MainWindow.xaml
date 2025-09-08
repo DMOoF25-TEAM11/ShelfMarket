@@ -3,10 +3,196 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ShelfMarket.UI"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:views="clr-namespace:ShelfMarket.UI.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Reolmarkedet" Height="720" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource Brush.Surface}">
 
+    <Window.Resources>
+        <x:Array x:Key="MenuItems" Type="{x:Type sys:String}">
+            <sys:String>Reoler</sys:String>
+            <sys:String>Kunder</sys:String>
+            <sys:String>Arrangementer</sys:String>
+            <sys:String>Økonomi</sys:String>
+            <sys:String>Bla bla bla :D</sys:String>
+            <sys:String>Osv.</sys:String>
+        </x:Array>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Venstre rail -->
+        <Border Grid.Column="0"
+            Background="{StaticResource Brush.SurfaceAlt}"
+            BorderBrush="{StaticResource Brush.Border}"
+            BorderThickness="0,0,1,0">
+            <DockPanel LastChildFill="True">
+                
+                <!-- Logo -->
+                <Border DockPanel.Dock="Top" Padding="16"
+                BorderThickness="0,0,0,1" BorderBrush="{StaticResource Brush.Border}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Image Source="/Views/Graphic/Reolmarkedet-logo.png"
+                        Width="228" Height="138"
+                        Stretch="UniformToFill"/>
+                    </StackPanel>
+
+                </Border>
+
+                <!-- Menu -->
+                <ListBox x:Name="LeftMenu"
+                 ItemsSource="{StaticResource MenuItems}"
+                 Style="{StaticResource Nav.ListBox}"
+                 SelectedIndex="0"/>
+            </DockPanel>
+        </Border>
+
+        <!-- Indhold -->
+        <Grid Grid.Column="1" Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding ElementName=LeftMenu, Path=SelectedItem}" Style="{StaticResource Text.H1}"/>
+                <Border Grid.Column="1" Background="{StaticResource Brush.Border}" Height="1"
+                Margin="16,18,0,0" VerticalAlignment="Top"/>
+            </Grid>
+
+            <!-- Views -->
+            <Grid Grid.Row="1">
+                <!-- Reoler -->
+                <views:ReolerView x:Name="ReolerView">
+                    <views:ReolerView.Style>
+                        <Style TargetType="FrameworkElement">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=LeftMenu, Path=SelectedItem}" Value="Reoler">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </views:ReolerView.Style>
+                </views:ReolerView>
+
+                <!-- Kunder -->
+                <Border x:Name="KunderView">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=LeftMenu, Path=SelectedItem}" Value="Kunder">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="Kunder – (placeholder)" Style="{StaticResource Text.H2}"/>
+                </Border>
+
+                <!-- Arrangementer -->
+                <Border x:Name="ArrangementerView">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=LeftMenu, Path=SelectedItem}" Value="Arrangementer">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="Arrangementer – (placeholder)" Style="{StaticResource Text.H2}"/>
+                </Border>
+
+                <!-- Økonomi -->
+                <Border x:Name="ØkonomiView">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=LeftMenu, Path=SelectedItem}" Value="Økonomi">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="Økonomi – (placeholder)" Style="{StaticResource Text.H2}"/>
+                </Border>
+
+                <!-- Bla bla bla :D -->
+                <Border x:Name="BlaBlaBlaView">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=LeftMenu, Path=SelectedItem}" Value="Bla bla bla :D">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="Bla bla bla :D – (placeholder)" Style="{StaticResource Text.H2}"/>
+                </Border>
+
+                <!-- Osv. -->
+                <Border x:Name="OsvView">
+                    <Border.Style>
+                        <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=LeftMenu, Path=SelectedItem}" Value="Osv.">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="Osv. – (placeholder)" Style="{StaticResource Text.H2}"/>
+                </Border>
+
+            </Grid>
+        </Grid>
+
+        <!-- ===== GLOBAL POPUP OVERLAY ===== -->
+        <!-- Overlay der dækker hele vinduet når popup er åben -->
+        <Grid x:Name="PopupOverlay" 
+              Background="#80000000" 
+              Visibility="Collapsed"
+              Grid.ColumnSpan="2">
+            <!-- Grid definitioner for centrering -->
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <!-- Top spacer -->
+                <RowDefinition Height="Auto"/>
+                <!-- Popup indhold -->
+                <RowDefinition/>
+                <!-- Bottom spacer -->
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <!-- Left spacer -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- Popup indhold -->
+                <ColumnDefinition/>
+                <!-- Right spacer -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Popup indhold centreret -->
+            <views:AddShelfPopup x:Name="AddShelfPopupContent" 
+                                 Grid.Row="1" 
+                                 Grid.Column="1"/>
+        </Grid>
     </Grid>
 </Window>

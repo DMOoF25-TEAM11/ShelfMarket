@@ -1,0 +1,89 @@
+<UserControl x:Class="ShelfMarket.UI.Views.AddShelfPopup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="450" d:DesignHeight="360">
+
+    <!-- Popup vindue til at tilføje nye reoler -->
+    <Border Style="{StaticResource Popup.Window}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Overskrift -->
+            <TextBlock Grid.Row="0" 
+                       Text="Tilføj ny reol" 
+                       Style="{StaticResource Popup.Title}"/>
+
+            <!-- Reoltype ComboBox -->
+            <StackPanel Grid.Row="1" Margin="0,0,0,16">
+                <TextBlock Text="Reoltype:" 
+                           Style="{StaticResource Text.Body}" 
+                           Margin="0,0,0,8"/>
+                <ComboBox x:Name="ReoltypeComboBox" 
+                          SelectedIndex="0">
+                    <ComboBoxItem Content="6 Hylder"/>
+                    <ComboBoxItem Content="3 Hylder + bøjle"/>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Orientering ComboBox -->
+            <StackPanel Grid.Row="2" Margin="0,0,0,16">
+                <TextBlock Text="Orientering:" 
+                           Style="{StaticResource Text.Body}" 
+                           Margin="0,0,0,8"/>
+                <ComboBox x:Name="OrienteringComboBox" 
+                          SelectedIndex="0">
+                    <ComboBoxItem Content="Lodret"/>
+                    <ComboBoxItem Content="Vandret"/>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Reol nummer TextBox -->
+            <StackPanel Grid.Row="3" Margin="0,0,0,16">
+                <TextBlock Text="Reol nummer:" 
+                           Style="{StaticResource Text.Body}" 
+                           Margin="0,0,0,8"/>
+                <TextBox x:Name="ReolNummerTextBox"
+                         Text=""
+                         Width="100" 
+                         HorizontalAlignment="Left"/>
+                <TextBlock x:Name="FejlTekst" 
+                           Text="Dette nummer er allerede i brug" 
+                           Style="{StaticResource Text.Error}"/>
+            </StackPanel>
+
+            <!-- Knapper i horisontal layout -->
+            <StackPanel Grid.Row="4" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Center"
+                        Margin="0,16,0,0">
+                <!-- Tilføj reol knap -->
+                <Button Content="Tilføj reol" 
+                        Style="{StaticResource Popup.Button}"
+                        Click="TilfoejReol_Click"
+                        Width="120"
+                        Height="35"
+                        Margin="0,0,16,0"/>
+                <Button Content="Annuller" 
+                        Style="{StaticResource Popup.Button}"
+                        Click="Annuller_Click"
+                        Width="120"
+                        Height="35"
+                        Margin="0,0,0,0"/>
+
+                <!-- Annuller knap -->
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
