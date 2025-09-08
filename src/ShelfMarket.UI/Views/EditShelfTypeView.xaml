@@ -20,10 +20,10 @@
             <!-- Error and status messages -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" VerticalAlignment="Top">
+        <StackPanel Grid.Row="0">
             <TextBlock Text="Tilføj og rediger reol typer" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
-        <StackPanel Grid.Row="1" VerticalAlignment="Top">
+        <StackPanel Grid.Row="1">
             <!-- Form elements go here -->
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Name:"/>

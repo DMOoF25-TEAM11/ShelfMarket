@@ -26,12 +26,14 @@ public partial class EditShelfTypeView : Page
         if (_listVm is not null)
             _listVm.PropertyChanged += ListVm_OnPropertyChanged;
 
-        //vm.ShelfTypeSaved += (_, __) =>
-        //{
-        //    if (_listVm is not null)
-        //        _ = _listVm.RefreshAsync();
-        //};
+        // Refresh the list when an entity is saved
+        vm.EntitySaved += (_, __) =>
+        {
+            if (_listVm is not null)
+                _ = _listVm.RefreshAsync();
+        };
 
+        // Initial load of the list
         Loaded += async (_, __) =>
         {
             if (_listVm is not null)
