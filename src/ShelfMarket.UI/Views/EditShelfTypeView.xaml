@@ -45,8 +45,8 @@
                     Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVis}}"/>
             <Button Content="Slet" Width="80" Command="{Binding DeleteCommand}"
                     Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVis}}"/>
-            <Button Content="Nulstil" Width="80" Command="{Binding ResetCommand}"
-                    Visibility="{Binding IsAddMode, Converter={StaticResource BoolToVis}}"/>
+            <!--<Button Content="Nulstil" Width="80" Command="{Binding ResetCommand}"
+                    Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVis}}"/>-->
             <Button Content="Annuller" Width="80" Command="{Binding CancelCommand}"/>
         </StackPanel>
 
