@@ -9,11 +9,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+
+    <None Remove="Views\Graphic\Reolmarkedet-logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Views\Theme\Theme.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ShelfMarket.InfraStructure\ShelfMarket.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Views\Graphic\Reolmarkedet-logo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\Theme\Theme.xaml" />
   </ItemGroup>
 
 </Project>
