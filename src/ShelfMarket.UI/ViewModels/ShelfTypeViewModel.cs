@@ -17,6 +17,7 @@ public sealed class ShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, She
     private new const string _entityName = "Reol Type";
 
     #region Form Fields
+
     private string _name = string.Empty;
 
     /// <summary>
@@ -66,39 +67,6 @@ public sealed class ShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, She
     }
 
     #region Load handler
-    /// <summary>
-    /// Loads a ShelfType entity by its identifier and populates the form fields.
-    /// </summary>
-    /// <param name="id">The identifier of the ShelfType to load.</param>
-    public async Task LoadAsync(Guid id)
-    {
-        Error = null;
-        try
-        {
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity != null)
-            {
-                _currentEntity = entity; // keep current entity in sync with selection
-                Name = entity.Name;
-                Description = entity.Description;
-                IsEditMode = true;
-            }
-            else
-            {
-                _currentEntity = null;   // clear when not found
-                IsEditMode = false;
-                Error = _errorEntityNotFound;
-            }
-        }
-        catch (Exception ex)
-        {
-            Error = ex.Message;
-        }
-        finally
-        {
-            RefreshCommandStates();
-        }
-    }
     #endregion
 
     #region CanXXX Command States
@@ -126,6 +94,7 @@ public sealed class ShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, She
     /// <summary>
     /// Resets the form fields to their default values.
     /// </summary>
+    /// <returns>A completed task.</returns>
     protected override async Task OnResetFormAsync()
     {
         CurrentEntity = null;
@@ -140,11 +109,15 @@ public sealed class ShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, She
     /// <returns>The newly created ShelfType entity.</returns>
     protected override async Task<ShelfType> OnAddFormAsync()
     {
-        var shelfType = new ShelfType(Name, Description);
+        var entity = new ShelfType(Name, Description);
         await Task.CompletedTask;
-        return shelfType;
+        return entity;
     }
 
+    /// <summary>
+    /// Updates the current entity with the form values before saving.
+    /// </summary>
+    /// <returns>A completed task.</returns>
     protected override async Task OnSaveFormAsync()
     {
         if (CurrentEntity == null)
@@ -156,12 +129,18 @@ public sealed class ShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, She
         CurrentEntity.Description = Description;
         await Task.CompletedTask;
     }
-    #endregion
 
     /// <summary>
-    /// Gets the identifier of the specified <see cref="ShelfType"/> entity.
+    /// Loads the form fields from the specified <see cref="ShelfType"/> entity.
     /// </summary>
-    /// <param name="entity">The ShelfType entity.</param>
-    /// <returns>The entity's identifier, or null if not set.</returns>
-    protected override Guid? GetEntityId(ShelfType entity) => entity.Id;
+    /// <param name="entity">The entity to load values from.</param>
+    /// <returns>A completed task.</returns>
+    protected override async Task OnLoadFormAsync(ShelfType entity)
+    {
+        Name = entity.Name;
+        Description = entity.Description;
+        await Task.CompletedTask;
+    }
+    #endregion
+
 }

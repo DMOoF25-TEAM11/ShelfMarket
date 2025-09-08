@@ -233,6 +233,32 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     }
 
     #region Load method
+    public async Task LoadAsync(Guid id)
+    {
+        Error = null;
+        _currentEntity = null;
+        try
+        {
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity is null)
+            {
+                Error = _errorEntityNotFound;
+                await OnResetAsync();
+                return;
+            }
+            CurrentEntity = entity;
+            await OnLoadFormAsync(entity);
+            IsEditMode = true;
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+        }
+        finally
+        {
+            RefreshCommandStates();
+        }
+    }
     #endregion
 
     #region CanXXX methods
@@ -273,7 +299,7 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// Determines whether the cancel operation can be performed.
     /// </summary>
     /// <returns>True if cancel is allowed; otherwise, false.</returns>
-    protected virtual bool CanCancel() => IsEditMode && !IsSaving;
+    protected virtual bool CanCancel() => !IsSaving;
     #endregion
 
     #region Command Handlers
@@ -411,6 +437,8 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// <returns>The newly created entity.</returns>
     protected abstract Task<TEntity> OnAddFormAsync();
     protected abstract Task OnSaveFormAsync();
+
+    protected abstract Task OnLoadFormAsync(TEntity entity);
 
     #endregion
 
