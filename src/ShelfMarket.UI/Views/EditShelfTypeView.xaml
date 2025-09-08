@@ -9,37 +9,36 @@
       Title="Tilføj / rediger reol typer">
     <Grid>
         <Grid.RowDefinitions>
-            <!-- Title row -->
             <RowDefinition Height="Auto"/>
-            <!-- Form row-->
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <!-- Buttons -->
-            <RowDefinition Height="Auto"/>
-            <!-- ListView or BoxView row-->
-            <RowDefinition Height="Auto"/>
-            <!-- Error and status messages -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
-            <TextBlock Text="Tilføj og rediger reol typer" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </StackPanel>
-        <StackPanel Grid.Row="1">
-            <!-- Form elements go here -->
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Name:"/>
-                <TextBox
-                        Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
-                        MaxHeight="20"
-                        MinWidth="250"/>
-                <TextBlock Text="Description:"/>
-                <TextBox
-                        Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                        MaxHeight="20"
-                        MinWidth="250"/>
-            </StackPanel>
-        </StackPanel>
-        <StackPanel Grid.Row="2" VerticalAlignment="Top" Orientation="Horizontal" HorizontalAlignment="Center">
-            <!-- Buttons go here -->
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="Tilføj og rediger reol typer" Style="{StaticResource TitleStyle}" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <!-- Form -->
+        <Grid Grid.Row="1" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="250"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Name:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            <TextBox Grid.Column="1" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" 
+                     MaxHeight="20" MinWidth="200" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="3" Text="Description:" VerticalAlignment="Center" Margin="10,0,5,0"/>
+            <TextBox Grid.Column="4" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" 
+                     MaxHeight="20" MinWidth="200" VerticalAlignment="Center"/>
+        </Grid>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
             <Button Content="Tilføj" Width="80" Command="{Binding AddCommand}"
                     Visibility="{Binding IsAddMode, Converter={StaticResource BoolToVis}}"/>
             <Button Content="Gem" Width="80" Command="{Binding SaveCommand}"
@@ -49,15 +48,15 @@
             <Button Content="Nulstil" Width="80" Command="{Binding ResetCommand}"
                     Visibility="{Binding IsAddMode, Converter={StaticResource BoolToVis}}"/>
             <Button Content="Annuller" Width="80" Command="{Binding CancelCommand}"/>
+        </StackPanel>
 
-        </StackPanel>
-        <StackPanel Grid.Row="3">
-            <!-- ListView or BoxView elements go here -->
-            <controls:ListShelfTypeView x:Name="ShelfTypesListControl"/>
-        </StackPanel>
-        <StackPanel Grid.Row="4">
-                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="Bold" />
-                <TextBlock Text="{Binding StatusMessage}" Foreground="Green" FontWeight="Bold" />
+        <!-- ListView/UserControl -->
+        <controls:ListShelfTypeView Grid.Row="3" x:Name="ShelfTypesListControl" Margin="0,10,0,0"/>
+
+        <!-- Error and status messages -->
+        <StackPanel Grid.Row="4" Margin="0,10,0,0">
+            <TextBlock Text="{Binding Error}" Foreground="Red" FontWeight="Bold" Visibility="{Binding HasError, Converter={StaticResource BoolToVis}}"/>
+            <TextBlock Text="{Binding InfoMessage}" Foreground="Green" FontWeight="Bold" Visibility="{Binding HasInfoMessage, Converter={StaticResource BoolToVis}}"/>
         </StackPanel>
     </Grid>
 </Page>
