@@ -124,7 +124,12 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     public string? Error
     {
         get => _error;
-        protected set { if (_error == value) return; _error = value; OnPropertyChanged(); }
+        protected set
+        {
+            if (_error == value) return; _error = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(HasError));
+        }
     }
 
     /// <summary>
@@ -148,7 +153,8 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
         {
             if (_infoMessage == value) return;
             _infoMessage = value;
-            OnPropertyChanged();
+            OnPropertyChanged();                   // InfoMessage
+            OnPropertyChanged(nameof(HasInfoMessage)); // ensure Visibility updates
             if (!string.IsNullOrEmpty(value))
                 _ = AutoClearInfoMessageAsync();
         }
@@ -422,16 +428,14 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
         return prop.GetValue(entity) as Guid?;
     }
 
-    /// <summary>
-    /// Automatically clears the informational message after a predefined delay.
-    /// </summary>
     private async Task AutoClearInfoMessageAsync()
     {
         await Task.Delay(_infoMessageDuration);
         if (!string.IsNullOrEmpty(_infoMessage))
         {
             _infoMessage = null;
-            //OnPropertyChanged(nameof(InfoMessage));
+            OnPropertyChanged(nameof(InfoMessage));
+            OnPropertyChanged(nameof(HasInfoMessage));
         }
     }
     #endregion
