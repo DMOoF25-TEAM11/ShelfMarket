@@ -1,5 +1,7 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
+using ShelfMarket.Application.Interfaces;
 using ShelfMarket.UI.Commands;
 
 namespace ShelfMarket.UI.ViewModels.Abstracts;
@@ -10,14 +12,77 @@ namespace ShelfMarket.UI.ViewModels.Abstracts;
 /// <typeparam name="TRepos">The type of the repository used by the view model.</typeparam>
 /// <typeparam name="TEntity">The type of the entity managed by the view model.</typeparam>
 public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
-    where TRepos : notnull
+    where TRepos : notnull, IRepository<TEntity>
+    where TEntity : class
 {
+    #region Constants
+    /// <summary>
+    /// The logical name of the entity type handled by the view model.
+    /// Note: Uses nameof(TEntity), which evaluates to the string "TEntity".
+    /// </summary>
+    protected const string _entityName = nameof(TEntity);
+
+    /// <summary>
+    /// Prefix used for error messages.
+    /// </summary>
     protected const string _errorPrefix = "Fejl: ";
+
+    /// <summary>
+    /// Default message indicating that the requested entity could not be found.
+    /// </summary>
+    protected const string _errorEntityNotFound = _errorPrefix + _entityName + " " + " blev ikke fundet.";
+
+    /// <summary>
+    /// Prefix used for informational messages.
+    /// </summary>
     protected const string _infoPrefix = "Info: ";
 
-    private const int _infoMessageDuration = 3000; // Duration in milliseconds
+    /// <summary>
+    /// Default message indicating that an entity has been deleted.
+    /// </summary>
+    protected const string _infoDeleted = _entityName + " er slettet.";
 
-    protected Guid? _currentId;
+    /// <summary>
+    /// Default message indicating that an entity has been saved.
+    /// </summary>
+    protected const string _infoSaved = _entityName + " er gemt.";
+
+    /// <summary>
+    /// Title used for the delete confirmation dialog.
+    /// </summary>
+    protected const string _confirmDeleteTitle = "Bekræft slet " + _entityName;
+
+    /// <summary>
+    /// Message used for the delete confirmation dialog.
+    /// </summary>
+    protected const string _confirmDelete = "Er du sikker på, at du vil slette " + _entityName + "?";
+
+    /// <summary>
+    /// The duration, in milliseconds, before the informational message is automatically cleared.
+    /// </summary>
+    private const int _infoMessageDuration = 3000; // Duration in milliseconds
+    #endregion
+
+    /// <summary>
+    /// The currently selected or edited entity instance. When null, no entity is in context.
+    /// </summary>
+    protected TEntity? _currentEntity;
+
+    /// <summary>
+    /// Gets the currently selected or edited entity instance.
+    /// Setting this value triggers property change notifications and refreshes command states.
+    /// </summary>
+    public TEntity? CurrentEntity
+    {
+        get => _currentEntity;
+        protected set
+        {
+            if (_currentEntity == value) return;
+            _currentEntity = value;
+            OnPropertyChanged();
+            RefreshCommandStates();
+        }
+    }
 
     /// <summary>
     /// The repository instance used by the view model.
@@ -67,7 +132,11 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// </summary>
     public bool HasError => !string.IsNullOrEmpty(Error);
 
+    /// <summary>
+    /// Backing field for the <see cref="InfoMessage"/> property.
+    /// </summary>
     protected string? _infoMessage;
+
     /// <summary>
     /// Gets or sets the informational message for the view model.
     /// When set to a non-null or non-empty value, the message will automatically clear after a short delay.
@@ -97,6 +166,7 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
 
     /// <summary>
     /// Gets or sets a value indicating whether the view model is currently saving data.
+    /// Changing this value raises <see cref="ModelBase.OnPropertyChanged(string?)"/> and refreshes commands.
     /// </summary>
     public bool IsSaving
     {
@@ -111,6 +181,7 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
 
     /// <summary>
     /// Gets or sets a value indicating whether the view model is in edit mode.
+    /// Changing this value notifies dependent properties and updates command states.
     /// </summary>
     public bool IsEditMode
     {
@@ -130,6 +201,12 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// </summary>
     public bool IsAddMode => !IsEditMode;
     #endregion
+
+    /// <summary>
+    /// Occurs when an entity has been successfully saved, added, or deleted.
+    /// The event argument contains the affected entity instance or null (for delete).
+    /// </summary>
+    public event EventHandler<TEntity?>? EntitySaved;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelBase{TRepos, TEntity}"/> class.
@@ -198,13 +275,39 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// Handles the add command asynchronously.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
-    protected abstract Task OnAddAsync();
+    protected async Task OnAddAsync()
+    {
+        if (!CanAdd()) return;
+        IsSaving = true;
+        Error = null;
+        var entity = await OnAddFormAsync();
+        try
+        {
+            await _repository.AddAsync(entity);
+            EntitySaved?.Invoke(this, entity);
+            InfoMessage = _infoSaved;
+            await OnResetAsync();
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+        }
+        finally
+        {
+            IsSaving = false;
+            RefreshCommandStates();
+        }
+    }
 
     /// <summary>
     /// Handles the save command asynchronously.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
-    protected abstract Task OnSaveAsync();
+    protected async Task OnSaveAsync()
+    {
+        if (!CanSave()) return;
+        await Task.CompletedTask;
+    }
 
     /// <summary>
     /// Handles the cancel command asynchronously by resetting the view model.
@@ -219,15 +322,84 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// Handles the delete command asynchronously.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
-    protected abstract Task OnDeleteAsync();
+    protected async Task OnDeleteAsync()
+    {
+        if (_currentEntity is null) return;
+
+        // Confirm deletion with the user
+        if (MessageBox.Show(
+                _confirmDelete,
+                _confirmDeleteTitle,
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning)
+            != MessageBoxResult.Yes)
+            return;
+
+        IsSaving = true;
+
+        try
+        {
+            var id = GetEntityId(_currentEntity);
+            if (id is null) return;
+
+            await _repository.DeleteAsync(id.Value);
+            EntitySaved?.Invoke(this, null);
+            InfoMessage = _infoDeleted;
+            await OnResetAsync();
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
+        }
+        finally
+        {
+            IsSaving = false;
+            RefreshCommandStates();
+        }
+    }
 
     /// <summary>
     /// Handles the reset command asynchronously.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
-    protected abstract Task OnResetAsync();
+    protected async Task OnResetAsync()
+    {
+        Error = null;
+        _currentEntity = null; // switched from _currentId to _currentEntity
+        await OnResetFormAsync();
+        IsEditMode = false;
+        await Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Called by <see cref="OnResetAsync"/> to reset the form state (e.g., clear fields).
+    /// Implement in derived classes to restore the UI to its initial state.
+    /// </summary>
+    /// <returns>A task that completes when the form reset is finished.</returns>
+    protected abstract Task OnResetFormAsync();
+
+    /// <summary>
+    /// Called by <see cref="OnAddAsync"/> to build and validate a new entity from the current form values.
+    /// Implement in derived classes to map UI inputs to a <typeparamref name="TEntity"/> instance.
+    /// </summary>
+    /// <returns>The newly created entity.</returns>
+    protected abstract Task<TEntity> OnAddFormAsync();
 
     #endregion
+
+    #region Helpers
+    /// <summary>
+    /// Extracts an entity identifier as a Guid from the supplied entity instance using a property named "Id".
+    /// Override in derived classes for better performance or to handle different key names and types.
+    /// </summary>
+    /// <param name="entity">The entity instance from which to retrieve the identifier.</param>
+    /// <returns>The Guid identifier if available; otherwise, null.</returns>
+    protected virtual Guid? GetEntityId(TEntity entity)
+    {
+        var prop = typeof(TEntity).GetProperty("Id");
+        if (prop is null) return null;
+        return prop.GetValue(entity) as Guid?;
+    }
 
     /// <summary>
     /// Automatically clears the informational message after a predefined delay.
@@ -241,7 +413,9 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
             //OnPropertyChanged(nameof(InfoMessage));
         }
     }
+    #endregion
 
+    #region Command State Refresh
     /// <summary>
     /// Refreshes the state of all commands, causing their CanExecute status to be re-evaluated.
     /// </summary>
@@ -253,5 +427,6 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
         (ResetCommand as RelayCommand)?.RaiseCanExecuteChanged();
         (CancelCommand as RelayCommand)?.RaiseCanExecuteChanged();
     }
+    #endregion
 }
 

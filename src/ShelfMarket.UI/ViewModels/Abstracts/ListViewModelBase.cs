@@ -41,6 +41,7 @@ public abstract class ListViewModelBase<TEntity, ListItemVM> : ModelBase
     /// </summary>
     public ObservableCollection<ListItemVM> Items { get; } = new();
 
+    #region Error and State Management
     /// <summary>
     /// Backing field for the <see cref="IsLoading"/> property.
     /// </summary>
@@ -75,6 +76,7 @@ public abstract class ListViewModelBase<TEntity, ListItemVM> : ModelBase
     /// Gets a value indicating whether the view model currently has an error.
     /// </summary>
     public bool HasError => !string.IsNullOrEmpty(Error);
+    #endregion
 
     /// <summary>
     /// Gets the command for refreshing the list of items.
