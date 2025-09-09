@@ -119,10 +119,10 @@
   <!-- ===== HYLDE KNAPPER ===== -->
   <!-- Specialiserede knapstilarter til visualisering af hylder i lageret.  -->
   
-  <!-- Horisontal hylde knap - 50x40 pixels -->
+  <!-- Horisontal hylde knap - 45x35 pixels -->
   <Style x:Key="Stand.Horizontal" TargetType="Button">
-    <Setter Property="Width" Value="50"/>
-    <Setter Property="Height" Value="40"/>
+    <Setter Property="Width" Value="45"/>
+    <Setter Property="Height" Value="35"/>
     <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
     <Setter Property="Background" Value="{StaticResource Brush.Card}"/>
     <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
@@ -154,10 +154,10 @@
     </Setter>
   </Style>
 
-  <!-- Vertikal hylde knap - 40x50 pixels (Arver fra horisontal --> 
+  <!-- Vertikal hylde knap - 35x45 pixels (Arver fra horisontal --> 
   <Style x:Key="Stand.Vertical" TargetType="Button" BasedOn="{StaticResource Stand.Horizontal}">
-    <Setter Property="Width" Value="40"/>
-    <Setter Property="Height" Value="50"/>
+    <Setter Property="Width" Value="35"/>
+    <Setter Property="Height" Value="45"/>
   </Style>
 
   <!-- ===== NAVIGATION ===== -->
