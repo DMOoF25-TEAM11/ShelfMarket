@@ -1,12 +1,12 @@
 ﻿-- Create database if it does not exist
-IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'ShelfMarked_dev')
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'ShelfMarket_dev')
 BEGIN
-    CREATE DATABASE ShelfMarked_Dev;
+    CREATE DATABASE ShelfMarket_Dev;
 END
 GO
 
 -- Use the database
-USE ShelfMarked_Dev;
+USE ShelfMarket_Dev;
 GO
 
 -- Create table if it does not exist
@@ -28,7 +28,21 @@ BEGIN
         Number INT NOT NULL UNIQUE,
         ShelfTypeId UNIQUEIDENTIFIER NOT NULL,
         CONSTRAINT FK_SHELF_SHELFTTYPE FOREIGN KEY (ShelfTypeId)
-            REFERENCES SHELFTTYPE(Id)
+            REFERENCES SHELFTYPE(Id)
     );
 END
 GO
+
+-- Ceate SHELFLOCATION table if it does not exist
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'SHELFLOCATION')
+BEGIN
+    CREATE TABLE SHELFLOCATION (
+        Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+        ShelfId UNIQUEIDENTIFIER NOT NULL,
+        X INT NOT NULL,
+        Y INT NOT NULL,
+        CONSTRAINT FK_SHELFLOCATION_SHELF FOREIGN KEY (ShelfId)
+            REFERENCES SHELF(Id),
+        UNIQUE (X, Y)
+    );
+END
