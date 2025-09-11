@@ -1,0 +1,50 @@
+﻿sequenceDiagram
+    actor Ejer as Actor
+    participant UI
+    participant ViewModel
+    participant Infrastructure
+
+    Ejer->>UI: NavigateTo(EditShelfTanentContracts)
+
+    alt Create contract
+        Ejer->>UI: SelectTenant()
+        UI->>ViewModel: (tenantId)
+        loop Add contract lines
+            Ejer->>UI: FillLineForm(startMonth, endMonth, price)
+            UI->>ViewModel: AddContractLine(startMonth, endMonth, price)
+            ViewModel-->>UI: UpdateContractLinesList()
+        end
+        Ejer->>UI: SaveContract()
+        UI->>ViewModel: SaveContract()
+        ViewModel->>Infrastructure: PersistContract(contractData)
+        Infrastructure-->>ViewModel: SaveConfirmation
+        ViewModel-->>UI: ShowSaveConfirmation()
+    else View contract
+        Ejer->>UI: SelectContract(contractId)
+        UI->>ViewModel: OnContractSelected(contractId)
+        ViewModel->>Infrastructure: FetchContractDetails(contractId)
+        Infrastructure-->>ViewModel: ContractDetails
+        ViewModel-->>UI: DisplayContractDetails(contractDetails)
+        alt Edit contract
+            loop Edit contract lines
+                Ejer->>UI: EditLineForm(lineId, startMonth, endMonth, price)
+                UI->>ViewModel: UpdateContractLine(lineId, startMonth, endMonth, price)
+                ViewModel-->>UI: UpdateContractLinesList()
+            end
+            Ejer->>UI: SaveContract()
+            UI->>ViewModel: SaveContract()
+            ViewModel->>Infrastructure: PersistContract(contractData)
+            Infrastructure-->>ViewModel: SaveConfirmation
+            ViewModel-->>UI: ShowSaveConfirmation()
+        else Delete contract
+            Ejer->>UI: DeleteContract(contractId)
+            UI->>ViewModel: DeleteContract(contractId)
+            ViewModel->>Infrastructure: RemoveContract(contractId)
+            Infrastructure-->>ViewModel: DeleteConfirmation
+            ViewModel-->>UI: ShowDeleteConfirmation()
+        end
+    else Navigate to another page
+        Ejer->>UI: ClickMenu(page)
+        UI->>ViewModel: OnNavigateToPage(page)
+        ViewModel-->>UI: DisplayPage(page)
+    end
