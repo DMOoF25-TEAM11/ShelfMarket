@@ -7,12 +7,12 @@ namespace ShelfMarket.UI.Views;
 /// <summary>
 /// Interaction logic for EditShelfType.xaml
 /// </summary>
-public partial class EditShelfTypeView : Page
+public partial class ManagesShelfTypeView : Page
 {
     private ShelfTypeListViewModel? _listVm;
     private ShelfTypeViewModel? _vm;
 
-    public EditShelfTypeView()
+    public ManagesShelfTypeView()
     {
         InitializeComponent();
 
