@@ -1,0 +1,28 @@
+﻿sequenceDiagram
+    participant Ejer as "Ejer"
+    participant System as "System"
+
+    Ejer->>System: NavigerTil("Administrer hyreskontrakter")
+
+    alt Opret kontrakt
+        Ejer->>System: dropdownValg(lejer)
+        loop Tilføj kontrakt linjer
+            Ejer->>System: UdfyldFormular(StartMåned, Slutmåned, Pris)
+            System-->>Ejer: ordrelinjeliste
+        end
+    else se kontrakt
+        Ejer->>System: vælgerKontrakt(kontrakt)
+        System-->>Ejer: KontraktNummer, StartMåned, Slutmåned, Pris
+        alt Rediger kontrakt
+            System-->>Ejer: ordrelinjeliste
+            loop Rediger kontrakt linjer
+                Ejer->>System: OpdaterFormular(StartMåned, Slutmåned, Pris)
+                System-->>Ejer: Opdateret ordrelinjeliste
+            end
+        else Slet kontrakt
+            Ejer->>System: klikSletKontrakt(kontrakt)
+        end
+    else Vælger et forside eller andet menupunkt
+        Ejer->>System: klikkerMenu(side)
+        System-->>Ejer: side
+    end
