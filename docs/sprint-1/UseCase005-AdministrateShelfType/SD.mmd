@@ -1,47 +1,42 @@
 ﻿sequenceDiagram
-    actor Ejer as actor
+    actor Ejer as Actor
     participant UI
-    participant VM as EditShelfTypeViewModel
-    participant Repo as ShelfTypeRepository
-    participant DB
+    participant ViewModel
+    participant Infrastructure
 
-    Ejer->>UI: Clicks "Add/Edit ShelfType"
-    UI->>VM: Calls LoadAsync()
-    VM->>Repo: Calls GetAllAsync()
-    Repo->>DB: Queries ShelfTypes
-    DB-->>Repo: Returns ShelfTypes
-    Repo-->>VM: Returns ShelfTypes
-    VM-->>UI: Populates ShelfType list
+    Ejer->>UI: NavigateTo("Shelf Types")
+    UI->>ViewModel: OnNavigateToShelfTypes()
+    ViewModel->>Infrastructure: GetAllAsync()
+    Infrastructure-->>ViewModel: Task<IEnumerable<ShelfType>>
+    ViewModel-->>UI: ShelfTypeListViewModel(ObservableCollection<ShelfType>)
 
     alt Add ShelfType
-        Ejer->>UI: Fills form and clicks "Add"
-        UI->>VM: Calls AddShelfType(ShelfType newShelfType)
-        VM->>Repo: Calls AddAsync(ShelfType newShelfType)
-        Repo->>DB: Inserts new ShelfType
-        DB-->>Repo: Confirms insertion
-        Repo-->>VM: Returns success
-        VM-->>UI: Updates ShelfType list
-    else Edit ShelfType
-        Ejer->>UI: Selects ShelfType
-        UI->>VM: Calls LoadAsync(Guid ShelfTypeId)
-        VM->>Repo: Calls GetByIdAsync(Guid ShelfTypeId)
-        Repo->>DB: Queries ShelfType
-        DB-->>Repo: Returns ShelfType
-        Repo-->>VM: Returns ShelfType
-        VM-->>UI: Populates form with ShelfType data
-        Ejer->>UI: Modifies form and clicks "Save"
-        UI->>VM: Calls EditShelfType(ShelfType updatedShelfType)
-        VM->>Repo: Calls UpdateAsync(ShelfType updatedShelfType)
-        Repo->>DB: Updates ShelfType
-        DB-->>Repo: Confirms update
-        Repo-->>VM: Returns success
-        VM-->>UI: Updates ShelfType list
-    else Delete ShelfType
-        Ejer->>UI: Selects ShelfType and clicks "Delete"
-        UI->>VM: Calls DeleteShelfType(Guid ShelfTypeId)
-        VM->>Repo: Calls DeleteAsync(Guid ShelfTypeId)
-        Repo->>DB: Deletes ShelfType
-        DB-->>Repo: Confirms deletion
-        Repo-->>VM: Returns success
-        VM-->>UI: Updates ShelfType list
+        Ejer->>UI: CreateShelfType(string: name, string: description)
+        UI->>ViewModel: AddShelfType(string: name, string: description)
+        ViewModel->>Infrastructure: AddAsync({name, description})
+        Infrastructure-->>ViewModel: SaveConfirmation
+        ViewModel-->>UI: InfoMessage(_infoMsgSuccesSave)
+        ViewModel-->>UI: Refresh()
+    else Select ShelfType
+        Ejer->>UI: SelectShelfType(Guid: shelfTypeId)
+        UI->>ViewModel: OnShelfTypeSelected(Guid: shelfTypeId)
+        ViewModel->>Infrastructure: GetByIdAsync(Guid: shelfTypeId)
+        Infrastructure-->>ViewModel: ShelfTypeDetails
+        ViewModel-->>UI: DisplayShelfTypeDetails(ShelfTypeDetails)
+
+        alt Edit ShelfType
+            Ejer->>UI: EditShelfType(Guid: shelfTypeId, string: name, string: description)
+            UI->>ViewModel: UpdateShelfType(Guid: shelfTypeId, string: name, string: description)
+            ViewModel->>Infrastructure: UpdateAsync(Guid: shelfTypeId, {name, description})
+            Infrastructure-->>ViewModel: UpdateConfirmation
+            ViewModel-->>UI: ShowUpdateConfirmation()
+            ViewModel-->>UI: RefreshShelfTypeDetails()
+        else Delete ShelfType
+            Ejer->>UI: RequestDeleteShelfType(Guid: shelfTypeId)
+            UI->>ViewModel: DeleteShelfType(Guid: shelfTypeId)
+            ViewModel->>Infrastructure: RemoveShelfType(Guid: shelfTypeId)
+            Infrastructure-->>ViewModel: DeleteConfirmation
+            ViewModel-->>UI: ShowDeleteConfirmation()
+            ViewModel-->>UI: RefreshShelfTypeList()
+        end
     end
