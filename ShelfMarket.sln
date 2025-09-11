@@ -67,8 +67,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-2", "sprint-2", "{48
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase003-AdministrateShelfTenantContract", "UseCase003-AdministrateShelfTenantContract", "{6DBF37D4-22DE-4248-BC08-D0471CB4A8CF}"
 	ProjectSection(SolutionItems) = preProject
-		docs\Spirnt-2\UseCase003-AdministrateShelfTenantContract\UseCase-Brief.md = docs\Spirnt-2\UseCase003-AdministrateShelfTenantContract\UseCase-Brief.md
-		docs\Spirnt-2\UseCase003-AdministrateShelfTenantContract\UserStory.md = docs\Spirnt-2\UseCase003-AdministrateShelfTenantContract\UserStory.md
+		docs\sprint-2\UseCase003-AdministrateShelfTenantContract\DomainModel.mmd = docs\sprint-2\UseCase003-AdministrateShelfTenantContract\DomainModel.mmd
+		docs\sprint-2\UseCase003-AdministrateShelfTenantContract\UseCase-Brief.md = docs\sprint-2\UseCase003-AdministrateShelfTenantContract\UseCase-Brief.md
+		docs\sprint-2\UseCase003-AdministrateShelfTenantContract\UseCase-Casual.md = docs\sprint-2\UseCase003-AdministrateShelfTenantContract\UseCase-Casual.md
+		docs\sprint-2\UseCase003-AdministrateShelfTenantContract\UseCase-SSD.mmd = docs\sprint-2\UseCase003-AdministrateShelfTenantContract\UseCase-SSD.mmd
+		docs\sprint-2\UseCase003-AdministrateShelfTenantContract\UserStory.md = docs\sprint-2\UseCase003-AdministrateShelfTenantContract\UserStory.md
 	EndProjectSection
 EndProject
 Global
