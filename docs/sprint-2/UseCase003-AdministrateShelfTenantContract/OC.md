@@ -2,7 +2,7 @@
 
 ## 1 Åbn kontrakt administration 
 **Operation**: NavigerTil("Administrer hyreskontrakter")  
-**Cross References**: UseCase-SSD.mmd; UseCase-Brief.md trin 1  
+**Cross References**: SSD.mmd; UseCase-Brief.md trin 1  
 **Preconditions**: 
   - Appen kører og brugeren er autentificeret.
   - Navigationsmenuen er tilgængelig.
@@ -12,7 +12,7 @@
 
 ## 2 Vælg lejer
 **Operation**: dropdownValg(lejer)  
-**Cross References**: UseCase-SSD.mmd; UseCase-Brief.md trin 2–3  
+**Cross References**: SSD.mmd; UseCase-Brief.md trin 2–3  
 **Preconditions**:
   - Kontraktadministrationssiden er aktiv.
   - Listen over lejere er indlæst.
@@ -22,7 +22,7 @@
 
 ## 3 Tilføj kontrakt linje
 **Operation**: UdfyldFormular(StartMåned, Slutmåned, Pris)
-**Cross References**: UseCase-SSD.mmd (Tilføj kontrakt linjer loop); UseCase-Brief.md trin 4–8
+**Cross References**: SSD.mmd (Tilføj kontrakt linjer loop); UseCase-Brief.md trin 4–8
 **Preconditions**:
   - Kontraktadministrationssiden er aktiv; lejer er valgt.
   - Linjeeditoren er synlig; valideringsregler er tilgængelige.
@@ -32,7 +32,7 @@
 
 ## 4 Vælg kontrakt 
 **Operation**: vælgerKontrakt(kontrakt)
-**Cross References**: UseCase-SSD.mmd; UseCase-Brief.md trin 12–13
+**Cross References**: SSD.mmd; UseCase-Brief.md trin 12–13
 **Preconditions**:
   - Kontraktlisten er indlæst.
   - Den valgte kontrakt eksisterer og er tilgængelig.
@@ -42,7 +42,7 @@
 
 ## 5 Redigér kontrakt linje
 **Operation**: OpdaterFormular(StartMåned, Slutmåned, Pris)
-**Cross References**: UseCase-SSD.mmd (Rediger kontrakt linjer loop); UseCase-Brief.md trin 14–16
+**Cross References**: SSD.mmd (Rediger kontrakt linjer loop); UseCase-Brief.md trin 14–16
 **Preconditions**:
   - En kontrakt (ny eller eksisterende) er i redigeringskontekst.
   - Målordrelinje er valgt eller tilføj-tilstand er aktiv.
@@ -52,7 +52,7 @@
 
 ## 6 Slet kontrakt
 **Operation**: klikSletKontrakt(kontrakt)
-**Cross References**: UseCase-SSD.mmd; UseCase-Brief.md trin 18–21
+**Cross References**: SSD.mmd; UseCase-Brief.md trin 18–21
 **Preconditions**:
   - Kontrakten eksisterer og kan vælges.
   - Brugeren har tilladelse til at slette.
@@ -62,7 +62,7 @@
 
 ## 7 Gå til anden side
 **Operation**: klikkerMenu(side)
-**Cross References**: UseCase-SSD.mmd; UseCase-Brief.md trin 22
+**Cross References**: SSD.mmd; UseCase-Brief.md trin 22
 **Preconditions**:
   - Navigationsmenuen er synlig.
 **Postconditions**:
