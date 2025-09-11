@@ -63,6 +63,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase005-AdministrateShel
 		docs\sprint-1\UseCase005-AdministrateShelfType\UserStory.md = docs\sprint-1\UseCase005-AdministrateShelfType\UserStory.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-2", "sprint-2", "{4829EA2D-97BF-4555-BE22-ADF0BD3765D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase003-AdministrateShelfTenantContract", "UseCase003-AdministrateShelfTenantContract", "{6DBF37D4-22DE-4248-BC08-D0471CB4A8CF}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Spirnt-2\UseCase003-AdministrateShelfTenantContract\UseCase-Brief.md = docs\Spirnt-2\UseCase003-AdministrateShelfTenantContract\UseCase-Brief.md
+		docs\Spirnt-2\UseCase003-AdministrateShelfTenantContract\UserStory.md = docs\Spirnt-2\UseCase003-AdministrateShelfTenantContract\UserStory.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +116,8 @@ Global
 		{523051B1-BB5E-40F5-822A-1F3EB4921370} = {93399C27-1127-489C-9E8F-7C803315DE2A}
 		{1BC20C78-DCF8-4E66-9101-BDE5E3E1465E} = {523051B1-BB5E-40F5-822A-1F3EB4921370}
 		{D9BD81E6-E5D0-43A7-8DA6-675A177B603D} = {523051B1-BB5E-40F5-822A-1F3EB4921370}
+		{4829EA2D-97BF-4555-BE22-ADF0BD3765D7} = {93399C27-1127-489C-9E8F-7C803315DE2A}
+		{6DBF37D4-22DE-4248-BC08-D0471CB4A8CF} = {4829EA2D-97BF-4555-BE22-ADF0BD3765D7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E3670BE-F107-4641-8608-598441D3E901}
