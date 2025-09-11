@@ -2,50 +2,45 @@
     actor Ejer
     participant System
 
-    Ejer->>+System: navigererTilAdminReolType()
+    Ejer->>System: navigererTilAdminReolType()
 
-    loop for valg af handling (tilføj, rediger, slet)
+    loop for valg af handling (tilføj, vælg reol) (0..*)
 
         alt tilføj mode
-
             alt ReolNavn er unik og type er valgt
                 System-->>Ejer: TilføjKnap
                 Ejer->>System: Tilføj(ReolNavn, Beskrivelse)
                 System-->>Ejer: SuccesBesked
                 System-->>Ejer: Nulstil
-            else Valgt Nulstil
+            else Valgt Annuller
                 Ejer->>System: Nulstil()
             else Reol type navn er ikke unik
                 System-->>Ejer: Fejlmeddelelse
             else Systemfejl under oprettelse
-                System-->>-Ejer: Fejlmeddelelse
+                System-->>Ejer: Fejlmeddelelse
             end
 
-        end
-
-        alt rediger mode vælges
-
-            Ejer->>+System: Rediger(ReolTypeId)
+        else rediger mode vælges
+            Ejer-->>System: Vælger en ReolType()
             System-->>Ejer: ReolNavn, ReolBeskrivelse
 
             alt ReolNavn er unik og type er valgt
-                System-->>Ejer: GemKnap
-                Ejer->>System: Gem(ReolTypeId, ReolNavn, ReolBeskrivelse)
+                System-->>Ejer: Gem mulighed vises
+                Ejer->>System: Gem(ReolType)
                 System-->>Ejer: SuccesBesked
-                System-->>Ejer: Nulstil
+                System-->>Ejer: Nulstil felter og i tilføj mode
             else Valgt annullere
                 Ejer->>System: Annulere()
                 System-->>Ejer: TilføjMode
             else ReolNavn er ikke unik
                 System-->>Ejer: Fejlmeddelelse
-            else Systemfejl under oprettelse
-                System-->>-Ejer: Fejlmeddelelse
+            else Systemfejl under gemning
+                System-->>Ejer: Fejlmeddelelse
             end
-
         end
 
         alt sletning vælges
-            Ejer->>+System: slet(ReolId)
+            Ejer->>System: slet(ReolId)
             alt ReolType kan slettes (ingen afhængigheder)
                 System-->>Ejer: SuccesBesked
                 System-->>Ejer: Nulstil
@@ -56,7 +51,6 @@
             end
         end
 
-        alt navigerer væk fra reol-administrationssiden
-            Ejer->>+System: NavigerTilForside()
-        end
     end
+    Ejer->>System: NavigerTilForside()
+    System-->>Ejer: Forside
