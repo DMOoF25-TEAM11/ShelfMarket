@@ -11,7 +11,6 @@
 
 **Preconditions:** 
 - Ejer er logget ind og har åbnet Windows-applikationen  
-- Ejer har navigeret til administrations -> reol typer
 **Postconditions:**
 - hvis reoltype er tilføjet, slettet eller redigeret, er ændringerne gemt i databasen og vises i reoltypelisten.
 
