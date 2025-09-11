@@ -1,0 +1,15 @@
+﻿classDiagram
+    class ReolLejeKontrakt {
+        KontraktNummer
+    }
+
+    class ReolLejeKontraktLinje {
+        LinjeNummer
+        StartMåned
+        SlutMåned
+        MånedligAftalePris
+    }
+
+ReolLejeKontrakt "1" *-- "1..*" ReolLejeKontraktLinje : "har"
+
+note for ReolLejeKontraktLinje "En kontrakt kan have flere linjer, hver med forskellige start- og slutmåned samt pris.<br>Prisen er som standard beregnet og har nogle betingelser"
