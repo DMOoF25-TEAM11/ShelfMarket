@@ -80,11 +80,11 @@
                         Style="{StaticResource Button.Primary}" 
                         Click="TilfoejNyReol_Click" />
 
-                <!-- Tilføj ny reol knap - Åbner popup vindue -->
+                <!-- Ny kontrakt - Åbner kontrakt popup -->
                 <Button Grid.Column="7" 
                         Content="Ny Kontrakt" 
-                        Style="{StaticResource Button.Primary}" /> 
-                        <!--Click="Insæt ny knap"--> 
+                        Style="{StaticResource Button.Primary}"
+                        Click="NyKontrakt_Click"/> 
             </Grid>
         </Border>
 

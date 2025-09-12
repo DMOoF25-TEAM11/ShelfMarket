@@ -4,25 +4,31 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ShelfMarket.UI.Views.UserControls"
-             xmlns:viewmodels="clr-namespace:ShelfMarket.UI.ViewModels"
-             d:DataContext="{d:DesignInstance Type=viewmodels:StatusBarViewModel}"
              mc:Ignorable="d" >
-    <Grid VerticalAlignment="Bottom">
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Bruger:" Margin="0 0 8 0"/>
-            <TextBlock Text="{Binding User}" Margin="0 0 8 0"/>
-            
-            <TextBlock Text="|" Margin="0 0 8 0"/>
-            
-            <TextBlock Text="Db:" Margin="0 0 8 0"/>
-            <!-- replace with uft16 icons -->
-            <TextBlock Text="Forbundet" Visibility="{Binding IsDbConnected}" Margin="0 0 8 0"/>
-            <TextBlock Text="Findelse afbrudt" Visibility="{Binding IsDbNotConnected}" Margin="0 0 8 0"/>
+    <Border Style="{StaticResource StatusBar.Container}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <TextBlock Text="|" Margin="0 0 8 0"/>
-            
-            <!-- replace with uft16 icons -->
-            <TextBlock Text="{Binding IsDbSaving}"  Margin="0 0 8 0" />
-        </StackPanel>
-    </Grid>
+            <!-- Internet status (left) -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Ellipse Style="{StaticResource Status.Indicator}"
+                         Tag="{Binding IsInternetAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                <TextBlock Margin="8,0,4,0" Style="{StaticResource Text.Body}" Text="Internet:"/>
+                <TextBlock Style="{StaticResource Status.Text}"
+                           Tag="{Binding IsInternetAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+            </StackPanel>
+
+            <!-- Database status (right) -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Ellipse Style="{StaticResource Status.Indicator}"
+                         Tag="{Binding IsDatabaseConnected, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                <TextBlock Margin="8,0,4,0" Style="{StaticResource Text.Body}" Text="Database:"/>
+                <TextBlock Style="{StaticResource Status.Text}"
+                           Tag="{Binding IsDatabaseConnected, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>
