@@ -1,0 +1,44 @@
+<UserControl x:Class="ShelfMarket.UI.Views.Popups.ChooseShelfTypePopup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+
+    <Border Style="{StaticResource Popup.Window}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Titel -->
+            <TextBlock x:Name="TitleText" Text="Reol (ukendt)" Style="{StaticResource Text.H2}" HorizontalAlignment="Center"/>
+
+            <!-- Valg af reoltype -->
+            <StackPanel Grid.Row="1" Margin="0,16,0,16">
+                <TextBlock Text="Vælg reoltype" Style="{StaticResource Text.Body}" Margin="0,0,0,8"/>
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton x:Name="Type1" Content="1 hylder" GroupName="ShelfType" IsChecked="True"
+                                 Style="{StaticResource Option.Radio}"/>
+                    <RadioButton x:Name="Type2" Content="3 hylder + bøjlestang" GroupName="ShelfType" Margin="12,0,0,0"
+                                 Style="{StaticResource Option.Radio}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Knapper -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Vælg reol" Style="{StaticResource Button.Primary}" Height="38" Click="Choose_Click"/>
+                <Button Grid.Column="2" Content="Annuller" Style="{StaticResource Button.Secondary}" Height="38" Click="Cancel_Click"/>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>
+ 
+

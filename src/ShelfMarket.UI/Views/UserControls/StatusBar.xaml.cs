@@ -24,5 +24,33 @@ namespace ShelfMarket.UI.Views.UserControls
         {
             InitializeComponent();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly DependencyProperty IsInternetAvailableProperty = DependencyProperty.Register(
+            nameof(IsInternetAvailable), typeof(bool), typeof(StatusBar), new PropertyMetadata(false));
+
+        /// <summary>
+        /// Gets or sets a value indicating whether an active internet connection is available.
+        /// </summary>
+        public bool IsInternetAvailable
+        {
+            get => (bool)GetValue(IsInternetAvailableProperty);
+            set => SetValue(IsInternetAvailableProperty, value);
+        }
+
+        
+        public static readonly DependencyProperty IsDatabaseConnectedProperty = DependencyProperty.Register(
+            nameof(IsDatabaseConnected), typeof(bool), typeof(StatusBar), new PropertyMetadata(false));
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the database connection is currently active.
+        /// </summary>
+        public bool IsDatabaseConnected
+        {
+            get => (bool)GetValue(IsDatabaseConnectedProperty);
+            set => SetValue(IsDatabaseConnectedProperty, value);
+        }
     }
 }

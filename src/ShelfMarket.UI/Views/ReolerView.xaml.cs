@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Documents;
+using ShelfMarket.UI.Views.Popups;
 
 namespace ShelfMarket.UI.Views
 {
@@ -20,6 +22,8 @@ namespace ShelfMarket.UI.Views
         private Point _dragStartPoint;
         private int _originalColumn;
         private int _originalRow;
+        private AdornerLayer? _adornerLayer;
+        private VisualGhostAdorner? _originGhost;
 
         public ReolerView()
         {
@@ -87,6 +91,22 @@ namespace ShelfMarket.UI.Views
                 _originalColumn = Grid.GetColumn(button);
                 _originalRow = Grid.GetRow(button);
                 
+                // Opret en origin-ghost adorner ved knappen oprindelige placering
+                try
+                {
+                    _adornerLayer = AdornerLayer.GetAdornerLayer(ShelfGrid);
+                    if (_adornerLayer != null)
+                    {
+                        var originPos = button.TranslatePoint(new Point(0, 0), ShelfGrid);
+                        _originGhost = new VisualGhostAdorner(ShelfGrid, button, originPos);
+                        _adornerLayer.Add(_originGhost);
+                    }
+                }
+                catch
+                {
+                    // Ignorer adorner fejl – drag fungerer stadig uden ghost
+                }
+
                 // Visuel feedback under drag
                 button.Opacity = 0.7;
                 Panel.SetZIndex(button, 9999);
@@ -154,6 +174,7 @@ namespace ShelfMarket.UI.Views
                 _draggedButton.ReleaseMouseCapture();
                 _draggedButton = null;
                 Mouse.OverrideCursor = null;
+                RemoveGhost();
                 
                 // Markér event som håndteret
                 e.Handled = true;
@@ -220,9 +241,57 @@ namespace ShelfMarket.UI.Views
                 _draggedButton.ReleaseMouseCapture();
                 _draggedButton = null;
                 Mouse.OverrideCursor = null;
+                RemoveGhost();
                 
                 // Markér event som håndteret
                 e.Handled = true;
+            }
+        }
+
+        private void RemoveGhost()
+        {
+            try
+            {
+                if (_originGhost != null && _adornerLayer != null)
+                {
+                    _adornerLayer.Remove(_originGhost);
+                }
+            }
+            finally
+            {
+                _originGhost = null;
+                _adornerLayer = null;
+            }
+        }
+
+        /// <summary>
+        /// Simpel adorner der tegner en semitransparent kopi af et UIElement på en fast position.
+        /// </summary>
+        private sealed class VisualGhostAdorner : Adorner
+        {
+            private readonly VisualBrush _brush;
+            private readonly double _width;
+            private readonly double _height;
+            private readonly Point _location;
+
+            public VisualGhostAdorner(UIElement adornedElement, UIElement ghostOf, Point location)
+                : base(adornedElement)
+            {
+                _width = (ghostOf as FrameworkElement)?.ActualWidth ?? 0;
+                _height = (ghostOf as FrameworkElement)?.ActualHeight ?? 0;
+                _brush = new VisualBrush(ghostOf)
+                {
+                    Opacity = 0.35,
+                    Stretch = Stretch.None
+                };
+                _location = location;
+                IsHitTestVisible = false;
+            }
+
+            protected override void OnRender(DrawingContext drawingContext)
+            {
+                base.OnRender(drawingContext);
+                drawingContext.DrawRectangle(_brush, null, new Rect(_location, new Size(_width, _height)));
             }
         }
 
@@ -445,6 +514,26 @@ namespace ShelfMarket.UI.Views
                     
                     // Vis overlay
                     overlay.Visibility = Visibility.Visible;
+                    popupContent.Visibility = Visibility.Visible;
+                    var addContract = mainWindow.FindName("AddContractPopupContent") as AddContractPopup;
+                    if (addContract != null) addContract.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void NyKontrakt_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                var overlay = mainWindow.FindName("PopupOverlay") as Grid;
+                var addContract = mainWindow.FindName("AddContractPopupContent") as AddContractPopup;
+                if (overlay != null && addContract != null)
+                {
+                    overlay.Visibility = Visibility.Visible;
+                    addContract.Visibility = Visibility.Visible;
+                    var addShelf = mainWindow.FindName("AddShelfPopupContent") as AddShelfPopup;
+                    if (addShelf != null) addShelf.Visibility = Visibility.Collapsed;
                 }
             }
         }
@@ -477,6 +566,7 @@ namespace ShelfMarket.UI.Views
             var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
             var overlay = mainWindow?.FindName("PopupOverlay") as Grid;
             var popupContent = mainWindow?.FindName("AddShelfPopupContent") as AddShelfPopup;
+            var addContract = mainWindow?.FindName("AddContractPopupContent") as AddContractPopup;
             
             if (overlay != null)
             {
@@ -488,6 +578,12 @@ namespace ShelfMarket.UI.Views
             {
                 popupContent.ReolTilfoejet -= OnReolTilfoejet;
                 popupContent.Annulleret -= OnPopupAnnulleret;
+            }
+
+            // Skjul også AddContract hvis den var åben
+            if (addContract != null)
+            {
+                addContract.Visibility = Visibility.Collapsed;
             }
         }
 
