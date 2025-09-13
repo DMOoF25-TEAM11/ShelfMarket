@@ -14,8 +14,8 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
     private new const string _entityName = "Reol";
 
     #region Form Fields
-    private int _shelfNumber;
-    public int ShelfNumber
+    private uint _shelfNumber;
+    public uint ShelfNumber
     {
         get => _shelfNumber;
         set
@@ -98,7 +98,8 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
     #region Command Handlers
     protected override async Task<Shelf> OnAddFormAsync()
     {
-        var entity = new Shelf(ShelfNumber, ShelfTypeId);
+        // Provide default values for locationX and locationY (e.g., 0)
+        var entity = new Shelf((uint)ShelfNumber, ShelfTypeId, 0, 0);
         await Task.CompletedTask;
         return entity;
     }
