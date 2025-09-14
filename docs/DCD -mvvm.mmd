@@ -1,0 +1,129 @@
+﻿classDiagram
+
+namespace System.ComponentModel {
+    class INotifyPropertyChanged {
+        <<interface>>
+        +PropertyChangedEventHandler PropertyChanged
+    }
+}
+
+namespace System.Windows.Input {
+    class ICommand {
+        <<interface>>
+        +CanExecute(parameter object) bool
+        +Execute(parameter object) void
+        +event EventHandler CanExecuteChanged
+    }
+}
+
+namespace ShelfMarket.Application.Interfaces {
+    class IRepository~TEntity~ {
+        <<interface>>
+    }
+}
+
+namespace ShelfMarket.UI.ViewModels.Abstracts {
+    class ModelBase {
+        +event PropertyChangedEventHandler PropertyChanged
+        #OnPropertyChanged(name string) void
+    }
+
+    class ViewModelBase~TRepos_TEntity~ {
+        %% Constants (protected)
+        #const string _entityName
+        #const string _errorPrefix
+        #const string _errorEntityNotFound
+        #const string _infoPrefix
+        #const string _infoDeleted
+        #const string _infoSaved
+        #const string _confirmDeleteTitle
+        #const string _confirmDelete
+
+        %% Fields (protected)
+        #TEntity _currentEntity
+        #TRepos _repository
+        #string _error
+        #string _infoMessage
+        #bool _isSaving
+        #bool _isEditMode
+
+        %% Ctor (protected)
+        #ViewModelBase(repository TRepos) void
+
+        %% Public API
+        +ICommand AddCommand
+        +ICommand SaveCommand
+        +ICommand DeleteCommand
+        +ICommand ResetCommand
+        +ICommand CancelCommand
+        +TEntity CurrentEntity
+        +string Error
+        +bool HasError
+        +string InfoMessage
+        +bool HasInfoMessage
+        +bool IsSaving
+        +bool IsEditMode
+        +bool IsAddMode
+        +event EventHandler~TEntity~ EntitySaved
+        +LoadAsync(id Guid) Task
+
+        %% Protected virtual/abstract
+        #CanSubmitCore() bool
+        #CanAdd() bool
+        #CanSave() bool
+        #CanReset() bool
+        #CanDelete() bool
+        #CanCancel() bool
+        #OnAddAsync() Task
+        #OnSaveAsync() Task
+        #OnCancelAsync() Task
+        #OnDeleteAsync() Task
+        #OnResetAsync() Task
+        #OnResetFormAsync() Task
+        #OnAddFormAsync() Task~TEntity~
+        #OnSaveFormAsync() Task
+        #OnLoadFormAsync(entity TEntity) Task
+        #GetEntityId(entity TEntity) Guid
+        #RefreshCommandStates() void
+    }
+}
+
+namespace ShelfMarket.UI.Commands {
+    class RelayCommand {
+        +RelayCommand(execute Func~Task~, canExecute Func~bool~)
+        +CanExecute(parameter object) bool
+        +Execute(parameter object) void
+        +event EventHandler CanExecuteChanged
+        +RaiseCanExecuteChanged() void
+    }
+}
+
+namespace ShelfMarket.UI.ViewModels {
+    class ShelfTypeViewModel {
+        %% Protected overrides
+        #CanAdd() bool
+        #CanSave() bool
+        #OnResetFormAsync() Task
+        #OnAddFormAsync() Task~ShelfMarket.Domain.Entities.ShelfType~
+        #OnSaveFormAsync() Task
+        #OnLoadFormAsync(entity ShelfMarket.Domain.Entities.ShelfType) Task
+    }
+
+    class ShelfViewModel {
+        %% Protected overrides
+        #CanAdd() bool
+        #CanSave() bool
+        #OnResetFormAsync() Task
+        #OnAddFormAsync() Task~ShelfMarket.Domain.Entities.Shelf~
+        #OnSaveFormAsync() Task
+        #OnLoadFormAsync(entity ShelfMarket.Domain.Entities.Shelf) Task
+    }
+}
+
+ModelBase ..|> INotifyPropertyChanged
+ModelBase <|-- ViewModelBase
+ViewModelBase ..> IRepository : uses
+RelayCommand ..|> ICommand
+ViewModelBase ..> RelayCommand : uses for commands
+ViewModelBase ..|> ShelfTypeViewModel
+ViewModelBase ..|> ShelfViewModel

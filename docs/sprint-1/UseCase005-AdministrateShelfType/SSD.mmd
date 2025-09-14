@@ -24,33 +24,35 @@
             Ejer-->>System: Vælger en ReolType()
             System-->>Ejer: ReolNavn, ReolBeskrivelse
 
-            alt ReolNavn er unik og type er valgt
-                System-->>Ejer: Gem mulighed vises
-                Ejer->>System: Gem(ReolType)
-                System-->>Ejer: SuccesBesked
-                System-->>Ejer: Nulstil felter og i tilføj mode
-            else Valgt annullere
-                Ejer->>System: Annulere()
-                System-->>Ejer: TilføjMode
-            else ReolNavn er ikke unik
-                System-->>Ejer: Fejlmeddelelse
-            else Systemfejl under gemning
-                System-->>Ejer: Fejlmeddelelse
+            alt Redigere reolNavn og type
+                Ejer->>System: Rediger(ReolId, ReolNavn, Beskrivelse)
+                alt ReolNavn er unik og type er valgt
+                    System-->>Ejer: Gem mulighed vises
+                    Ejer->>System: Gem(ReolType)
+                    System-->>Ejer: SuccesBesked
+                    System-->>Ejer: Nulstil felter og i tilføj mode
+                else Valgt annullere
+                    Ejer->>System: Annulere()
+                    System-->>Ejer: TilføjMode
+                else ReolNavn er ikke unik
+                    System-->>Ejer: Fejlmeddelelse
+                else Systemfejl under gemning
+                    System-->>Ejer: Fejlmeddelelse
+                end
+            end
+
+            alt sletning vælges
+                Ejer->>System: slet(ReolId)
+                alt ReolType kan slettes (ingen afhængigheder)
+                    System-->>Ejer: SuccesBesked
+                    System-->>Ejer: Nulstil
+                else ReolType kan ikke slettes (har afhængigheder)
+                    System-->>Ejer: Fejlmeddelelse
+                else Systemfejl under sletning
+                    System-->>Ejer: Fejlmeddelelse
+                end
             end
         end
-
-        alt sletning vælges
-            Ejer->>System: slet(ReolId)
-            alt ReolType kan slettes (ingen afhængigheder)
-                System-->>Ejer: SuccesBesked
-                System-->>Ejer: Nulstil
-            else ReolType kan ikke slettes (har afhængigheder)
-                System-->>Ejer: Fejlmeddelelse
-            else Systemfejl under sletning
-                System-->>Ejer: Fejlmeddelelse
-            end
-        end
-
     end
     Ejer->>System: NavigerTilForside()
     System-->>Ejer: Forside

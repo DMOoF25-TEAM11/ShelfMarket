@@ -4,7 +4,7 @@
     participant ViewModel
     participant Infrastructure
 
-    Ejer->>UI: NavigateTo("ManagesShelfTypes")
+    Ejer->>+UI: NavigateTo("ManagesShelfTypes")
     UI->>ViewModel: OnNavigateToShelfTypes()
     loop
         ViewModel->>Infrastructure: GetAllAsync()
@@ -85,9 +85,10 @@
                 ViewModel-->>UI: OnPropertyChange() # Populate clear fields and pop listVm and Messages
             end
         end
+        UI-->>-Ejer : ManagesShelfTypes
     end
-    Ejer->>UI: NavigateTo("FrontPageView")
-    UI->>ViewModel: OnNavigateToFrontPage()
+    Ejer->>+UI: NavigateTo("FrontPageView")
+    UI->>+ViewModel: OnNavigateToFrontPage()
     ViewModel-->>UI: FrontPageViewModel
-    ViewModel-->>UI: OnPropertyChange() # Populate form fields and pop listVm and Messages
-    UI-->>Ejer: FrontPageView
+    ViewModel-->>-UI: OnPropertyChange() # Populate form fields and pop listVm and Messages
+    UI-->>-Ejer: FrontPageView
