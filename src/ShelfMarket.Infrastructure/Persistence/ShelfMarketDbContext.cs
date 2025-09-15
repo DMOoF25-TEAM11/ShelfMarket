@@ -7,6 +7,8 @@ public class ShelfMarketDbContext : DbContext
 {
     public DbSet<ShelfType> ShelfTypes { get; set; }
     public DbSet<Shelf> Shelves { get; set; }
+    public DbSet<ShelfTenantContract> ShelfTenantContracts { get; set; }
+    public DbSet<ShelfTenantContractLine> ShelfTenantContractLines { get; set; }
 
     public ShelfMarketDbContext(DbContextOptions<ShelfMarketDbContext> options)
         : base(options)
@@ -21,5 +23,9 @@ public class ShelfMarketDbContext : DbContext
             .ToTable("SHELFTYPE");
         modelBuilder.Entity<Shelf>()
             .ToTable("SHELF");
+        modelBuilder.Entity<ShelfTenantContract>()
+            .ToTable("SHELFTENANTCONTRACT");
+        modelBuilder.Entity<ShelfTenantContractLine>()
+            .ToTable("SHELFTENANTCONTRACTLINE");
     }
 }
