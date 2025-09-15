@@ -31,6 +31,10 @@ public partial class App : System.Windows.Application
                 services.AddTransient<ShelfTypeListViewModel>();
                 services.AddTransient<ShelfTypeViewModel>();
 
+                // ShelfTenantContract
+                services.AddTransient<ManagesShelfTanentContractListViewModel>();
+                services.AddTransient<ManagesShelfTanentContractViewModel>();
+
             })
             .Build();
 

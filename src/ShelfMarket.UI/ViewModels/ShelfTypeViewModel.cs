@@ -14,7 +14,7 @@ public sealed class ShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, She
     /// <summary>
     /// The display name for the entity, used in UI messages.
     /// </summary>
-    private new const string _entityName = "Reol Type";
+    //private new const string _entityName = "Reol Type";
 
     #region Form Fields
 

@@ -7,15 +7,16 @@ namespace ShelfMarket.UI.ViewModels.Abstracts;
 /// <summary>
 /// Provides a base class for list view models in the MVVM pattern, supporting item selection, error handling, and refresh logic.
 /// </summary>
-/// <typeparam name="TEntity">The type of the repository or data source used by the view model.</typeparam>
+/// <typeparam name="TEntityRepo">The type of the repository or data source used by the view model.</typeparam>
 /// <typeparam name="ListItemVM">The type of the item view model contained in the list.</typeparam>
-public abstract class ListViewModelBase<TEntity, ListItemVM> : ModelBase
-    where TEntity : class
+public abstract class ListViewModelBase<TEntityRepo, ListItemVM> : ModelBase
+    where TEntityRepo : class
+    where ListItemVM : class
 {
     /// <summary>
     /// The repository or data source instance used by the view model.
     /// </summary>
-    protected readonly TEntity _repository;
+    protected readonly TEntityRepo _repository;
 
     /// <summary>
     /// Backing field for the <see cref="SelectedItem"/> property.
@@ -87,7 +88,7 @@ public abstract class ListViewModelBase<TEntity, ListItemVM> : ModelBase
     /// Initializes a new instance of the <see cref="ListViewModelBase{TEntity, ListItemVM}"/> class.
     /// </summary>
     /// <param name="repository">The repository or data source instance to use.</param>
-    public ListViewModelBase(TEntity repository)
+    public ListViewModelBase(TEntityRepo repository)
     {
         _repository = repository;
         RefreshCommandState = new RelayCommand(async () => await RefreshAsync(), () => !IsLoading);
@@ -98,5 +99,7 @@ public abstract class ListViewModelBase<TEntity, ListItemVM> : ModelBase
     /// Asynchronously refreshes the list of items. Must be implemented by derived classes.
     /// </summary>
     /// <returns>A task representing the asynchronous refresh operation.</returns>
+    /// <TODO>Make this a virtual method</TODO>
     public abstract Task RefreshAsync();
+
 }
