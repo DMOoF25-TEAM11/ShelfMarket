@@ -17,18 +17,20 @@
 
         class ShelfRentContract {
             +Guid Id
-            +Guid TenantId
+            +Guid ShelfTenantId
             +uint ContractNumber
+            +date StartDate
+            +date EndDate
+            +date CancelledAt
         }
 
         class ShelfRentContractLine {
             +Guid Id
             +Guid ShelfRentContractId
+            +Guid ShelfId
             +uint LineNumber
-            +date StartMonth
-            +date EndMonth
-            +decimal MonthlyAgreementPrice
-            +decimal MonthlyAgreementPriceSpecial
+            +decimal PricePerMonth
+            +decimal PricePerMonthSpecial
         }
     }
 
