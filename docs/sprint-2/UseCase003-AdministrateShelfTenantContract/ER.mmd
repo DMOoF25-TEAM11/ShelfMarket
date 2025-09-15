@@ -1,6 +1,20 @@
 ﻿erDiagram
-    SHELFTTYPE {
+    SHELFRENTCONTRACT {
         Guid Id PK
-        string Name "UNIQUE"
-        string Description
+        Guid ShelfTenantId FK
+        uint ContractNumber "UNIQUE"
+        Date StartDate
+        Date EndDate
+        Date Cancelled
     }
+
+    SHELFRENTCONTRACTLINE {
+        Guid Id PK
+        Guid ShelfRentContractId FK
+        Guid ShelfId FK
+        uint LineNumber "UNIQUE"
+        Decimal MonthlyAgreementPrice
+        Decimal MonthlyAgreementPriceSpecial
+    }
+
+    SHELFRENTCONTRACT ||--o{ SHELFRENTCONTRACTLINE : has
