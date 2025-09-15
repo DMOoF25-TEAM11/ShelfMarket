@@ -1,4 +1,4 @@
 ﻿# Database Schema
 
-SHELFTTYPE (<u>Id</u>, Name, Description)
-
+SHELFRENTCONTRACT (<u>Id</u>, <em>ShelfTenantId</em>, ContractNumber, StartDate, EndDate, Cancelled)
+SHELFRENTCONTRACTLINE (<u>Id</u>, <em>ShelfRentContractId</em>, <em>ShelfId</em>, PricePerMonth, PricePerMonthSpecial)
