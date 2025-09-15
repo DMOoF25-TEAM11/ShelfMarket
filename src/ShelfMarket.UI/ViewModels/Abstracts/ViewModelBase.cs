@@ -18,14 +18,14 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     #region Constants
     /// <summary>
     /// The logical name of the entity type handled by the view model.
-    /// Note: Uses nameof(TEntity), which evaluates to the string "TEntity".
+    /// Note: Uses nameof(TEntityRepo), which evaluates to the string "TEntityRepo".
     /// </summary>
     protected const string _entityName = nameof(TEntity);
 
     /// <summary>
     /// Prefix used for error messages.
     /// </summary>
-    protected const string _errorPrefix = "Fejl: ";
+    private const string _errorPrefix = "Fejl: ";
 
     /// <summary>
     /// Default message indicating that the requested entity could not be found.
@@ -35,7 +35,7 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// <summary>
     /// Prefix used for informational messages.
     /// </summary>
-    protected const string _infoPrefix = "Info: ";
+    private const string _infoPrefix = "Info: ";
 
     /// <summary>
     /// Default message indicating that an entity has been deleted.
@@ -55,7 +55,7 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// <summary>
     /// Message used for the delete confirmation dialog.
     /// </summary>
-    protected const string _confirmDelete = "Er du sikker på, at du vil slette " + _entityName + "?";
+    protected string _confirmDelete = "Er du sikker på, at du vil slette " + _entityName + "?";
 
     /// <summary>
     /// The duration, in milliseconds, before the informational message is automatically cleared.
