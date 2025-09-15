@@ -1,0 +1,38 @@
+﻿erDiagram
+    VERSION {
+        int Id PK
+        Date AppliedAt
+    }
+
+    SHELFTYPE {
+        Guid Id PK 
+        string Name "UNIQUE"
+        string Description
+    }
+
+    SHELF {
+        Guid Id PK
+        int Number "UNIQUE"
+        Guid ShelfTypeId FK
+    }
+
+    SHELFRENTCONTRACT {
+        Guid Id PK
+        Guid ShelfTenantId FK
+        uint ContractNumber "UNIQUE"
+        Date StartDate
+        Date EndDate
+        Date Cancelled
+    }
+
+    SHELFRENTCONTRACTLINE {
+        Guid Id PK
+        Guid ShelfRentContractId FK
+        Guid ShelfId FK
+        uint LineNumber "UNIQUE"
+        Decimal MonthlyAgreementPrice
+        Decimal MonthlyAgreementPriceSpecial
+    }
+
+    SHELFTYPE ||--o{ SHELF : has
+    SHELFRENTCONTRACT ||--o{ SHELFRENTCONTRACTLINE : has
