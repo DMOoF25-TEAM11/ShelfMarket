@@ -1,10 +1,11 @@
 ﻿classDiagram
     class ShelfRentContract {
         +Guid Id
+        +Guid ShelfTenantId
         +uint ContractNumber
-        +date StartMonth
-        +date EndMonth
-        +date Cancelled
+        +date StartDate
+        +date EndDate
+        +date CancelledAt
     }
 
     class ShelfRentContractLine {
@@ -12,8 +13,8 @@
         +Guid ShelfRentContractId
         +Guid ShelfId
         +uint LineNumber
-        +decimal MonthlyAgreementPrice
-        +decimal MonthlyAgreementPriceSpecial
+        +decimal PricePerMonth
+        +decimal PricePerMonthSpecial
     }
 
 ShelfRentContract *-- ShelfRentContractLine : "has"
