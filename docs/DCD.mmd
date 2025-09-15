@@ -17,11 +17,13 @@
 
         class ShelfRentContract {
             +Guid Id
+            +Guid TenantId
             +uint ContractNumber
         }
 
         class ShelfRentContractLine {
             +Guid Id
+            +Guid ShelfRentContractId
             +uint LineNumber
             +date StartMonth
             +date EndMonth

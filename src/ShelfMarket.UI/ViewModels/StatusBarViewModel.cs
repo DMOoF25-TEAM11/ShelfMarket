@@ -4,7 +4,7 @@ namespace ShelfMarket.UI.ViewModels;
 
 public class StatusBarViewModel : ModelBase
 {
-    private string _user;
+    private string _user = string.Empty; // Initialize here
 
     public string User
     {

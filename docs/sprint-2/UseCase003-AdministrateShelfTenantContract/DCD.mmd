@@ -6,6 +6,7 @@
 
     class ShelfRentContractLine {
         +Guid Id
+        +Guid ShelfRentContractId
         +uint LineNumber
         +date StartMonth
         +date EndMonth
@@ -13,6 +14,6 @@
         +decimal MonthlyAgreementPriceSpecial
     }
 
-ShelfRentContract "1" *-- "1..*" ShelfRentContractLine : "has"
+ShelfRentContract *-- ShelfRentContractLine : "has"
 
 note for ShelfRentContractLine "A contract can have multiple lines, each with different start and end months as well as prices.<br>The price is calculated by default and has some conditions"
