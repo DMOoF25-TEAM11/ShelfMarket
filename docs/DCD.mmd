@@ -14,30 +14,65 @@
             +uint LocationY
             +bool OrientationHorizontal
         }
+
+        class ShelfRentContract {
+            +Guid Id
+            +uint ContractNumber
+        }
+
+        class ShelfRentContractLine {
+            +Guid Id
+            +uint LineNumber
+            +date StartMonth
+            +date EndMonth
+            +decimal MonthlyAgreementPrice
+            +decimal MonthlyAgreementPriceSpecial
+        }
     }
 
     namespace ShelfMarket.Application.Interfaces {
         class IRepository~TEntity~ {
-            +Task<TEntity> GetByIdAsync(Guid id)
-            +Task<List<TEntity>> GetAllAsync()
-            +Task AddAsync(TEntity entity)
-            +Task UpdateAsync(TEntity entity)
-            +Task DeleteAsync(Guid id)
+            <<interface>>
+            +GetByIdAsync(Guid id) Task~TEntity~
+            +GetAllAsync() Task~List__TEntity~
+            +AddAsync(TEntity entity) Task
+            +UpdateAsync(TEntity entity) Task
+            +DeleteAsync(Guid id) Task
         }
         class IShelfTypeRepository {
-            +Task<ShelfType> GetByIdAsync(Guid id)
-            +Task<List<ShelfType>> GetAllAsync()
-            +Task AddAsync(ShelfType shelfType)
-            +Task UpdateAsync(ShelfType shelfType)
-            +Task DeleteAsync(Guid id)
+            <<interface>>
+            +GetByIdAsync(Guid id) Task~ShelfType~
+            +GetAllAsync() Task~List__ShelfType~
+            +AddAsync(ShelfType shelfType) Task
+            +UpdateAsync(ShelfType shelfType) Task
+            +DeleteAsync(Guid id) Task
         }
 
         class IShelfRepository {
-            +Task<Shelf> GetByIdAsync(Guid id)
-            +Task<List<Shelf>> GetAllAsync()
-            +Task AddAsync(Shelf shelf)
-            +Task UpdateAsync(Shelf shelf)
-            +Task DeleteAsync(Guid id)
+            <<interface>>
+            +GetByIdAsync(Guid id) Task~Shelf~
+            +GetAllAsync() Task~List__Shelf~
+            +AddAsync(Shelf shelf) Task
+            +UpdateAsync(Shelf shelf) Task
+            +DeleteAsync(Guid id) Task
+        }
+
+        class IShelfRentContractRepository {
+            <<interface>>
+            +GetByIdAsync(Guid id) Task~ShelfRentContract~
+            +GetAllAsync() Task~List__ShelfRentContract~
+            +AddAsync(ShelfRentContract shelfRentContract) Task
+            +UpdateAsync(ShelfRentContract shelfRentContract) Task
+            +DeleteAsync(Guid id) Task
+        }
+
+        class IShelfRentContractLineRepository {
+            <<interface>>
+            +GetByIdAsync(Guid id) Task~ShelfRentContractLine~
+            +GetAllAsync() Task~List__ShelfRentContractLine~
+            +AddAsync(ShelfRentContractLine shelfRentContractLine) Task
+            +UpdateAsync(ShelfRentContractLine shelfRentContractLine) Task
+            +DeleteAsync(Guid id) Task
         }
     }
 
@@ -45,50 +80,53 @@
         class Repository~TEntity~ {
             #ShelfMarketDbContext _context
             #DbSet~TEntity~ _dbSet
-
-            +Repository(ShelfMarketDbContext context)
-            +Task SaveChangesAsync()
+            +Repository() void
+            +SaveChangesAsync(ShelfMarketDbContext context) Task
         }
 
         class ShelfRepository {
             +ShelfRepository(ShelfMarketDbContext context)
-            +Task<Shelf> GetByIdAsync(Guid id)
-            +Task<List<Shelf>> GetAllAsync()
-            +Task AddAsync(Shelf shelf)
-            +Task UpdateAsync(Shelf shelf)
-            +Task DeleteAsync(Guid id)
+            +GetByIdAsync(Guid id) Task~Shelf~ 
+            +GetAllAsync() Task~List__Shelf~ 
+            +AddAsync(Shelf shelf) Task
+            +UpdateAsync(Shelf shelf) Task
+            +DeleteAsync(Guid id) Task
         }
 
         class ShelfTypeRepository {
             +ShelfTypeRepository(ShelfMarketDbContext context)
-            +Task<ShelfType> GetByIdAsync(Guid id)
-            +Task<List<ShelfType>> GetAllAsync()
-            +Task AddAsync(ShelfType shelfType)
-            +Task UpdateAsync(ShelfType shelfType)
-            +Task DeleteAsync(Guid id)
+            +GetByIdAsync(Guid id) Task~ShelfType~
+            +GetAllAsync() Task~List__ShelfType~
+            +AddAsync(ShelfType shelfType) Task
+            +UpdateAsync(ShelfType shelfType) Task
+            +DeleteAsync(Guid id) Task
         }
     }
-
-    <<Interfaces>> IRepository~TEntity~
-    <<interface>> IShelfTypeRepository
-    <<interface>> IShelfRepository
-
-    <<abstract>> Repository~TEntity~
 
     %% Associations
     Shelf --* ShelfRepository : manages
     ShelfType --* ShelfTypeRepository : manages
+    ShelfRentContract --* ShelfRentContractRepository : manages
+    ShelfRentContractLine --* IShelfRentContractLineRepository : manages
 
     %% Composition
     Shelf --* ShelfType : has a
+    ShelfRentContract *-- ShelfRentContractLine : "has"
+    
+    Repository o-- ShelfMarketDbContext : uses
+
 
     %% Inheritance and Implementation
     ShelfRepository --|> IShelfRepository : implements
     ShelfTypeRepository --|> IShelfTypeRepository : implements
+    ShelfRentContractRepository --|> IShelfRentContractRepository : implements
     Repository --|> IRepository : implements
 
     IShelfRepository --|> IRepository : implements
     IShelfTypeRepository --|> IRepository : implements
+    IShelfRentContractRepository --|> IRepository : implements
 
     ShelfRepository ..|> Repository : inheritance
     ShelfTypeRepository ..|> Repository : inheritance
+    ShelfRentContractRepository ..|> Repository : inheritance
+

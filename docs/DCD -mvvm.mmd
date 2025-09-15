@@ -24,11 +24,13 @@ namespace ShelfMarket.Application.Interfaces {
 
 namespace ShelfMarket.UI.ViewModels.Abstracts {
     class ModelBase {
+        <<abstract>>
         +event PropertyChangedEventHandler PropertyChanged
         #OnPropertyChanged(name string) void
     }
 
     class ViewModelBase~TRepos_TEntity~ {
+        <<abstract>>
         %% Constants (protected)
         #const string _entityName
         #const string _errorPrefix
@@ -122,8 +124,8 @@ namespace ShelfMarket.UI.ViewModels {
 
 ModelBase ..|> INotifyPropertyChanged
 ModelBase <|-- ViewModelBase
-ViewModelBase ..> IRepository : uses
 RelayCommand ..|> ICommand
-ViewModelBase ..> RelayCommand : uses for commands
-ViewModelBase ..|> ShelfTypeViewModel
-ViewModelBase ..|> ShelfViewModel
+IRepository <.. ViewModelBase
+ViewModelBase <|-- ShelfTypeViewModel
+ViewModelBase <|-- ShelfViewModel
+ViewModelBase ..> RelayCommand
