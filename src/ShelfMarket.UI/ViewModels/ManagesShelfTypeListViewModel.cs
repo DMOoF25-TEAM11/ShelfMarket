@@ -4,9 +4,9 @@ using ShelfMarket.UI.ViewModels.Abstracts;
 
 namespace ShelfMarket.UI.ViewModels;
 
-public sealed class ShelfTypeListViewModel : ListViewModelBase<IShelfTypeRepository, ShelfTypeListItemViewModel>
+public sealed class ManagesShelfTypeListViewModel : ListViewModelBase<IShelfTypeRepository, ManagesShelfTypeListItemViewModel>
 {
-    public ShelfTypeListViewModel(IShelfTypeRepository repository) : base(repository)
+    public ManagesShelfTypeListViewModel(IShelfTypeRepository repository) : base(repository)
     {
     }
 
@@ -23,7 +23,7 @@ public sealed class ShelfTypeListViewModel : ListViewModelBase<IShelfTypeReposit
             Items.Clear();
             foreach (var item in items)
             {
-                Items.Add(new ShelfTypeListItemViewModel(item));
+                Items.Add(new ManagesShelfTypeListItemViewModel(item));
             }
         }
         catch (Exception ex)

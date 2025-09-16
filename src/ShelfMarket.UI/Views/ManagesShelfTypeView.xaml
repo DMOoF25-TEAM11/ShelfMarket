@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:controls="clr-namespace:ShelfMarket.UI.Views.UserControls" 
       xmlns:viewmodels="clr-namespace:ShelfMarket.UI.ViewModels" 
-      d:DataContext="{d:DesignInstance Type=viewmodels:ShelfTypeViewModel}"
+      d:DataContext="{d:DesignInstance Type=viewmodels:ManagesShelfTypeViewModel}"
       mc:Ignorable="d"
       Title="Administrere reol typer">
     <Grid>
@@ -52,7 +52,7 @@
         </StackPanel>
 
         <!-- ListView/UserControl -->
-        <controls:ListShelfTypeView Grid.Row="3" x:Name="ShelfTypesListControl" Margin="0,10,0,0"/>
+        <controls:ManagesShelfTypeListView Grid.Row="3" x:Name="ManagesShelfTypeListViewControl" Margin="0,10,0,0"/>
 
         <!-- Error and status messages -->
         <StackPanel Grid.Row="4" Margin="0,10,0,0">

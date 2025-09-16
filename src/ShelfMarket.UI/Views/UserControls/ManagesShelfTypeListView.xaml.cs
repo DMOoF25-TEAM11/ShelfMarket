@@ -5,9 +5,9 @@ namespace ShelfMarket.UI.Views.UserControls;
 /// <summary>
 /// Interaction logic for ListShelfTypeView.xaml
 /// </summary>
-public partial class ListShelfTypeView : UserControl
+public partial class ManagesShelfTypeListView : UserControl
 {
-    public ListShelfTypeView()
+    public ManagesShelfTypeListView()
     {
         InitializeComponent();
     }

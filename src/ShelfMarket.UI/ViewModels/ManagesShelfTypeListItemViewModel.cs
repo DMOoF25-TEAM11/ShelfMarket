@@ -2,13 +2,13 @@
 
 namespace ShelfMarket.UI.ViewModels;
 
-public class ShelfTypeListItemViewModel
+public class ManagesShelfTypeListItemViewModel
 {
     public Guid? Id { get; }
     public string Name { get; }
     public string Description { get; }
 
-    public ShelfTypeListItemViewModel(ShelfType shelfType)
+    public ManagesShelfTypeListItemViewModel(ShelfType shelfType)
     {
         Id = shelfType.Id;
         Name = shelfType.Name;
