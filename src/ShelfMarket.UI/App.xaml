@@ -13,7 +13,7 @@
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <!-- MVVM View mapping -->
             <DataTemplate DataType="{x:Type vm:ShelfViewModel}">
-                <views:ReolerView/>
+                <views:ShelfView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:SalesViewModel}">
                 <views:SalesView/>

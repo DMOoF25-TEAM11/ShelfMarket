@@ -1,32 +1,35 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 
-namespace ShelfMarket.UI.Views.Popups;
+namespace ShelfMarket.UI.Views.Windows;
 
-public partial class ShelfInfoPopup : UserControl
+public partial class ChooseShelfTypeWindow : UserControl
 {
-    public ShelfInfoPopup()
+    public ChooseShelfTypeWindow()
     {
         InitializeComponent();
     }
 
-    private void Close_Click(object sender, RoutedEventArgs e)
+    public void SetShelfNumber(int number)
     {
-        var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
-        var overlay = mainWindow?.FindName("PopupOverlay") as Grid;
-        if (overlay != null)
-        {
-            overlay.Visibility = Visibility.Collapsed;
-        }
+        TitleText.Text = $"Reol ({number})";
     }
 
-    private void ChooseShelves_Click(object sender, RoutedEventArgs e)
+    private void Cancel_Click(object sender, RoutedEventArgs e)
     {
         var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
         var overlay = mainWindow?.FindName("PopupOverlay") as Grid;
         if (overlay != null)
-        {
             overlay.Visibility = Visibility.Collapsed;
-        }
+    }
+
+    private void Choose_Click(object sender, RoutedEventArgs e)
+    {
+        var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
+        var overlay = mainWindow?.FindName("PopupOverlay") as Grid;
+        if (overlay != null)
+            overlay.Visibility = Visibility.Collapsed;
     }
 }
+
+

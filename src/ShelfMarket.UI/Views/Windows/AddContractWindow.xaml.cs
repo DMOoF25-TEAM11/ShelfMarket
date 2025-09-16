@@ -1,11 +1,11 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ShelfMarket.UI.Views.Popups;
+namespace ShelfMarket.UI.Views.Windows;
 
-public partial class AddContractPopup : UserControl
+public partial class AddContractWindow : UserControl
 {
-    public AddContractPopup()
+    public AddContractWindow()
     {
         InitializeComponent();
     }
