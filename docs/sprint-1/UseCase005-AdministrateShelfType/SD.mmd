@@ -1,10 +1,8 @@
 ﻿sequenceDiagram
-    actor Ejer as Actor
     participant UI
     participant ViewModel
     participant Infrastructure
 
-    Ejer->>+UI: NavigateTo("ManagesShelfTypes")
     UI->>ViewModel: OnNavigateToShelfTypes()
     loop
         ViewModel->>Infrastructure: GetAllAsync()
@@ -12,7 +10,7 @@
         ViewModel-->>UI: ShelfTypeListViewModel(ObservableCollection<ShelfType>)
 
         alt Add ShelfType
-            Ejer->>UI: CreateShelfType(string: name, string: description)
+            UI->>UI: CreateShelfType(string: name, string: description)
             alt Tilføj
                 UI->>ViewModel: OnAddAsync()
                 ViewModel->>Infrastructure: AddAsync({name, description})
@@ -34,7 +32,7 @@
             end
             ViewModel-->>UI: OnPropertyChange() # Populate form fields and pop listVm and Messages
         else Select ShelfType
-            Ejer->>UI: SelectShelfType(Guid: shelfTypeId)
+            UI->>UI: SelectShelfType(Guid: shelfTypeId)
             UI->>ViewModel: OnShelfTypeSelected(Guid: shelfTypeId)
             ViewModel->>Infrastructure: GetByIdAsync(Guid: shelfTypeId)
             Infrastructure-->>ViewModel: Task<ShelfType>
@@ -42,20 +40,20 @@
 
             alt Edit ShelfType
                 alt succes
-                    Ejer->>UI: EditShelfType(Guid: shelfTypeId, string: name, string: description)
+                    UI->>UI: EditShelfType(Guid: shelfTypeId, string: name, string: description)
                     UI->>ViewModel: OnSaveAsync()
                     ViewModel->>Infrastructure: UpdateAsync(Guid: shelfTypeId, {name, description})
                     Infrastructure-->>ViewModel: Task
                     ViewModel-->>UI: OnPropertyChange() # Populate form fields and pop listVm and Messages
                 else Valgt annullere
-                    Ejer->>UI: OnCancel()
+                    UI->>UI: OnCancel()
                     UI->>ViewModel: OnCancelAsync()
                     ViewModel-->>UI: OnPropertyChange() # Populate clear fields and pop listVm and Messages
                 else ReolNavn er ikke unik
                     UI->>ViewModel: CanSave() : false
                     ViewModel-->>ViewModel: ErrorMessage(_errorMsgNameNotUnique)
                 else Systemfejl under gemning
-                    Ejer->>UI: EditShelfType(string: name, string: description)
+                    UI->>UI: EditShelfType(string: name, string: description)
                     UI->>ViewModel: OnSaveAsync()
                     ViewModel->>Infrastructure: UpdateAsync(ShelfType: entity)
                     Infrastructure-->>ViewModel: Exception # It logs error before Exception
@@ -63,7 +61,7 @@
                     ViewModel-->>UI: OnPropertyChange() # Populate form fields and pop listVm and Messages
                 end
             else Delete ShelfType
-                Ejer->>UI: RequestDeleteShelfType(Guid: shelfTypeId)
+                UI->>UI: RequestDeleteShelfType(Guid: shelfTypeId)
                 alt ReolType kan slettes (ingen afhængigheder)
 
                 UI->>ViewModel: OnDeleteAsync()
@@ -85,10 +83,7 @@
                 ViewModel-->>UI: OnPropertyChange() # Populate clear fields and pop listVm and Messages
             end
         end
-        UI-->>-Ejer : ManagesShelfTypes
     end
-    Ejer->>+UI: NavigateTo("FrontPageView")
     UI->>+ViewModel: OnNavigateToFrontPage()
     ViewModel-->>UI: FrontPageViewModel
     ViewModel-->>-UI: OnPropertyChange() # Populate form fields and pop listVm and Messages
-    UI-->>-Ejer: FrontPageView
