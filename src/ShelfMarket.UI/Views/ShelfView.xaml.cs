@@ -7,7 +7,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Documents;
-using ShelfMarket.UI.Views.Popups;
+using ShelfMarket.UI.Views.Windows;
 
 namespace ShelfMarket.UI.Views
 {
@@ -15,7 +15,7 @@ namespace ShelfMarket.UI.Views
     /// Brugerflade til visualisering og manuel placering af reoler i et grid.
     /// Understøtter drag-and-drop mellem synlige celler samt popup til oprettelse af nye reoler.
     /// </summary>
-    public partial class ReolerView : UserControl
+    public partial class ShelfView : UserControl
     {
         private bool _isDragging = false;
         private Button? _draggedButton;
@@ -25,14 +25,14 @@ namespace ShelfMarket.UI.Views
         private AdornerLayer? _adornerLayer;
         private VisualGhostAdorner? _originGhost;
 
-        public ReolerView()
+        public ShelfView()
         {
             InitializeComponent();
             // Vent til UI er indlæst, så alle visuelle elementer findes i visual tree
-            this.Loaded += ReolerView_Loaded;
+            this.Loaded += ShelfView_Loaded;
         }
 
-        private void ReolerView_Loaded(object sender, RoutedEventArgs e)
+        private void ShelfView_Loaded(object sender, RoutedEventArgs e)
         {
             SetupDragAndDrop();
         }
@@ -478,14 +478,16 @@ namespace ShelfMarket.UI.Views
                 for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
                 {
                     DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
-                    if (child != null && child is T)
+                    if (child != null)
                     {
-                        yield return (T)child;
-                    }
-
-                    foreach (T childOfChild in FindVisualChildren<T>(child))
-                    {
-                        yield return childOfChild;
+                        if (child is T)
+                        {
+                            yield return (T)child;
+                        }
+                        foreach (T childOfChild in FindVisualChildren<T>(child))
+                        {
+                            yield return childOfChild;
+                        }
                     }
                 }
             }
@@ -501,7 +503,7 @@ namespace ShelfMarket.UI.Views
             if (mainWindow != null)
             {
                 var overlay = mainWindow.FindName("PopupOverlay") as Grid;
-                var popupContent = mainWindow.FindName("AddShelfPopupContent") as AddShelfPopup;
+                var popupContent = mainWindow.FindName("AddShelfPopupContent") as AddShelfWindow;
                 
                 if (overlay != null && popupContent != null)
                 {
@@ -515,7 +517,7 @@ namespace ShelfMarket.UI.Views
                     // Vis overlay
                     overlay.Visibility = Visibility.Visible;
                     popupContent.Visibility = Visibility.Visible;
-                    var addContract = mainWindow.FindName("AddContractPopupContent") as AddContractPopup;
+                    var addContract = mainWindow.FindName("AddContractPopupContent") as AddContractWindow;
                     if (addContract != null) addContract.Visibility = Visibility.Collapsed;
                 }
             }
@@ -527,12 +529,12 @@ namespace ShelfMarket.UI.Views
             if (mainWindow != null)
             {
                 var overlay = mainWindow.FindName("PopupOverlay") as Grid;
-                var addContract = mainWindow.FindName("AddContractPopupContent") as AddContractPopup;
+                var addContract = mainWindow.FindName("AddContractPopupContent") as AddContractWindow;
                 if (overlay != null && addContract != null)
                 {
                     overlay.Visibility = Visibility.Visible;
                     addContract.Visibility = Visibility.Visible;
-                    var addShelf = mainWindow.FindName("AddShelfPopupContent") as AddShelfPopup;
+                    var addShelf = mainWindow.FindName("AddShelfPopupContent") as AddShelfWindow;
                     if (addShelf != null) addShelf.Visibility = Visibility.Collapsed;
                 }
             }
@@ -565,8 +567,8 @@ namespace ShelfMarket.UI.Views
         {
             var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
             var overlay = mainWindow?.FindName("PopupOverlay") as Grid;
-            var popupContent = mainWindow?.FindName("AddShelfPopupContent") as AddShelfPopup;
-            var addContract = mainWindow?.FindName("AddContractPopupContent") as AddContractPopup;
+            var popupContent = mainWindow?.FindName("AddShelfPopupContent") as AddShelfWindow;
+            var addContract = mainWindow?.FindName("AddContractPopupContent") as AddContractWindow;
             
             if (overlay != null)
             {

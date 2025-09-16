@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:ShelfMarket.UI.Views"
-        xmlns:pop="clr-namespace:ShelfMarket.UI.Views.Popups"
+        xmlns:pop="clr-namespace:ShelfMarket.UI.Views.Windows"
         xmlns:uc="clr-namespace:ShelfMarket.UI.Views.UserControls"
         mc:Ignorable="d"
         Title="Reolmarkedet" Height="720" Width="1200"
@@ -49,9 +49,7 @@
         </Grid>
 
         <!-- ===== STATUS BAR (BOTTOM) ===== -->
-        <uc:StatusBar Grid.Row="1" Grid.ColumnSpan="2"
-                      IsInternetAvailable="{Binding IsInternetAvailable, RelativeSource={RelativeSource AncestorType=Window}}"
-                      IsDatabaseConnected="{Binding IsDatabaseConnected, RelativeSource={RelativeSource AncestorType=Window}}"/>
+        <uc:StatusBar Grid.Row="1" Grid.ColumnSpan="2"/>
 
         <!-- ===== GLOBAL POPUP OVERLAY ===== -->
         <!-- Overlay der dækker hele vinduet når popup er åben -->
@@ -75,16 +73,16 @@
             </Grid.ColumnDefinitions>
 
             <!-- Popup indhold centreret -->
-            <pop:AddShelfPopup x:Name="AddShelfPopupContent" 
+            <pop:AddShelfWindow x:Name="AddShelfPopupContent" 
                                  Grid.Row="1" 
                                  Grid.Column="1"/>
 
-            <pop:AddContractPopup x:Name="AddContractPopupContent"
+            <pop:AddContractWindow x:Name="AddContractPopupContent"
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Visibility="Collapsed"/>
 
-            <pop:ChooseShelfTypePopup x:Name="ChooseShelfTypePopupContent"
+            <pop:ChooseShelfTypeWindow x:Name="ChooseShelfTypePopupContent"
                                          Grid.Row="1"
                                          Grid.Column="1"
                                          Visibility="Collapsed"/>
