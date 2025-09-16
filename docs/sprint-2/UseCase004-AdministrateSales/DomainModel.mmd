@@ -1,0 +1,15 @@
+﻿classDiagram
+    class salg {
+        salgsnummer
+        dato
+        betalingsmetode
+        ekspedient
+    }
+
+    class salgslinier {
+        reolnummer
+        antal
+        pris
+    }
+
+    salg "1" -- "0..*" salgslinier : indeholder
