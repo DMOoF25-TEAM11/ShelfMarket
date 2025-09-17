@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.Infrastructure.Persistence;
 using ShelfMarket.Infrastructure.Repositories;
@@ -9,99 +8,89 @@ namespace ShelfMarket.Infrastructure.Tests;
 [TestClass]
 public class ShelfTypeRepositoryTests
 {
-    private ShelfMarketDbContext _context;
-    private ShelfTypeRepository _repository;
-
-    [TestInitialize]
-    public void TestInitialize()
+    private static ShelfMarketDbContext CreateDbContext(string dbName)
     {
-        // Load configuration from appsettings.json
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false)
-            .Build();
-
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-
         var options = new DbContextOptionsBuilder<ShelfMarketDbContext>()
-            .UseSqlServer(connectionString)
+            .UseInMemoryDatabase(databaseName: dbName)
+            .EnableSensitiveDataLogging()
             .Options;
-        _context = new ShelfMarketDbContext(options);
 
-        // Ensure database is created and clean for each test
-        _context.Database.EnsureCreated();
-        _context.ShelfTypes.RemoveRange(_context.Set<ShelfType>());
-        _context.SaveChanges();
-
-        _repository = new ShelfTypeRepository(_context);
+        var ctx = new ShelfMarketDbContext(options);
+        ctx.Database.EnsureCreated();
+        return ctx;
     }
 
-    [TestCleanup]
-    public void TestCleanup()
-    {
-        _context.ShelfTypes.RemoveRange(_context.Set<ShelfType>());
-        _context.SaveChanges();
-        _context.Dispose();
-    }
+    private static ShelfTypeRepository CreateRepository(string dbName) =>
+        new(CreateDbContext(dbName));
 
-    [DoNotParallelize]
     [TestMethod]
     public async Task AddAsync_AddsEntity()
     {
+        var dbName = Guid.NewGuid().ToString();
+        var repo = CreateRepository(dbName);
+
         var shelfType = new ShelfType("Type1", "Description1");
 
-        await _repository.AddAsync(shelfType);
+        await repo.AddAsync(shelfType);
 
-        var result = await _context.Set<ShelfType>().FirstOrDefaultAsync(x => x.Name == "Type1");
+        var result = await repo.GetByIdAsync(shelfType.Id!.Value);
         Assert.IsNotNull(result);
         Assert.AreEqual("Description1", result.Description);
     }
 
-    [DoNotParallelize]
     [TestMethod]
     public async Task AddRangeAsync_AddsEntities()
     {
+        var dbName = Guid.NewGuid().ToString();
+        var repo = CreateRepository(dbName);
+
         var shelfTypes = new List<ShelfType>
             {
                 new ShelfType("TypeA", "DescA"),
                 new ShelfType("TypeB", "DescB")
             };
 
-        await _repository.AddRangeAsync(shelfTypes);
+        await repo.AddRangeAsync(shelfTypes);
 
-        var count = await _context.Set<ShelfType>().CountAsync();
+        var allShelfTypes = await repo.GetAllAsync();
+        var count = allShelfTypes.Count();
+
         Assert.AreEqual(2, count);
     }
 
-    [DoNotParallelize]
     [TestMethod]
     public async Task UpdateAsync_UpdatesEntity()
     {
+        var dbName = Guid.NewGuid().ToString();
+        var repo = CreateRepository(dbName);
+
         var shelfType = new ShelfType("TypeX", "DescX");
-        await _repository.AddAsync(shelfType);
+        await repo.AddAsync(shelfType);
 
         shelfType.Description = "UpdatedDesc";
-        await _repository.UpdateAsync(shelfType);
+        await repo.UpdateAsync(shelfType);
 
-        var updated = await _context.Set<ShelfType>().FirstOrDefaultAsync(x => x.Name == "TypeX");
+        var updated = await repo.GetByIdAsync(shelfType.Id!.Value);
         Assert.IsNotNull(updated);
         Assert.AreEqual("UpdatedDesc", updated.Description);
     }
 
-    [DoNotParallelize]
     [TestMethod]
     public async Task DeleteAsync_DeletesEntity()
     {
-        var shelfType = new ShelfType("TypeDel", "DescDel");
-        await _repository.AddAsync(shelfType);
+        var dbName = Guid.NewGuid().ToString();
+        var ctx = CreateDbContext(dbName);
+        var repo = new ShelfTypeRepository(ctx);
 
-        var added = await _context.Set<ShelfType>().FirstOrDefaultAsync(x => x.Name == "TypeDel");
+        var shelfType = new ShelfType("TypeDel", "DescDel");
+        await repo.AddAsync(shelfType);
+
+        var added = await ctx.Set<ShelfType>().FirstOrDefaultAsync(x => x.Name == "TypeDel");
         Assert.IsNotNull(added);
 
-        await _repository.DeleteAsync(added.Id!.Value);
+        await repo.DeleteAsync(added.Id!.Value);
 
-        var deleted = await _context.Set<ShelfType>().FirstOrDefaultAsync(x => x.Name == "TypeDel");
+        var deleted = await ctx.Set<ShelfType>().FirstOrDefaultAsync(x => x.Name == "TypeDel");
         Assert.IsNull(deleted);
     }
 }

@@ -17,8 +17,8 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// </summary>
     private static readonly (uint YStart, uint YEnd, uint XStart, uint XEnd)[] _lockedLocationRange = new (uint, uint, uint, uint)[]
     {
-        (0, 4, 0, 19),   // Locked by wall (Y: 0-4, X: 0-19) Toilet
-        (7, 19, 0, 9),   // Locked by wall (Y: 7-19, X: 0-9) Office
+        (0, 4, 11, 18),   // Locked by wall (Y: 0-4, X: 0-19) Toilet / Staff room
+        (19, 21, 15, 18),   // Locked by wall (Y: 7-19, X: 0-9) Counter
     };
 
     /// <summary>
@@ -29,7 +29,9 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// <summary>
     /// Generates all locked (Y, X) locations from the defined ranges.
     /// </summary>
-    /// <returns>An array of locked (Y, X) coordinate pairs.</returns>
+    /// <returns>
+    /// An array of locked (Y, X) coordinate pairs.
+    /// </returns>
     private static (uint Y, uint X)[] GetLockedLocations()
     {
         var locations = new List<(uint Y, uint X)>();
@@ -63,23 +65,95 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// <returns>
     /// <c>true</c> if the location is free (no shelf exists at the given coordinates and not locked); otherwise, <c>false</c>.
     /// </returns>
+    [Obsolete("Use IsLocationFreeAsync instead.")]
     public async Task<bool> IsLocationFree(uint locationX, uint locationY, CancellationToken cancellationToken = default)
     {
-        return !await _dbSet.AnyAsync(shelf => shelf.LocationX == locationX && shelf.LocationY == locationY, cancellationToken) && !await IsLocationLocked(locationX, locationY);
+        bool isLocationFree = true;
+        List<Shelf>? AllShelfs = await _dbSet.ToListAsync(cancellationToken);
+        if (AllShelfs.Any())
+        {
+            foreach (var shelf in AllShelfs)
+            {
+                // Check if the location is occupied by any shelf (either anchor or second cell)
+                if ((shelf.LocationX == locationX && shelf.LocationY == locationY) ||
+                    (shelf.OrientationHorizontal && shelf.LocationX + 1 == locationX && shelf.LocationY == locationY) ||
+                    (!shelf.OrientationHorizontal && shelf.LocationX == locationX && shelf.LocationY + 1 == locationY))
+                {
+                    isLocationFree = false;
+                    break;
+                }
+            }
+            return isLocationFree && !IsLocationLocked(locationX, locationY);
+        }
+        // If no shelves exist, just check if location is locked
+        return !IsLocationLocked(locationX, locationY);
     }
 
     /// <summary>
-    /// Checks asynchronously if a location is locked by wall, toilet, or office.
+    /// Checks asynchronously if a shelf location is free (not occupied by any shelf and not locked).
+    /// </summary>
+    /// <param name="locationX">The X coordinate of the location.</param>
+    /// <param name="locationY">The Y coordinate of the location.</param>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// <c>true</c> if the location is free (no shelf exists at the given coordinates and not locked); otherwise, <c>false</c>.
+    /// </returns>
+    [Obsolete("Use IsLocationFreeAsync(uint x, uint y, bool orientationHorizontal, CancellationToken). This version checks only a single cell.")]
+    public async Task<bool> IsLocationFreeAsync(uint locationX, uint locationY, CancellationToken cancellationToken = default)
+    {
+        bool isOccupied = await _dbSet.AnyAsync(
+            shelf => shelf.LocationX == locationX && shelf.LocationY == locationY,
+            cancellationToken);
+
+        bool isLocked = IsLocationLocked(locationX, locationY);
+
+        return !isOccupied && !isLocked;
+    }
+
+    /// <summary>
+    /// Checks asynchronously if a shelf location is free, considering shelf length (2) and orientation.
+    /// Assumes (locationX, locationY) is the leftmost/topmost cell of the shelf.
+    /// </summary>
+    /// <param name="locationX">The X coordinate of the leftmost/topmost cell.</param>
+    /// <param name="locationY">The Y coordinate of the leftmost/topmost cell.</param>
+    /// <param name="orientationHorizontal">True if shelf is horizontal; false if vertical.</param>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// <c>true</c> if both cells are free (no shelf exists at the given coordinates and not locked); otherwise, <c>false</c>.
+    /// </returns>
+    public async Task<bool> IsLocationFreeAsync(uint locationX, uint locationY, bool orientationHorizontal, CancellationToken cancellationToken = default)
+    {
+        var second = orientationHorizontal
+            ? (X: locationX + 1, Y: locationY)
+            : (X: locationX, Y: locationY + 1);
+
+        bool overlaps = await _dbSet.AnyAsync(s =>
+               // Existing shelf anchors match either candidate cell
+               (s.LocationX == locationX && s.LocationY == locationY)
+            || (s.LocationX == second.X && s.LocationY == second.Y)
+            // Existing shelf second cell matches either candidate cell
+            || (s.OrientationHorizontal && (
+                   (s.LocationX + 1 == locationX && s.LocationY == locationY)
+                || (s.LocationX + 1 == second.X && s.LocationY == second.Y)))
+            || (!s.OrientationHorizontal && (
+                   (s.LocationX == locationX && s.LocationY + 1 == locationY)
+                || (s.LocationX == second.X && s.LocationY + 1 == second.Y))),
+            cancellationToken);
+
+        if (overlaps)
+            return false;
+
+        return !IsLocationLocked(locationX, locationY) && !IsLocationLocked(second.X, second.Y);
+    }
+
+    /// <summary>
+    /// Checks if a location is locked by wall, toilet, or office.
     /// </summary>
     /// <param name="locationX">The X coordinate of the location.</param>
     /// <param name="locationY">The Y coordinate of the location.</param>
     /// <returns>
     /// <c>true</c> if the location is locked; otherwise, <c>false</c>.
     /// </returns>
-    private static Task<bool> IsLocationLocked(uint locationX, uint locationY)
-    {
-        // No I/O or async work needed, but keep async signature for interface compatibility
-        bool isLocked = _lockedLocations.Any(loc => loc.X == locationX && loc.Y == locationY);
-        return Task.FromResult(isLocked);
-    }
+    private static bool IsLocationLocked(uint locationX, uint locationY) =>
+        _lockedLocations.Any(loc => loc.X == locationX && loc.Y == locationY);
 }

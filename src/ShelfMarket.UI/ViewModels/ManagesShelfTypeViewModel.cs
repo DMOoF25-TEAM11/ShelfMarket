@@ -9,7 +9,7 @@ namespace ShelfMarket.UI.ViewModels;
 /// ViewModel for managing ShelfType entities in the UI.
 /// Handles form state, validation, and command logic for ShelfType CRUD operations.
 /// </summary>
-public sealed class ShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, ShelfType>
+public sealed class ManagesShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, ShelfType>
 {
     /// <summary>
     /// The display name for the entity, used in UI messages.
@@ -58,10 +58,10 @@ public sealed class ShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, She
     #endregion
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ShelfTypeViewModel"/> class.
+    /// Initializes a new instance of the <see cref="ManagesShelfTypeViewModel"/> class.
     /// </summary>
     /// <param name="selected">Optional repository instance to use. If null, resolves from DI container.</param>
-    public ShelfTypeViewModel(IShelfTypeRepository? selected = null) : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfTypeRepository>())
+    public ManagesShelfTypeViewModel(IShelfTypeRepository? selected = null) : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfTypeRepository>())
     {
         // Initialize commands and other properties here
     }

@@ -30,8 +30,8 @@ public partial class App : System.Windows.Application
                 services.AddTransient<MainWindow>();
 
                 // ShelfType
-                services.AddTransient<ShelfTypeListViewModel>();
-                services.AddTransient<ShelfTypeViewModel>();
+                services.AddTransient<ManagesShelfTypeListViewModel>();
+                services.AddTransient<ManagesShelfTypeViewModel>();
 
                 // ShelfTenantContract
                 services.AddTransient<ManagesShelfTanentContractListViewModel>();

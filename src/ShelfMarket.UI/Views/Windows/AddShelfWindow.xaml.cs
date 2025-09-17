@@ -2,17 +2,17 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ShelfMarket.UI.Views.Popups
+namespace ShelfMarket.UI.Views.Windows
 {
     /// <summary>
     /// Popup vindue til at tilføje nye reoler til systemet
     /// </summary>
-    public partial class AddShelfPopup : UserControl
+    public partial class AddShelfWindow : UserControl
     {
         public event EventHandler? ReolTilfoejet;
         public event EventHandler? Annulleret;
 
-        public AddShelfPopup()
+        public AddShelfWindow()
         {
             InitializeComponent();
         }

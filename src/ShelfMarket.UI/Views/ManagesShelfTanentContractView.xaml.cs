@@ -5,24 +5,25 @@ using ShelfMarket.UI.ViewModels;
 namespace ShelfMarket.UI.Views;
 
 /// <summary>
-/// Interaction logic for EditShelfType.xaml
+/// Interaction logic for ManagesShelfRentContractView.xaml
 /// </summary>
-public partial class ManagesShelfTypeView : Page
+public partial class ManagesShelfTanentContractView : Page
 {
-    private ManagesShelfTypeListViewModel? _listVm;
-    private ManagesShelfTypeViewModel? _vm;
+    private ManagesShelfTanentContractViewModel? _vm;
+    private ManagesShelfTanentContractListViewModel? _listVm;
 
-    public ManagesShelfTypeView()
+    public ManagesShelfTanentContractView()
     {
         InitializeComponent();
 
-        ManagesShelfTypeViewModel vm = new();
+        ManagesShelfTanentContractViewModel vm = new();
         DataContext = vm;
         _vm = vm;
 
         /* Do we need these line. Should be done in ListViewModel */
-        _listVm = App.HostInstance.Services.GetRequiredService<ManagesShelfTypeListViewModel>();
-        ManagesShelfTypeListViewControl.DataContext = _listVm;
+        _listVm = App.HostInstance.Services.GetRequiredService<ManagesShelfTanentContractListViewModel>();
+        ManagesShelfTanentContractListViewControl.DataContext = _listVm;
+
 
         if (_listVm is not null)
             _listVm.PropertyChanged += ListVm_OnPropertyChanged;
@@ -43,7 +44,7 @@ public partial class ManagesShelfTypeView : Page
     }
     private async void ListVm_OnPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(ManagesShelfTypeListViewModel.SelectedItem)
+        if (e.PropertyName == nameof(ManagesShelfTanentContractListViewModel.SelectedItem)
             && _listVm?.SelectedItem is { } item
             && _vm is not null
             && item.Id.HasValue)
