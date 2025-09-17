@@ -29,7 +29,9 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// <summary>
     /// Generates all locked (Y, X) locations from the defined ranges.
     /// </summary>
-    /// <returns>An array of locked (Y, X) coordinate pairs.</returns>
+    /// <returns>
+    /// An array of locked (Y, X) coordinate pairs.
+    /// </returns>
     private static (uint Y, uint X)[] GetLockedLocations()
     {
         var locations = new List<(uint Y, uint X)>();
@@ -88,7 +90,7 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     }
 
     /// <summary>
-    /// Checks asynchronously if a shelf location is free (not occupied by any shelf and not locked). 
+    /// Checks asynchronously if a shelf location is free (not occupied by any shelf and not locked).
     /// </summary>
     /// <param name="locationX">The X coordinate of the location.</param>
     /// <param name="locationY">The Y coordinate of the location.</param>
@@ -108,8 +110,17 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
         return !isOccupied && !isLocked;
     }
 
-    // Overload that considers shelf length (2) and orientation.
-    // Assumes (locationX, locationY) is the leftmost/topmost cell of the shelf.
+    /// <summary>
+    /// Checks asynchronously if a shelf location is free, considering shelf length (2) and orientation.
+    /// Assumes (locationX, locationY) is the leftmost/topmost cell of the shelf.
+    /// </summary>
+    /// <param name="locationX">The X coordinate of the leftmost/topmost cell.</param>
+    /// <param name="locationY">The Y coordinate of the leftmost/topmost cell.</param>
+    /// <param name="orientationHorizontal">True if shelf is horizontal; false if vertical.</param>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// <c>true</c> if both cells are free (no shelf exists at the given coordinates and not locked); otherwise, <c>false</c>.
+    /// </returns>
     public async Task<bool> IsLocationFreeAsync(uint locationX, uint locationY, bool orientationHorizontal, CancellationToken cancellationToken = default)
     {
         var second = orientationHorizontal
@@ -136,7 +147,7 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     }
 
     /// <summary>
-    /// Checks asynchronously if a location is locked by wall, toilet, or office.
+    /// Checks if a location is locked by wall, toilet, or office.
     /// </summary>
     /// <param name="locationX">The X coordinate of the location.</param>
     /// <param name="locationY">The Y coordinate of the location.</param>
