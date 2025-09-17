@@ -82,6 +82,7 @@ BEGIN
         City NVARCHAR(100) NULL,
         Email NVARCHAR(255) NULL,
         Phone NVARCHAR(50) NULL,
+        Status NVARCHAR(50) NOT NULL,
         CONSTRAINT UQ_SHELF_TENANT_EMAIL UNIQUE (Email)
     );
 END
@@ -209,11 +210,11 @@ INSERT INTO dbo.SHELF (Id, Number, ShelfTypeId, LocationX, LocationY, OrientalHo
 
 
 --ShelfTenant
-INSERT INTO dbo.SHELFTENANT (Id, FirstName, LastName, Address, PostalCode, City, Email, PhoneNumber) 
-VALUES (CAST('D4A5E8F1-6C2B-4C3A-9F4E-1A2B3C4D5E6F' AS UNIQUEIDENTIFIER), 'Louise', 'Ebersbach', 'Some Street 1', '1234', 'Copenhagen', 'Louise@gmail.com', 10101010);
+INSERT INTO dbo.SHELFTENANT (Id, FirstName, LastName, Address, PostalCode, City, Email, PhoneNumber, Status) 
+VALUES (CAST('D4A5E8F1-6C2B-4C3A-9F4E-1A2B3C4D5E6F' AS UNIQUEIDENTIFIER), 'Louise', 'Ebersbach', 'Some Street 1', '1234', 'Copenhagen', 'Louise@gmail.com', 10101010, 'Active');
 
-INSERT INTO dbo.SHELFTENANT (Id, FirstName, LastName, Address, PostalCode, City, Email, PhoneNumber)
-VALUES (CAST('A1B2C3D4-E5F6-4A3B-9C8D-7E6F5A4B3C2D' AS UNIQUEIDENTIFIER), 'Peter', 'Holm', 'Another Street 2', '5678', 'Aarhus', 'Peter@gmail.com', 20202020);
+INSERT INTO dbo.SHELFTENANT (Id, FirstName, LastName, Address, PostalCode, City, Email, PhoneNumber, Status)
+VALUES (CAST('A1B2C3D4-E5F6-4A3B-9C8D-7E6F5A4B3C2D' AS UNIQUEIDENTIFIER), 'Peter', 'Holm', 'Another Street 2', '5678', 'Aarhus', 'Peter@gmail.com', 20202020, 'Active');
 
-INSERT INTO dbo.SHELFTENANT (Id, FirstName, LastName, Address, PostalCode, City, Email, PhoneNumber)
-VALUES (CAST('F1E2D3C4-B5A6-4B7C-8D9E-0F1A2B3C4D5E' AS UNIQUEIDENTIFIER), 'Anton', 'Mikkelsen', 'Third Street 3', '9101', 'Odense', 'Anton@gmail.com', 30303030);
+INSERT INTO dbo.SHELFTENANT (Id, FirstName, LastName, Address, PostalCode, City, Email, PhoneNumber, Status)
+VALUES (CAST('F1E2D3C4-B5A6-4B7C-8D9E-0F1A2B3C4D5E' AS UNIQUEIDENTIFIER), 'Anton', 'Mikkelsen', 'Third Street 3', '9101', 'Odense', 'Anton@gmail.com', 30303030, 'Inactive');
