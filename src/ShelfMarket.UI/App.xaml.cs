@@ -1,9 +1,11 @@
-﻿using System.Windows;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ShelfMarket.Application;
+using ShelfMarket.Application.Interfaces;
 using ShelfMarket.Infrastructure;
+using ShelfMarket.Infrastructure.Repositories;
 using ShelfMarket.UI.ViewModels;
+using System.Windows;
 
 namespace ShelfMarket.UI;
 
@@ -34,6 +36,15 @@ public partial class App : System.Windows.Application
                 // ShelfTenantContract
                 services.AddTransient<ManagesShelfTanentContractListViewModel>();
                 services.AddTransient<ManagesShelfTanentContractViewModel>();
+
+                // ShelfTenant
+                services.AddSingleton<ITenantRepository, TenantRepository>();
+                services.AddTransient<TenantsViewModel>();
+                services.AddTransient<MainWindowViewModel>();
+                services.AddSingleton(sp => new MainWindow
+                {
+                    DataContext = sp.GetRequiredService<MainWindowViewModel>()
+                });
 
             })
             .Build();

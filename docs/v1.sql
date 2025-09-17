@@ -70,6 +70,22 @@ BEGIN
 END
 GO
 
+-- Create table if it does not exist
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'SHELFTENANT' AND TABLE_SCHEMA = N'dbo')
+BEGIN
+    CREATE TABLE dbo.SHELFTENANT (
+        Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+        FirstName NVARCHAR(255) NOT NULL,
+        LastName NVARCHAR(255) NOT NULL,
+        Address NVARCHAR(255) NULL,
+        PostalCode NVARCHAR(20) NULL,
+        City NVARCHAR(100) NULL,
+        Email NVARCHAR(255) NULL,
+        Phone NVARCHAR(50) NULL,
+        CONSTRAINT UQ_SHELF_TENANT_EMAIL UNIQUE (Email)
+    );
+END
+GO
 
 ---------------------------------------------------------
 --------------             DML             --------------
@@ -190,3 +206,14 @@ INSERT INTO dbo.SHELF (Id, Number, ShelfTypeId, LocationX, LocationY, OrientalHo
 INSERT INTO dbo.SHELF (Id, Number, ShelfTypeId, LocationX, LocationY, OrientalHorizontal) VALUES (CAST('C9BA656D-6F8C-43F3-BAF5-0FC0B70782D1' AS UNIQUEIDENTIFIER), 80, CAST('BCC9F172-052F-466D-B63C-E9901A6FEE7D' AS UNIQUEIDENTIFIER), 7, 2, 0);
 
 -- insert some more --
+
+
+--ShelfTenant
+INSERT INTO dbo.SHELFTENANT (Id, FirstName, LastName, Address, PostalCode, City, Email, PhoneNumber) 
+VALUES (CAST('D4A5E8F1-6C2B-4C3A-9F4E-1A2B3C4D5E6F' AS UNIQUEIDENTIFIER), 'Louise', 'Ebersbach', 'Some Street 1', '1234', 'Copenhagen', 'Louise@gmail.com', 10101010);
+
+INSERT INTO dbo.SHELFTENANT (Id, FirstName, LastName, Address, PostalCode, City, Email, PhoneNumber)
+VALUES (CAST('A1B2C3D4-E5F6-4A3B-9C8D-7E6F5A4B3C2D' AS UNIQUEIDENTIFIER), 'Peter', 'Holm', 'Another Street 2', '5678', 'Aarhus', 'Peter@gmail.com', 20202020);
+
+INSERT INTO dbo.SHELFTENANT (Id, FirstName, LastName, Address, PostalCode, City, Email, PhoneNumber)
+VALUES (CAST('F1E2D3C4-B5A6-4B7C-8D9E-0F1A2B3C4D5E' AS UNIQUEIDENTIFIER), 'Anton', 'Mikkelsen', 'Third Street 3', '9101', 'Odense', 'Anton@gmail.com', 30303030);
