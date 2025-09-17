@@ -22,9 +22,9 @@ public static class DependencyInjection
 
         services.AddDbContext<ShelfMarketDbContext>(options =>
             options.UseSqlServer(connectionString));
-        // Register infrastructure services here
-        services.AddSingleton<IShelfRepository, ShelfRepository>();
-        services.AddSingleton<IShelfTypeRepository, ShelfTypeRepository>();
+        // Register infrastructure services here (Scoped to match DbContext lifetime)
+        services.AddScoped<IShelfRepository, ShelfRepository>();
+        services.AddScoped<IShelfTypeRepository, ShelfTypeRepository>();
         return services;
     }
 }

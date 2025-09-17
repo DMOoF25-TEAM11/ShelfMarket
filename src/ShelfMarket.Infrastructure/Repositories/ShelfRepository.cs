@@ -15,29 +15,25 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// Ranges of locked locations (YStart, YEnd, XStart, XEnd).
     /// These represent areas (e.g., wall, toilet, office) where shelves cannot be placed.
     /// </summary>
-    private static readonly (uint YStart, uint YEnd, uint XStart, uint XEnd)[] _lockedLocationRange = new (uint, uint, uint, uint)[]
-    {
-        (0, 4, 0, 19),   // Locked by wall (Y: 0-4, X: 0-19) Toilet
-        (7, 19, 0, 9),   // Locked by wall (Y: 7-19, X: 0-9) Office
-    };
+    private static readonly (int YStart, int YEnd, int XStart, int XEnd)[] _lockedLocationRange = Array.Empty<(int, int, int, int)>();
 
     /// <summary>
     /// All locked locations as (Y, X) pairs, generated from <see cref="_lockedLocationRange"/>.
     /// </summary>
-    private static readonly (uint Y, uint X)[] _lockedLocations = GetLockedLocations();
+    private static readonly (int Y, int X)[] _lockedLocations = GetLockedLocations();
 
     /// <summary>
     /// Generates all locked (Y, X) locations from the defined ranges.
     /// </summary>
     /// <returns>An array of locked (Y, X) coordinate pairs.</returns>
-    private static (uint Y, uint X)[] GetLockedLocations()
+    private static (int Y, int X)[] GetLockedLocations()
     {
-        var locations = new List<(uint Y, uint X)>();
+        var locations = new List<(int Y, int X)>();
         foreach (var (yStart, yEnd, xStart, xEnd) in _lockedLocationRange)
         {
-            for (uint y = yStart; y <= yEnd; y++)
+            for (int y = yStart; y <= yEnd; y++)
             {
-                for (uint x = xStart; x <= xEnd; x++)
+                for (int x = xStart; x <= xEnd; x++)
                 {
                     locations.Add((y, x));
                 }
@@ -63,7 +59,7 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// <returns>
     /// <c>true</c> if the location is free (no shelf exists at the given coordinates and not locked); otherwise, <c>false</c>.
     /// </returns>
-    public async Task<bool> IsLocationFree(uint locationX, uint locationY, CancellationToken cancellationToken = default)
+    public async Task<bool> IsLocationFree(int locationX, int locationY, CancellationToken cancellationToken = default)
     {
         return !await _dbSet.AnyAsync(shelf => shelf.LocationX == locationX && shelf.LocationY == locationY, cancellationToken) && !await IsLocationLocked(locationX, locationY);
     }
@@ -76,10 +72,6 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// <returns>
     /// <c>true</c> if the location is locked; otherwise, <c>false</c>.
     /// </returns>
-    private static Task<bool> IsLocationLocked(uint locationX, uint locationY)
-    {
-        // No I/O or async work needed, but keep async signature for interface compatibility
-        bool isLocked = _lockedLocations.Any(loc => loc.X == locationX && loc.Y == locationY);
-        return Task.FromResult(isLocked);
-    }
+    private static Task<bool> IsLocationLocked(int locationX, int locationY)
+        => Task.FromResult(false);
 }
