@@ -41,10 +41,7 @@ public partial class App : System.Windows.Application
                 services.AddSingleton<ITenantRepository, TenantRepository>();
                 services.AddTransient<TenantsViewModel>();
                 services.AddTransient<MainWindowViewModel>();
-                services.AddSingleton(sp => new MainWindow
-                {
-                    DataContext = sp.GetRequiredService<MainWindowViewModel>()
-                });
+                
 
             })
             .Build();
