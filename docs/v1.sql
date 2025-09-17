@@ -76,7 +76,9 @@ GO
 ---------------------------------------------------------
 
 -- Insert Shelf Type
+DELETE FROM dbo.SHELFTYPE WHERE Id = 'BCC9F172-052F-466D-B63C-E9901A6FEE7D';
 INSERT INTO dbo.SHELFTYPE (Id, Name, Description) VALUES (CAST('BCC9F172-052F-466D-B63C-E9901A6FEE7D' AS UNIQUEIDENTIFIER), N'6 hylder', N'Standard reol');
+DELETE FROM dbo.SHELFTYPE WHERE Id = '4AEBD9CF-9CD7-4F6E-BB38-C79BF279334B';
 INSERT INTO dbo.SHELFTYPE (Id, Name, Description) VALUES (CAST('4AEBD9CF-9CD7-4F6E-BB38-C79BF279334B' AS UNIQUEIDENTIFIER), N'3 hylder og en stang', N'Egnet til tøj');
 
 -- Insert Shelf
