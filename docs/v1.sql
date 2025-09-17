@@ -90,7 +90,8 @@ INSERT INTO dbo.SHELFTYPE (Id, Name, Description) VALUES (CAST('4AEBD9CF-9CD7-4F
 --        CAST([Number] AS varchar(12)) + ', ' +
 --        'CAST(''' + CONVERT(varchar(36), ShelfTypeId) + ''' AS UNIQUEIDENTIFIER), ' +
 --        CAST(LocationX AS varchar(12)) + ', ' +
---        CAST(LocationY AS varchar(12)) + ');'
+--        CAST(LocationY AS varchar(12)) + '), ' +
+--        CAST(OrientalHorizontal AS varchar(12)) + ');'
 -- FROM dbo.SHELF
 -- ORDER BY [Number];
 -- PRINT 'COMMIT;';
