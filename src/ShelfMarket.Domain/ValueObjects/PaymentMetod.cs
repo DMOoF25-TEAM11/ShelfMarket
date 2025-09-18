@@ -1,6 +1,6 @@
 ﻿namespace ShelfMarket.Domain.ValueObjects;
 
-public enum PaymentMetode
+public enum PaymentMetod
 {
     Cash,
     MobilePay
