@@ -1,6 +1,9 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
+using ShelfMarket.Application.Interfaces;
+using ShelfMarket.Infrastructure.Persistence;
 
 namespace ShelfMarket.UI.Views.Windows
 {
@@ -19,12 +22,7 @@ namespace ShelfMarket.UI.Views.Windows
 
         private void TilfoejReol_Click(object sender, RoutedEventArgs e)
         {
-            if (ValiderInput())
-            {
-                FejlTekst.Visibility = Visibility.Collapsed;
-                ReolTilfoejet?.Invoke(this, EventArgs.Empty);
-                LukPopup();
-            }
+            _ = CreateAsync();
         }
 
         private void Annuller_Click(object sender, RoutedEventArgs e)
@@ -33,29 +31,48 @@ namespace ShelfMarket.UI.Views.Windows
             LukPopup();
         }
 
-        private bool ValiderInput()
+        private async System.Threading.Tasks.Task CreateAsync()
         {
             if (!int.TryParse(ReolNummerTextBox.Text, out int reolNummer))
             {
                 VisFejl("Reol nummer skal være et gyldigt tal");
-                return false;
+                return;
             }
 
-            if (ErNummerIForvejen(reolNummer))
+            bool horizontal = OrienteringComboBox.SelectedIndex == 1; // 0=Lodret, 1=Vandret
+
+            try
             {
-                VisFejl("Dette nummer er allerede i brug");
-                return false;
+                using var scope = App.HostInstance.Services.CreateScope();
+                var layout = scope.ServiceProvider.GetRequiredService<IShelfLayoutService>();
+                // Ensure a default shelf type exists if needed
+                var db = scope.ServiceProvider.GetRequiredService<ShelfMarketDbContext>();
+                var type = db.ShelfTypes.FirstOrDefault();
+                if (type == null)
+                {
+                    db.ShelfTypes.Add(new Domain.Entities.ShelfType { Id = Guid.NewGuid(), Name = "Default" });
+                    await db.SaveChangesAsync();
+                }
+
+                // Spawn på X=22, Y=0
+                var ok = await layout.TryCreateShelfAsync(reolNummer, horizontal, 22, 0);
+                if (!ok)
+                {
+                    VisFejl("Nummer findes allerede eller feltet (22,0) er optaget.");
+                    return;
+                }
+
+                FejlTekst.Visibility = Visibility.Collapsed;
+                ReolTilfoejet?.Invoke(this, EventArgs.Empty);
+                LukPopup();
             }
-                      
-
-            return true;
+            catch (Exception ex)
+            {
+                VisFejl($"Der opstod en fejl: {ex.Message}");
+            }
         }
 
-        private bool ErNummerIForvejen(int nummer)
-        {
-            int[] brugteNumre = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 20, 25 };
-            return Array.Exists(brugteNumre, x => x == nummer);
-        }
+        // Nummer-check håndteres i service/repo – lokal liste er fjernet
 
         private void VisFejl(string fejlbesked)
         {

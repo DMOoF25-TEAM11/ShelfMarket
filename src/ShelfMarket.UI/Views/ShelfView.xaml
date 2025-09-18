@@ -120,7 +120,7 @@
                         </DrawingBrush>
                     </Grid.Background>
 
-                    <!-- Grid definitioner - 20 kolonner x 17 rækker (udvidet med ekstra vægge) -->
+                    <!-- Grid definitioner - 23 kolonner x 17 rækker (udvidet med ekstra vægge) -->
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="51"/>
                         <!-- Venstre væg synlig -->
@@ -142,6 +142,9 @@
                         <ColumnDefinition Width="51"/>
                         <ColumnDefinition Width="51"/>
                         <ColumnDefinition Width="51"/>
+                        <ColumnDefinition Width="51"/>
+                        <ColumnDefinition Width="51"/>
+                        <ColumnDefinition Width="51"/>                        
                         <ColumnDefinition Width="51"/>
                         <ColumnDefinition Width="51"/>
                         <ColumnDefinition Width="51"/>
@@ -171,15 +174,13 @@
                         <RowDefinition Height="51"/>
                         <RowDefinition Height="51"/>
                         <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <!-- Bund synlig (række 15) -->
-                        <RowDefinition Height="51"/>
-                        <!-- Bund synlig (række 16) -->
+                        <RowDefinition Height="51"/>                    
+                        <RowDefinition Height="51"/>                        
                     </Grid.RowDefinitions>
 
                     <!-- Væg ramme rundt om ydre grid (tykkere streg) -->
-                    <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="20" Grid.RowSpan="16" 
-                               Stroke="{StaticResource Brush.Border}" StrokeThickness="3" Fill="Transparent" Margin="0,0,-153,0"/>
+                    <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="23" Grid.RowSpan="16" 
+                               Stroke="{StaticResource Brush.Border}" StrokeThickness="3" Fill="Transparent" Margin="0,0,0,0"/>
 
 
                     <!-- ===== LODRET REOLER (1-13) ===== -->

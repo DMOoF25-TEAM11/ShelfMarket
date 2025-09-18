@@ -24,7 +24,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Reol (Nummer)" Style="{StaticResource Text.H2}" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="TitleText" Text="Reol (Nummer)" Style="{StaticResource Text.H2}" HorizontalAlignment="Center"/>
                 <Button Grid.Column="1" Content="✕" Width="32" Height="32"
                         Background="{StaticResource Brush.Transparent}" BorderThickness="0"
                         Foreground="{StaticResource Brush.Text}"
@@ -81,7 +81,7 @@
                         <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="ReolTypeCombo" Grid.Column="0" SelectedIndex="0">
+                    <ComboBox x:Name="ReolTypeCombo" Grid.Column="0" SelectedIndex="0" SelectionChanged="ReolTypeCombo_SelectionChanged">
                         <ComboBoxItem Content="Vertikal"/>
                         <ComboBoxItem Content="Horizontal"/>                        
                     </ComboBox>                    
@@ -117,7 +117,7 @@
                 <Button Grid.Column="0" Content="Gem" Style="{StaticResource Button.Primary}" Height="38" Click="ChooseShelves_Click"/>
                 <Button Grid.Column="2" Content="Opsig Leje" Style="{StaticResource Button.Secondary}" Height="38" Click="Close_Click"/>
                 <Button Grid.Column="4" Content="Tilføj varer" Style="{StaticResource Button.Primary}" Height="38" Click="ChooseShelves_Click"/>                
-                <Button Grid.Column="6" Content="Slet Reol" Style="{StaticResource Button.Secondary}" Height="38" Click="Close_Click"/>
+                <Button Grid.Column="6" Content="Slet Reol" Style="{StaticResource Button.Secondary}" Height="38" Click="DeleteShelf_Click"/>
             </Grid>
         </Grid>
     </Border>

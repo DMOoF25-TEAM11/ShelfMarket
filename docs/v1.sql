@@ -33,7 +33,7 @@ BEGIN
         ShelfTypeId UNIQUEIDENTIFIER NOT NULL,
         LocationX INT NOT NULL,
         LocationY INT NOT NULL,
-        OrientalHorizontal BIT NOT NULL,
+        OrientationHorizontal BIT NOT NULL CONSTRAINT DF_SHELF_OrientationHorizontal DEFAULT(1),
         CONSTRAINT FK_SHELF_SHELFTTYPE FOREIGN KEY (ShelfTypeId)
             REFERENCES dbo.SHELFTYPE(Id),
             UNIQUE (LocationX, LocationY)

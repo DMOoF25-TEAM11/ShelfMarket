@@ -86,6 +86,11 @@
                                          Grid.Row="1"
                                          Grid.Column="1"
                                          Visibility="Collapsed"/>
+
+            <pop:ShelfInfoWindow x:Name="ShelfInfoPopupContent"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  Visibility="Collapsed"/>
         </Grid>
         
     </Grid>

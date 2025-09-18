@@ -26,6 +26,10 @@ public class ShelfMarketDbContext : DbContext
             .ToTable("SHELFTYPE");
         modelBuilder.Entity<Shelf>()
             .ToTable("SHELF");
+        // Map Orientation property to existing DB column name (typo in DB): OrientalHorizontal
+        modelBuilder.Entity<Shelf>()
+            .Property(s => s.OrientationHorizontal)
+            .HasColumnName("OrientalHorizontal");
         modelBuilder.Entity<ShelfTenantContract>()
             .ToTable("SHELFTENANTCONTRACT");
         modelBuilder.Entity<ShelfTenantContractLine>()

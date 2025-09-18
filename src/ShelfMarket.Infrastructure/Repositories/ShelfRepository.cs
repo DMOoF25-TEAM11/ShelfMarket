@@ -15,7 +15,8 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// Ranges of locked locations (YStart, YEnd, XStart, XEnd).
     /// These represent areas (e.g., wall, toilet, office) where shelves cannot be placed.
     /// </summary>
-    private static readonly (uint YStart, uint YEnd, uint XStart, uint XEnd)[] _lockedLocationRange = new (uint, uint, uint, uint)[]
+
+    private static readonly (int YStart, int YEnd, int XStart, int XEnd)[] _lockedLocationRange = Array.Empty<(int, int, int, int)>();
     {
         (0, 4, 11, 18),   // Locked by wall (Y: 0-4, X: 0-19) Toilet / Staff room
         (19, 21, 15, 18),   // Locked by wall (Y: 7-19, X: 0-9) Counter
@@ -24,22 +25,23 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// <summary>
     /// All locked locations as (Y, X) pairs, generated from <see cref="_lockedLocationRange"/>.
     /// </summary>
-    private static readonly (uint Y, uint X)[] _lockedLocations = GetLockedLocations();
+    private static readonly (int Y, int X)[] _lockedLocations = GetLockedLocations();
 
     /// <summary>
     /// Generates all locked (Y, X) locations from the defined ranges.
     /// </summary>
+    /// <returns>An array of locked (Y, X) coordinate pairs.</returns>
     /// <returns>
     /// An array of locked (Y, X) coordinate pairs.
     /// </returns>
-    private static (uint Y, uint X)[] GetLockedLocations()
+    private static (int Y, int X)[] GetLockedLocations()    
     {
-        var locations = new List<(uint Y, uint X)>();
+        var locations = new List<(int Y, int X)>();
         foreach (var (yStart, yEnd, xStart, xEnd) in _lockedLocationRange)
         {
-            for (uint y = yStart; y <= yEnd; y++)
+            for (int y = yStart; y <= yEnd; y++)
             {
-                for (uint x = xStart; x <= xEnd; x++)
+                for (int x = xStart; x <= xEnd; x++)
                 {
                     locations.Add((y, x));
                 }
@@ -66,7 +68,7 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// <c>true</c> if the location is free (no shelf exists at the given coordinates and not locked); otherwise, <c>false</c>.
     /// </returns>
     [Obsolete("Use IsLocationFreeAsync instead.")]
-    public async Task<bool> IsLocationFree(uint locationX, uint locationY, CancellationToken cancellationToken = default)
+    public async Task<bool> IsLocationFree(int locationX, int locationY, CancellationToken cancellationToken = default)    
     {
         bool isLocationFree = true;
         List<Shelf>? AllShelfs = await _dbSet.ToListAsync(cancellationToken);
@@ -99,7 +101,7 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// <c>true</c> if the location is free (no shelf exists at the given coordinates and not locked); otherwise, <c>false</c>.
     /// </returns>
     [Obsolete("Use IsLocationFreeAsync(uint x, uint y, bool orientationHorizontal, CancellationToken). This version checks only a single cell.")]
-    public async Task<bool> IsLocationFreeAsync(uint locationX, uint locationY, CancellationToken cancellationToken = default)
+    public async Task<bool> IsLocationFreeAsync(int locationX, int locationY, CancellationToken cancellationToken = default)
     {
         bool isOccupied = await _dbSet.AnyAsync(
             shelf => shelf.LocationX == locationX && shelf.LocationY == locationY,
