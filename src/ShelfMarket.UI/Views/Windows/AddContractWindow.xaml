@@ -54,7 +54,10 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="80"/>
+
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -62,23 +65,13 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Adresse" Style="{StaticResource Text.Body}"/>
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="By" Style="{StaticResource Text.Body}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="4" Text="PostNr." Style="{StaticResource Text.Body}"/>
                     <TextBox Grid.Row="1" Grid.Column="0" Margin="0,4,0,0"/>
                     <TextBox Grid.Row="1" Grid.Column="2" Margin="0,4,0,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="4" Margin="0,4,0,0"/>
                 </Grid>
 
-                <Grid Margin="0,8,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Postnummer" HorizontalAlignment="Center" Style="{StaticResource Text.Body}"/>                    
-                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,4,0,0"/>                    
-                </Grid>
+                
 
                 <Grid Margin="0,8,0,0">
                     <Grid.ColumnDefinitions>
