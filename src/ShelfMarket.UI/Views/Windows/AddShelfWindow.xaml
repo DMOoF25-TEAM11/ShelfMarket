@@ -33,8 +33,23 @@
                        Text="Tilføj ny reol" 
                        Style="{StaticResource Popup.Title}"/>
 
+            <!-- Reol nummer TextBox -->
+            <StackPanel Grid.Row="1" Margin="0,0,0,16">
+                <TextBlock Text="Reol nummer:" 
+                           Style="{StaticResource Text.Body}" 
+                           Margin="0,0,0,8"
+                           HorizontalAlignment="Center"/>
+                <TextBox x:Name="ReolNummerTextBox"
+                         Text=""
+                         Width="100" 
+                         HorizontalAlignment="Center"/>
+                <TextBlock x:Name="FejlTekst" 
+                           Text="Dette nummer er allerede i brug" 
+                           Style="{StaticResource Text.Error}"/>
+            </StackPanel>
+
             <!-- Reoltype + Orientering side om side -->
-            <Grid Grid.Row="1" Margin="0,0,0,16">
+            <Grid Grid.Row="2" Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="20"/>
@@ -60,19 +75,7 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Reol nummer TextBox -->
-            <StackPanel Grid.Row="2" Margin="0,0,0,16">
-                <TextBlock Text="Reol nummer:" 
-                           Style="{StaticResource Text.Body}" 
-                           Margin="0,0,0,8"/>
-                <TextBox x:Name="ReolNummerTextBox"
-                         Text=""
-                         Width="100" 
-                         HorizontalAlignment="Left"/>
-                <TextBlock x:Name="FejlTekst" 
-                           Text="Dette nummer er allerede i brug" 
-                           Style="{StaticResource Text.Error}"/>
-            </StackPanel>
+            
 
             <!-- Knapper i horisontal layout -->
             <StackPanel Grid.Row="3" 

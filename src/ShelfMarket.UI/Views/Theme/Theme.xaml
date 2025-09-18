@@ -399,7 +399,18 @@
     <sys:String>December</sys:String>
   </x:Array>
 
-  <!-- ===== SYSTEM INTEGRATION ===== -->
+  <!-- Fælles månedsliste (dansk) -->
+  <x:Array x:Key="YearDa" Type="{x:Type sys:String}">
+      <sys:String>2024</sys:String>
+      <sys:String>2025</sys:String>
+      <sys:String>2026</sys:String>
+      <sys:String>2027</sys:String>
+      <sys:String>2028</sys:String>      
+  </x:Array>
+
+
+
+    <!-- ===== SYSTEM INTEGRATION ===== -->
   <!--   Integration med Windows system farver og standarder.  -->
   
   <!-- Applikations hovedbaggrund - sætter system vindue farve -->
