@@ -9,11 +9,14 @@ public class ShelfMarketDbContext : DbContext
     public DbSet<Shelf> Shelves { get; set; }
     public DbSet<ShelfTenantContract> ShelfTenantContracts { get; set; }
     public DbSet<ShelfTenantContractLine> ShelfTenantContractLines { get; set; }
-
+    
     public ShelfMarketDbContext(DbContextOptions<ShelfMarketDbContext> options)
         : base(options)
     {
     }
+
+    //ShelfTenant
+    public DbSet<ShelfTenant> ShelfTenants { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,5 +34,9 @@ public class ShelfMarketDbContext : DbContext
             .ToTable("SHELFTENANTCONTRACT");
         modelBuilder.Entity<ShelfTenantContractLine>()
             .ToTable("SHELFTENANTCONTRACTLINE");
+
+        //ShelfTenant
+        modelBuilder.Entity<ShelfTenant>()
+            .ToTable("SHELFTENANT");
     }
 }

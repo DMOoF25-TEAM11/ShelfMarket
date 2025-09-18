@@ -25,7 +25,7 @@
                 <views:EventsView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:TenantsViewModel}">
-                <views:TenantsView/>
+                <uc:TenantView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:MaintenanceViewModel}">
                 <views:MaintenanceView/>
