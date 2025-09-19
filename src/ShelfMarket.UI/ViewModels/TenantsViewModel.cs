@@ -1,13 +1,14 @@
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Interfaces;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ShelfMarket.UI.ViewModels;
 
@@ -167,10 +168,7 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
     {
     }
 
-    #region Commands
-    public ICommand AddCommand { get; }
-    public ICommand SaveCommand { get; }
-    public ICommand DeleteCommand { get; }
+    #region Extra Commands
     public ICommand ResetFormCommand { get; }
     public ICommand RefreshCommand { get; }
     #endregion
@@ -180,27 +178,14 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
     {
         _tenantRepository = tenantRepository;
 
-        AddCommand = new RelayCommand(async () => await OnAddFormAsync(), 
-            () => !IsEditMode && !string.IsNullOrWhiteSpace(FirstName) &&
-            !string.IsNullOrWhiteSpace(LastName));
-
-        SaveCommand = new RelayCommand(async () => await OnSaveAsync(), 
-            () => IsEditMode && CurrentEntity != null &&
-            (!string.IsNullOrWhiteSpace(FirstName) && FirstName != CurrentEntity.FirstName ||
-             !string.IsNullOrWhiteSpace(LastName) && LastName != CurrentEntity.LastName ||
-             !string.IsNullOrWhiteSpace(Address) && Address != CurrentEntity.Address ||
-             !string.IsNullOrWhiteSpace(PostalCode) && PostalCode != CurrentEntity.PostalCode ||
-             !string.IsNullOrWhiteSpace(City) && City != CurrentEntity.City ||
-             !string.IsNullOrWhiteSpace(Email) && Email != CurrentEntity.Email));
-
-        DeleteCommand = new RelayCommand(async () => await OnDeleteAsync(), 
-            () => IsEditMode && CurrentEntity != null);
-
-        ResetFormCommand = new RelayCommand(async () => await OnResetFormAsync(), 
-            () => IsEditMode || !string.IsNullOrWhiteSpace(FirstName) ||
-            !string.IsNullOrWhiteSpace(LastName) || !string.IsNullOrWhiteSpace(Address) ||
-            !string.IsNullOrWhiteSpace(PostalCode) || !string.IsNullOrWhiteSpace(City) ||
-            !string.IsNullOrWhiteSpace(Email));
+        ResetFormCommand = new RelayCommand(async () => await OnResetFormAsync(),
+            () => IsEditMode ||
+                  !string.IsNullOrWhiteSpace(FirstName) ||
+                  !string.IsNullOrWhiteSpace(LastName) ||
+                  !string.IsNullOrWhiteSpace(Address) ||
+                  !string.IsNullOrWhiteSpace(PostalCode) ||
+                  !string.IsNullOrWhiteSpace(City) ||
+                  !string.IsNullOrWhiteSpace(Email));
 
         RefreshCommand = new RelayCommand(async () => await LoadTenantOptionAsync());
 
@@ -212,6 +197,31 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
     #region Dropdown Fields
     private readonly ITenantRepository _tenantRepository;
     public ObservableCollection<ShelfTenant> Tenants { get; private set; } = [];
+    #endregion
+
+    #region Command Overrides
+    protected override bool CanAdd() =>
+        base.CanAdd() &&
+        !string.IsNullOrWhiteSpace(FirstName) &&
+        !string.IsNullOrWhiteSpace(LastName) &&
+        !string.IsNullOrWhiteSpace(Address) &&
+        !string.IsNullOrWhiteSpace(PostalCode) &&
+        !string.IsNullOrWhiteSpace(City) &&
+        !string.IsNullOrWhiteSpace(Email) &&
+        !string.IsNullOrWhiteSpace(PhoneNumber);
+
+    protected override bool CanSave() =>
+        base.CanSave() && CurrentEntity != null &&
+        (!string.IsNullOrWhiteSpace(FirstName) && FirstName != CurrentEntity.FirstName ||
+         !string.IsNullOrWhiteSpace(LastName) && LastName != CurrentEntity.LastName ||
+         !string.IsNullOrWhiteSpace(Address) && Address != CurrentEntity.Address ||
+         !string.IsNullOrWhiteSpace(PostalCode) && PostalCode != CurrentEntity.PostalCode ||
+         !string.IsNullOrWhiteSpace(City) && City != CurrentEntity.City ||
+         !string.IsNullOrWhiteSpace(Email) && Email != CurrentEntity.Email ||
+         !string.IsNullOrWhiteSpace(PhoneNumber) && PhoneNumber != CurrentEntity.PhoneNumber);
+
+    protected override bool CanDelete() =>
+        base.CanDelete() && CurrentEntity != null;
     #endregion
 
     #region Load handler
@@ -252,7 +262,6 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
         );
 
         TenantId = entity.Id;
-
         return Task.FromResult(entity);
     }
 
@@ -283,7 +292,6 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
 
         return Task.CompletedTask;
     }
-
     protected override Task OnLoadFormAsync(ShelfTenant entity)
     {
         CurrentEntity = entity;
