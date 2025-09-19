@@ -56,19 +56,29 @@
                 <Grid Margin="0,8,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Startmåned" Style="{StaticResource Text.Label}"/>
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Slutmåned" Style="{StaticResource Text.Label}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Start måned" HorizontalAlignment="Center" Style="{StaticResource Text.Label}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Startår" HorizontalAlignment="Center"  Style="{StaticResource Text.Label}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="4" Text="Slut måned" HorizontalAlignment="Center" Style="{StaticResource Text.Label}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="6" Text="Slut år" HorizontalAlignment="Center" Style="{StaticResource Text.Label}"/>
                     <ComboBox Grid.Row="1" Grid.Column="0" SelectedIndex="0" Margin="0,4,0,0"
-                              ItemsSource="{StaticResource MonthsDa}"/>
-                    <ComboBox Grid.Row="1" Grid.Column="2" SelectedIndex="2" Margin="0,4,0,0"
-                              ItemsSource="{StaticResource MonthsDa}"/>
+          ItemsSource="{StaticResource MonthsDa}"/>
+                    <ComboBox Grid.Row="1" Grid.Column="2" SelectedIndex="0" Margin="0,4,0,0"
+          ItemsSource="{StaticResource YearDa}"/>
+                    <ComboBox Grid.Row="1" Grid.Column="4" SelectedIndex="2" Margin="0,4,0,0"
+          ItemsSource="{StaticResource MonthsDa}"/>
+                    <ComboBox Grid.Row="1" Grid.Column="6" SelectedIndex="0" Margin="0,4,0,0"
+          ItemsSource="{StaticResource YearDa}"/>
                 </Grid>
             </StackPanel>
 
@@ -81,10 +91,17 @@
                         <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="ReolTypeCombo" Grid.Column="0" SelectedIndex="0" SelectionChanged="ReolTypeCombo_SelectionChanged">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Retning" Style="{StaticResource Text.Label}"/>
+                    <ComboBox x:Name="ReolTypeCombo" Grid.Row="1" Grid.Column="0" SelectedIndex="0" SelectionChanged="ReolTypeCombo_SelectionChanged">
                         <ComboBoxItem Content="Vertikal"/>
                         <ComboBoxItem Content="Horizontal"/>                        
-                    </ComboBox>                    
+                    </ComboBox>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Type Reol" Style="{StaticResource Text.Label}"/>
+                    <ComboBox Grid.Row="1" Grid.Column="2" SelectedIndex="0" Margin="0,4,0,0" />
                 </Grid>
             </StackPanel>
 
