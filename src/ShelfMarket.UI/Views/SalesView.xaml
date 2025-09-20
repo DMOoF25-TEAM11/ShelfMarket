@@ -1,5 +1,37 @@
 ﻿<UserControl x:Class="ShelfMarket.UI.Views.SalesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Border Background="{StaticResource Brush.SurfaceAlt}"/>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:uc="clr-namespace:ShelfMarket.UI.Views.UserControls">
+    <Grid>
+        <!--
+            Layout root:
+            - 5 rows:
+                0: Title (Auto)
+                1: Form inputs (Auto)
+                2: Action buttons (Auto)
+                3: List/UserControl area (*)
+                4: Status messages (Auto)
+        -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- Title: Centered heading describing the page purpose (Danish) -->
+        <TextBlock Grid.Row="0"
+                   Text="Tilføj og rediger reol typer"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+
+        <!-- Form Inputs: StackPanel with labeled TextBoxes for Name and Description -->
+        <StackPanel Grid.Row="1" Margin="0,10,0,0">
+            <TextBlock Text="Reol nummer / EAN:"/>
+            <TextBox x:Name="ReolTextBox" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Pris:"/>
+            <TextBox x:Name="PriceTextBox" Margin="0,0,0,10"/>
+        </StackPanel>
+    </Grid>
 </UserControl>
