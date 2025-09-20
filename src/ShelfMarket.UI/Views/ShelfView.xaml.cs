@@ -123,58 +123,61 @@ namespace ShelfMarket.UI.Views
         #endregion
 
         #region Drag & drop wiring
-        private async Task EnsureMissingShelvesCreatedFromUIAsync(IEnumerable<ShelfMarket.Domain.Entities.Shelf> existing)
-        {
-            try
-            {
-                var existingByNumber = existing.ToDictionary(s => s.Number, s => s);
-                var allButtons = FindVisualChildren<Button>(ShelfGrid).Where(b => b.Name.StartsWith("Shelf")).ToList();
+        //private async Task EnsureMissingShelvesCreatedFromUIAsync(IEnumerable<ShelfMarket.Domain.Entities.Shelf> existing)
+        //{
+        //    try
+        //    {
+        //        var existingByNumber = existing.ToDictionary(s => s.Number, s => s);
+        //        var allButtons = FindVisualChildren<Button>(ShelfGrid).Where(b => b.Name.StartsWith("Shelf")).ToList();
 
-                // Resolve style references once
-                Style? styleH = null, styleV = null;
-                try
-                {
-                    styleH = FindResource("Stand.Horizontal") as Style;
-                    styleV = FindResource("Stand.Vertical") as Style;
-                }
-                catch { }
+        //        // Resolve style references once
+        //        Style? styleH = null, styleV = null;
+        //        try
+        //        {
+        //            styleH = FindResource("Stand.Horizontal") as Style;
+        //            styleV = FindResource("Stand.Vertical") as Style;
+        //        }
+        //        catch { }
 
-                var missing = new List<(int Number, int Col, int Row, bool IsHorizontal)>();
-                var updates = new List<(ShelfMarket.Domain.Entities.Shelf Shelf, int Col, int Row, bool? NewHorizontal)>();
+        //        var missing = new List<(int Number, int Col, int Row, bool IsHorizontal)>();
+        //        var updates = new List<(ShelfMarket.Domain.Entities.Shelf Shelf, int Col, int Row, bool? NewHorizontal)>();
 
-                foreach (var b in allButtons)
-                {
-                    if (!int.TryParse(b.Name["Shelf".Length..], out var num)) continue;
-                    int col = Grid.GetColumn(b);
-                    int row = Grid.GetRow(b);
-                    bool isHorizontal = Grid.GetColumnSpan(b) > 1; // use span, falls back to style
-                    if (!isHorizontal && styleH != null && ReferenceEquals(b.Style, styleH)) isHorizontal = true;
+        //        foreach (var b in allButtons)
+        //        {
+        //            if (!int.TryParse(b.Name["Shelf".Length..], out var num)) continue;
+        //            int col = Grid.GetColumn(b);
+        //            int row = Grid.GetRow(b);
+        //            bool isHorizontal = Grid.GetColumnSpan(b) > 1; // use span, falls back to style
+        //            if (!isHorizontal && styleH != null && ReferenceEquals(b.Style, styleH)) isHorizontal = true;
 
-                    if (existingByNumber.TryGetValue(num, out var shelf))
-                    {
-                        bool needUpdatePos = shelf.LocationX != col || shelf.LocationY != row;
-                        bool needUpdateOri = shelf.OrientationHorizontal != isHorizontal;
-                        if (needUpdatePos || needUpdateOri)
-                            updates.Add((shelf, col, row, needUpdateOri ? isHorizontal : (bool?)null));
-                    }
-                    else
-                    {
-                        missing.Add((num, col, row, isHorizontal));
-                    }
-                }
+        //            /*
+        //             * TODO : Use IsLocationFreeAsync from ShelfRepository to check if position is valid
+        //             */
+        //            if (existingByNumber.TryGetValue(num, out var shelf))
+        //            {
+        //                bool needUpdatePos = shelf.LocationX != col || shelf.LocationY != row;
+        //                bool needUpdateOri = shelf.OrientationHorizontal != isHorizontal;
+        //                if (needUpdatePos || needUpdateOri)
+        //                    updates.Add((shelf, col, row, needUpdateOri ? isHorizontal : (bool?)null));
+        //            }
+        //            else
+        //            {
+        //                missing.Add((num, col, row, isHorizontal));
+        //            }
+        //        }
 
-                // DB er nu source of truth – ingen automatisk reset længere
-                return;
+        //        // DB er nu source of truth – ingen automatisk reset længere
+        //        return;
 
-                // (seeding code below kept as-is but not executed)
-            }
-            catch
-            {
-                // ignore – seeding er kun convenience
-            }
-        }
+        //        // (seeding code below kept as-is but not executed)
+        //    }
+        //    catch
+        //    {
+        //        // ignore – seeding er kun convenience
+        //    }
+        //}
 
-        private static string shellfNumber(uint number) => number.ToString();
+        //private static string shellfNumber(uint number) => number.ToString();
 
         private static Button? FindButtonByName(DependencyObject root, string name)
         {
@@ -602,78 +605,78 @@ namespace ShelfMarket.UI.Views
             return ShelfGrid.RowDefinitions.Count - 1;
         }
 
-        [Obsolete("Not used anymore. using repository methods instead")]
-        private bool IsValidGridPosition(int column, int row)
-        {
-            int firstVisibleCol = 0;
-            while (firstVisibleCol < ShelfGrid.ColumnDefinitions.Count &&
-                   GetDefinitionSize(ShelfGrid.ColumnDefinitions[firstVisibleCol]) <= 0)
-            {
-                firstVisibleCol++;
-            }
+        //[Obsolete("Not used anymore. using repository methods instead")]
+        //private bool IsValidGridPosition(int column, int row)
+        //{
+        //    int firstVisibleCol = 0;
+        //    while (firstVisibleCol < ShelfGrid.ColumnDefinitions.Count &&
+        //           GetDefinitionSize(ShelfGrid.ColumnDefinitions[firstVisibleCol]) <= 0)
+        //    {
+        //        firstVisibleCol++;
+        //    }
 
-            int lastVisibleCol = ShelfGrid.ColumnDefinitions.Count - 1;
-            while (lastVisibleCol >= 0 &&
-                   GetDefinitionSize(ShelfGrid.ColumnDefinitions[lastVisibleCol]) <= 0)
-            {
-                lastVisibleCol--;
-            }
+        //    int lastVisibleCol = ShelfGrid.ColumnDefinitions.Count - 1;
+        //    while (lastVisibleCol >= 0 &&
+        //           GetDefinitionSize(ShelfGrid.ColumnDefinitions[lastVisibleCol]) <= 0)
+        //    {
+        //        lastVisibleCol--;
+        //    }
 
-            int firstVisibleRow = 0;
-            while (firstVisibleRow < ShelfGrid.RowDefinitions.Count &&
-                   GetDefinitionSize(ShelfGrid.RowDefinitions[firstVisibleRow]) <= 0)
-            {
-                firstVisibleRow++;
-            }
+        //    int firstVisibleRow = 0;
+        //    while (firstVisibleRow < ShelfGrid.RowDefinitions.Count &&
+        //           GetDefinitionSize(ShelfGrid.RowDefinitions[firstVisibleRow]) <= 0)
+        //    {
+        //        firstVisibleRow++;
+        //    }
 
-            int lastVisibleRow = ShelfGrid.RowDefinitions.Count - 1;
-            while (lastVisibleRow >= 0 &&
-                   GetDefinitionSize(ShelfGrid.RowDefinitions[lastVisibleRow]) <= 0)
-            {
-                lastVisibleRow--;
-            }
+        //    int lastVisibleRow = ShelfGrid.RowDefinitions.Count - 1;
+        //    while (lastVisibleRow >= 0 &&
+        //           GetDefinitionSize(ShelfGrid.RowDefinitions[lastVisibleRow]) <= 0)
+        //    {
+        //        lastVisibleRow--;
+        //    }
 
-            return column >= firstVisibleCol && column <= lastVisibleCol &&
-                   row >= firstVisibleRow && row <= lastVisibleRow;
-        }
+        //    return column >= firstVisibleCol && column <= lastVisibleCol &&
+        //           row >= firstVisibleRow && row <= lastVisibleRow;
+        //}
 
-        private int ClampToVisibleColumns(int column)
-        {
-            int firstVisibleCol = 0;
-            while (firstVisibleCol < ShelfGrid.ColumnDefinitions.Count &&
-                   GetDefinitionSize(ShelfGrid.ColumnDefinitions[firstVisibleCol]) <= 0)
-            {
-                firstVisibleCol++;
-            }
+        //private int ClampToVisibleColumns(int column)
+        //{
+        //    int firstVisibleCol = 0;
+        //    while (firstVisibleCol < ShelfGrid.ColumnDefinitions.Count &&
+        //           GetDefinitionSize(ShelfGrid.ColumnDefinitions[firstVisibleCol]) <= 0)
+        //    {
+        //        firstVisibleCol++;
+        //    }
 
-            int lastVisibleCol = ShelfGrid.ColumnDefinitions.Count - 1;
-            while (lastVisibleCol >= 0 &&
-                   GetDefinitionSize(ShelfGrid.ColumnDefinitions[lastVisibleCol]) <= 0)
-            {
-                lastVisibleCol--;
-            }
+        //    int lastVisibleCol = ShelfGrid.ColumnDefinitions.Count - 1;
+        //    while (lastVisibleCol >= 0 &&
+        //           GetDefinitionSize(ShelfGrid.ColumnDefinitions[lastVisibleCol]) <= 0)
+        //    {
+        //        lastVisibleCol--;
+        //    }
 
-            return Math.Max(firstVisibleCol, Math.Min(lastVisibleCol, column));
-        }
+        //    return Math.Max(firstVisibleCol, Math.Min(lastVisibleCol, column));
+        //}
 
-        private int ClampToVisibleRows(int row)
-        {
-            int firstVisibleRow = 0;
-            while (firstVisibleRow < ShelfGrid.RowDefinitions.Count &&
-                   GetDefinitionSize(ShelfGrid.RowDefinitions[firstVisibleRow]) <= 0)
-            {
-                firstVisibleRow++;
-            }
+        //private int ClampToVisibleRows(int row)
+        //{
+        //    int firstVisibleRow = 0;
+        //    while (firstVisibleRow < ShelfGrid.RowDefinitions.Count &&
+        //           GetDefinitionSize(ShelfGrid.RowDefinitions[firstVisibleRow]) <= 0)
+        //    {
+        //        firstVisibleRow++;
+        //    }
 
-            int lastVisibleRow = ShelfGrid.RowDefinitions.Count - 1;
-            while (lastVisibleRow >= 0 &&
-                   GetDefinitionSize(ShelfGrid.RowDefinitions[lastVisibleRow]) <= 0)
-            {
-                lastVisibleRow--;
-            }
+        //    int lastVisibleRow = ShelfGrid.RowDefinitions.Count - 1;
+        //    while (lastVisibleRow >= 0 &&
+        //           GetDefinitionSize(ShelfGrid.RowDefinitions[lastVisibleRow]) <= 0)
+        //    {
+        //        lastVisibleRow--;
+        //    }
 
-            return Math.Max(firstVisibleRow, Math.Min(lastVisibleRow, row));
-        }
+        //    return Math.Max(firstVisibleRow, Math.Min(lastVisibleRow, row));
+        //}
 
         private static double GetDefinitionSize(ColumnDefinition col)
         {
@@ -695,29 +698,29 @@ namespace ShelfMarket.UI.Views
             return height;
         }
 
-        private double GetCellWidth()
-        {
-            // Estimér typisk cellebredde via første synlige kolonne; brug fallback hvis intet findes
-            foreach (var col in ShelfGrid.ColumnDefinitions)
-            {
-                var w = col.ActualWidth;
-                if (w > 0) return w;
-                if (col.Width.IsAbsolute && col.Width.Value > 0) return col.Width.Value;
-            }
-            return 25.0;
-        }
+        //private double GetCellWidth()
+        //{
+        //    // Estimér typisk cellebredde via første synlige kolonne; brug fallback hvis intet findes
+        //    foreach (var col in ShelfGrid.ColumnDefinitions)
+        //    {
+        //        var w = col.ActualWidth;
+        //        if (w > 0) return w;
+        //        if (col.Width.IsAbsolute && col.Width.Value > 0) return col.Width.Value;
+        //    }
+        //    return 25.0;
+        //}
 
-        private double GetCellHeight()
-        {
-            // Estimér typisk cellehøjde via første synlige række; brug fallback hvis intet findes
-            foreach (var row in ShelfGrid.RowDefinitions)
-            {
-                var h = row.ActualHeight;
-                if (h > 0) return h;
-                if (row.Height.IsAbsolute && row.Height.Value > 0) return row.Height.Value;
-            }
-            return 25.0;
-        }
+        //private double GetCellHeight()
+        //{
+        //    // Estimér typisk cellehøjde via første synlige række; brug fallback hvis intet findes
+        //    foreach (var row in ShelfGrid.RowDefinitions)
+        //    {
+        //        var h = row.ActualHeight;
+        //        if (h > 0) return h;
+        //        if (row.Height.IsAbsolute && row.Height.Value > 0) return row.Height.Value;
+        //    }
+        //    return 25.0;
+        //}
         #endregion
 
         #region Shelf sizing helpers
@@ -889,18 +892,18 @@ namespace ShelfMarket.UI.Views
         /// Returnerer true hvis der allerede står en anden reolknap i den angivne celle.
         /// Note: Kept for compatibility; occupancy is validated server-side.
         /// </summary>
-        private bool IsCellOccupied(int column, int row, Button? ignore = null)
-        {
-            foreach (var child in FindVisualChildren<Button>(ShelfGrid))
-            {
-                if (ignore != null && ReferenceEquals(child, ignore)) continue;
-                if (Grid.GetColumn(child) == column && Grid.GetRow(child) == row)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        //private bool IsCellOccupied(int column, int row, Button? ignore = null)
+        //{
+        //    foreach (var child in FindVisualChildren<Button>(ShelfGrid))
+        //    {
+        //        if (ignore != null && ReferenceEquals(child, ignore)) continue;
+        //        if (Grid.GetColumn(child) == column && Grid.GetRow(child) == row)
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
         #endregion
     }
 }
