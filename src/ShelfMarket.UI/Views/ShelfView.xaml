@@ -98,9 +98,7 @@
                 CornerRadius="0" 
                 Margin="8,4,8,8">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid x:Name="ShelfGrid" AllowDrop="True"
-                      Width="475"
-                      Height="700">
+                <Grid x:Name="ShelfGrid" AllowDrop="True">
 
                     <!-- Grid baggrund med subtile linjer -->
                     <Grid.Background>
@@ -121,7 +119,7 @@
                         </DrawingBrush>
                     </Grid.Background>
 
-                    <!-- 19 columns -->
+                     <!--19 columns 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="25"/>
                         <ColumnDefinition Width="25"/>
@@ -144,7 +142,7 @@
                         <ColumnDefinition Width="25"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- 27 rows -->
+                     27 rows 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25"/>
@@ -174,7 +172,7 @@
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="25"/>
-                    </Grid.RowDefinitions>
+                    </Grid.RowDefinitions>-->
 
                     <!-- Existing shelf buttons and elements go here, update their Grid.Row and Grid.Column as needed -->
                 </Grid>

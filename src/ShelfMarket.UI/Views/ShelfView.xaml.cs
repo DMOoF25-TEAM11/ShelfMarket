@@ -15,6 +15,13 @@ namespace ShelfMarket.UI.Views
     /// </summary>
     public partial class ShelfView : UserControl
     {
+        #region variables
+        // Grid shape (19 x 27), cell size in pixels
+        private const int GridColumns = 19;
+        private const int GridRows = 27;
+        private const double CellSizePx = 25.0;
+        #endregion
+
         #region Fields
         private bool _isDragging = false;
         private Button? _draggedButton;
@@ -42,6 +49,7 @@ namespace ShelfMarket.UI.Views
         /// </summary>
         private async void ShelfView_Loaded(object sender, RoutedEventArgs e)
         {
+            ConfigureShelfGridShape();
             SetupDragAndDrop();
             await LoadShelvesFromDatabaseAsync();
         }
@@ -905,5 +913,50 @@ namespace ShelfMarket.UI.Views
         //    return false;
         //}
         #endregion
+
+        #region Grid configuration
+        /// <summary>
+        /// Enforces a 19x27 grid with 25px cells and sizes the grid to match those definitions.
+        /// Prevents stretching by aligning to top-left.
+        /// </summary>
+        private void ConfigureShelfGridShape()
+        {
+            if (ShelfGrid == null) return;
+
+            // Stop layout pass while reconfiguring to avoid flicker
+            ShelfGrid.BeginInit();
+
+            // Exact size = columns * cell width, rows * cell height
+            ShelfGrid.HorizontalAlignment = HorizontalAlignment.Left;
+            ShelfGrid.VerticalAlignment = VerticalAlignment.Top;
+            ShelfGrid.Width = GridColumns * CellSizePx;
+            ShelfGrid.Height = GridRows * CellSizePx;
+
+            // Ensure column definitions
+            if (ShelfGrid.ColumnDefinitions.Count != GridColumns ||
+                ShelfGrid.ColumnDefinitions.Any(c => !c.Width.IsAbsolute || Math.Abs(c.Width.Value - CellSizePx) > 0.01))
+            {
+                ShelfGrid.ColumnDefinitions.Clear();
+                for (int i = 0; i < GridColumns; i++)
+                {
+                    ShelfGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(CellSizePx) });
+                }
+            }
+
+            // Ensure row definitions
+            if (ShelfGrid.RowDefinitions.Count != GridRows ||
+                ShelfGrid.RowDefinitions.Any(r => !r.Height.IsAbsolute || Math.Abs(r.Height.Value - CellSizePx) > 0.01))
+            {
+                ShelfGrid.RowDefinitions.Clear();
+                for (int i = 0; i < GridRows; i++)
+                {
+                    ShelfGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(CellSizePx) });
+                }
+            }
+
+            ShelfGrid.EndInit();
+        }
+        #endregion
+
     }
 }
