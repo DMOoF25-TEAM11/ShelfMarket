@@ -3,241 +3,252 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-  <!-- ===== REOLMARKEDET THEME ===== -->
-  <!-- 
+    <!-- ===== REOLMARKEDET THEME ===== -->
+    <!-- 
       Dette er hovedtemaet for Reolmarkedet applikationen.
       Temaet definerer alle farver, styles og komponenter der bruges gennem hele applikationen.
       Alle ændringer her påvirker hele applikationens udseende.
   -->
 
-  <!-- ===== FARVEPALETTE ===== -->
-  <Color x:Key="Color.Primary">#FF6B00</Color>
-  <Color x:Key="Color.OnPrimary">#FFFFFFFF</Color>
-  <Color x:Key="Color.Surface">#0F172A</Color>
-  <Color x:Key="Color.SurfaceAlt">#111827</Color>
-  <Color x:Key="Color.Card">#1F2937</Color>
-  <Color x:Key="Color.Accent">#22C55E</Color>
-  <Color x:Key="Color.Text">#E5E7EB</Color>
-  <Color x:Key="Color.TextDim">#9CA3AF</Color>
-  <Color x:Key="Color.Border">#374151</Color>
+    <!-- ===== FARVEPALETTE ===== -->
+    <Color x:Key="Color.Primary">#FF6B00</Color>
+    <Color x:Key="Color.OnPrimary">#FFFFFFFF</Color>
+    <Color x:Key="Color.Surface">#0F172A</Color>
+    <Color x:Key="Color.SurfaceAlt">#111827</Color>
+    <Color x:Key="Color.Card">#1F2937</Color>
+    <Color x:Key="Color.Accent">#22C55E</Color>
+    <Color x:Key="Color.Text">#E5E7EB</Color>
+    <Color x:Key="Color.TextDim">#9CA3AF</Color>
+    <Color x:Key="Color.Border">#374151</Color>
 
-  <!-- ===== BRUSH DEFINITIONER ===== -->
-  <SolidColorBrush x:Key="Brush.Primary" Color="{StaticResource Color.Primary}"/>
-  <SolidColorBrush x:Key="Brush.OnPrimary" Color="{StaticResource Color.OnPrimary}"/>
-  <SolidColorBrush x:Key="Brush.Surface" Color="{StaticResource Color.Surface}"/>
-  <SolidColorBrush x:Key="Brush.SurfaceAlt" Color="{StaticResource Color.SurfaceAlt}"/>
-  <SolidColorBrush x:Key="Brush.Card" Color="{StaticResource Color.Card}"/>
-  <SolidColorBrush x:Key="Brush.Accent" Color="{StaticResource Color.Accent}"/>
-  <SolidColorBrush x:Key="Brush.Text" Color="{StaticResource Color.Text}"/>
-  <SolidColorBrush x:Key="Brush.TextDim" Color="{StaticResource Color.TextDim}"/>
-  <SolidColorBrush x:Key="Brush.Border" Color="{StaticResource Color.Border}"/>
-  <SolidColorBrush x:Key="Brush.Transparent" Color="Transparent"/>
+    <!-- ===== BRUSH DEFINITIONER ===== -->
+    <SolidColorBrush x:Key="Brush.Primary" Color="{StaticResource Color.Primary}"/>
+    <SolidColorBrush x:Key="Brush.OnPrimary" Color="{StaticResource Color.OnPrimary}"/>
+    <SolidColorBrush x:Key="Brush.Surface" Color="{StaticResource Color.Surface}"/>
+    <SolidColorBrush x:Key="Brush.SurfaceAlt" Color="{StaticResource Color.SurfaceAlt}"/>
+    <SolidColorBrush x:Key="Brush.Card" Color="{StaticResource Color.Card}"/>
+    <SolidColorBrush x:Key="Brush.Accent" Color="{StaticResource Color.Accent}"/>
+    <SolidColorBrush x:Key="Brush.Text" Color="{StaticResource Color.Text}"/>
+    <SolidColorBrush x:Key="Brush.TextDim" Color="{StaticResource Color.TextDim}"/>
+    <SolidColorBrush x:Key="Brush.Border" Color="{StaticResource Color.Border}"/>
+    <SolidColorBrush x:Key="Brush.Transparent" Color="Transparent"/>
 
-  <!-- ===== TYPOGRAFI ===== -->
-  <Style x:Key="Text.H1" TargetType="TextBlock">
-    <Setter Property="FontSize" Value="28"/>
-    <Setter Property="FontWeight" Value="SemiBold"/>
-    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-  </Style>
+    <!-- ===== TYPOGRAFI ===== -->
+    <Style x:Key="Text.H1" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+    </Style>
 
-  <Style x:Key="Text.H2" TargetType="TextBlock" BasedOn="{StaticResource Text.H1}">
-    <Setter Property="FontSize" Value="20"/>
-    <Setter Property="FontWeight" Value="SemiBold"/>
-  </Style>
+    <Style x:Key="Text.H2" TargetType="TextBlock" BasedOn="{StaticResource Text.H1}">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
 
-  <Style x:Key="Text.Body" TargetType="TextBlock">
-    <Setter Property="FontSize" Value="14"/>
-    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-    <Setter Property="TextWrapping" Value="Wrap"/>
-  </Style>
+    <Style x:Key="Text.Body" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
 
-  <!-- ===== KNAPPER ===== -->
-  <!-- 
+    <!-- ===== KNAPPER ===== -->
+    <!-- 
       Her defineres knapstilarter for forskellige formål i applikationen.
       Knapperne har hover-effekter og disabled states for bedre brugeroplevelse.
   -->
-  
-  <!-- Primær knap - Hovedhandlinger som "Gem", "Opret", "Tilføj" -->
-  <Style x:Key="Button.Primary" TargetType="Button">
-    <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
-    <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
-    <Setter Property="Padding" Value="12,8"/>
-    <Setter Property="BorderThickness" Value="0"/>
-    <Setter Property="Cursor" Value="Hand"/>
-    <Setter Property="SnapsToDevicePixels" Value="True"/>
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="Button">
-          <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="8">
-            <ContentPresenter Margin="4"
+
+    <!-- Primær knap - Hovedhandlinger som "Gem", "Opret", "Tilføj" -->
+    <Style x:Key="Button.Primary" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
+        <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="8">
+                        <ContentPresenter Margin="4"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"/>
-          </Border>
-          <ControlTemplate.Triggers>
-            <!-- Hover effekt - lysere orange -->
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter TargetName="Bg" Property="Background" Value="#FF7C21"/>
-            </Trigger>
-            <!-- Tryk effekt - mørkere orange -->
-            <Trigger Property="IsPressed" Value="True">
-              <Setter TargetName="Bg" Property="Background" Value="#E65F00"/>
-            </Trigger>
-            <!-- Deaktiveret tilstand - gennemsigtig -->
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter Property="Opacity" Value="0.6"/>
-            </Trigger>
-          </ControlTemplate.Triggers>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Hover effekt - lysere orange -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#FF7C21"/>
+                        </Trigger>
+                        <!-- Tryk effekt - mørkere orange -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#E65F00"/>
+                        </Trigger>
+                        <!-- Deaktiveret tilstand - gennemsigtig -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
-  <!-- Sekundær knap - til sekundære handlinger som Annuller -->
-  <Style x:Key="Button.Secondary" TargetType="Button">
-    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-    <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
-    <Setter Property="Padding" Value="12,8"/>
-    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
-    <Setter Property="BorderThickness" Value="1"/>
-    <Setter Property="Cursor" Value="Hand"/>
-    <Setter Property="SnapsToDevicePixels" Value="True"/>
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="Button">
-          <Border x:Name="Bg" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
-            <ContentPresenter Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-          </Border>
-          <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter TargetName="Bg" Property="Background" Value="#151E32"/>
-            </Trigger>
-            <Trigger Property="IsPressed" Value="True">
-              <Setter TargetName="Bg" Property="Background" Value="#0F172A"/>
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter Property="Opacity" Value="0.6"/>
-            </Trigger>
-          </ControlTemplate.Triggers>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
+    <!-- Sekundær knap - til sekundære handlinger som Annuller -->
+    <Style x:Key="Button.Secondary" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+                        <ContentPresenter Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#151E32"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#0F172A"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
-  <!-- Behold special styles her hvis de ikke passer i de delte filer -->
-  <!-- Stand.Horizontal / Stand.Vertical kan flyttes senere ved behov -->
+    <!-- Behold special styles her hvis de ikke passer i de delte filer -->
+    <!-- Stand.Horizontal / Stand.Vertical kan flyttes senere ved behov -->
 
-  <!-- ===== NAVIGATION ===== -->
-  <!-- 
+    <!-- ===== NAVIGATION ===== -->
+    <!-- 
       Stilarter til navigation og menuer i applikationen.
       Disse stilarter giver en konsistent navigation oplevelse.
   -->
-  
-  <!-- Navigation ListBox - Venstre menu/navigation -->
-  <Style x:Key="Nav.ListBox" TargetType="ListBox">
-    <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
-    <Setter Property="BorderThickness" Value="0"/>
-    <Setter Property="Padding" Value="8"/>
-    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-    <Setter Property="FontSize" Value="20"/>  <!-- Menu tekststørrelse -->
-    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-    <Setter Property="ItemContainerStyle">
-      <Setter.Value>
-        <Style TargetType="ListBoxItem">
-          <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-          <Setter Property="Padding" Value="0"/>
-          <Setter Property="Template">
+
+    <!-- Navigation ListBox - Venstre menu/navigation -->
+    <Style x:Key="Nav.ListBox" TargetType="ListBox">
+        <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="FontSize" Value="20"/>
+        <!-- Menu tekststørrelse -->
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ItemContainerStyle">
             <Setter.Value>
-              <ControlTemplate TargetType="ListBoxItem">
-                <Grid>
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="4"/>
-                    <ColumnDefinition Width="*"/>
-                  </Grid.ColumnDefinitions>
-                  <!-- Valgbar - viser aktiv side -->
-                    
-                  <Border x:Name="SelBar" Grid.Column="0" Background="{StaticResource Brush.Transparent}" CornerRadius="2"/>
-                    
-                  <!-- Menu element -->
-                  <Border Grid.Column="1"
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="4"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Valgbar - viser aktiv side -->
+
+                                    <Border x:Name="SelBar" Grid.Column="0" Background="{StaticResource Brush.Transparent}" CornerRadius="2"/>
+
+                                    <!-- Menu element -->
+                                    <Border Grid.Column="1"
                           Background="{StaticResource Brush.Transparent}"
                           CornerRadius="8"
                           Padding="12,10">
-                    <ContentPresenter/>
-                  </Border>
-                </Grid>
-                <ControlTemplate.Triggers>
-                    
-                  <!-- Hover effekt - grå valgbar -->
-                  <Trigger Property="IsMouseOver" Value="True">
-                    <Setter TargetName="SelBar" Property="Background" Value="{StaticResource Brush.Border}"/>
-                  </Trigger>
-                    
-                  <!-- Valgt element - orange valgbar og fed tekst -->
-                  <Trigger Property="IsSelected" Value="True">
-                    <Setter TargetName="SelBar" Property="Background" Value="{StaticResource Brush.Primary}"/>
-                    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-                    <Setter Property="FontWeight" Value="SemiBold"/>
-                  </Trigger>
-                    
-                  <!-- Deaktiveret element -->
-                  <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Opacity" Value="0.6"/>
-                  </Trigger>
-                </ControlTemplate.Triggers>
-              </ControlTemplate>
+                                        <ContentPresenter/>
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+
+                                    <!-- Hover effekt - grå valgbar -->
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="SelBar" Property="Background" Value="{StaticResource Brush.Border}"/>
+                                    </Trigger>
+
+                                    <!-- Valgt element - orange valgbar og fed tekst -->
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="SelBar" Property="Background" Value="{StaticResource Brush.Primary}"/>
+                                        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                    </Trigger>
+
+                                    <!-- Deaktiveret element -->
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.6"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
             </Setter.Value>
-          </Setter>
-        </Style>
-      </Setter.Value>
-    </Setter>
-  </Style>
+        </Setter>
+    </Style>
 
-  <!-- ===== KORT OG PANELER ===== -->
-  <!-- Stilarter til kort, paneler og containere der holder indhold.  -->
-  
-  <!-- Card - Generel kort stil til at gruppere relateret indhold -->
-  <Style x:Key="Card" TargetType="Border">
-    <Setter Property="Background" Value="{StaticResource Brush.Card}"/>
-    <Setter Property="CornerRadius" Value="12"/>
-    <Setter Property="Padding" Value="16"/>
-    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
-    <Setter Property="BorderThickness" Value="1"/>
-  </Style>
+    <!-- ===== KORT OG PANELER ===== -->
+    <!-- Stilarter til kort, paneler og containere der holder indhold.  -->
 
-  <!-- ===== INPUT FELTER ===== -->
-  <!-- Stilarter til input felter og formular elementer.  -->
-  
-  <!-- TextBox - Tekst input felter -->
-  <Style TargetType="TextBox">
-    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-    <Setter Property="Background" Value="#0B1220"/>
-    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
-    <Setter Property="BorderThickness" Value="0"/>
-    <Setter Property="Padding" Value="10,6"/>
-    <Setter Property="CaretBrush" Value="{StaticResource Brush.Text}"/>
-  </Style>
+    <!-- Card - Generel kort stil til at gruppere relateret indhold -->
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Brush.Card}"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
 
-  <!-- ComboBox - Dropdown lister til valg af muligheder -->
-  <Style TargetType="ComboBox">
-    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-    <Setter Property="Background" Value="#0B1220"/>
-    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
-    <Setter Property="BorderThickness" Value="1"/>
-    <Setter Property="Padding" Value="8,4"/>
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="ComboBox">
-          <Grid>
-              
-            <!-- Hovedbaggrund -->
-            <Border x:Name="Bg"
+    <!-- ===== INPUT FELTER ===== -->
+    <!-- Stilarter til input felter og formular elementer.  -->
+
+    <!-- TextBlock - Afkrydsningsfelter -->
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+    </Style>
+
+    <!-- TextBox - Tekst input felter -->
+    <Style TargetType="TextBox">
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="Background" Value="#0B1220"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="CaretBrush" Value="{StaticResource Brush.Text}"/>
+    </Style>
+
+    <Style TargetType="ListView" BasedOn="{StaticResource Nav.ListBox}">
+        <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
+        <Setter Property="TextBlock.Foreground" Value="Black"/>
+    </Style>
+
+    <!-- ComboBox - Dropdown lister til valg af muligheder -->
+    <Style TargetType="ComboBox">
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="Background" Value="#0B1220"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+
+                        <!-- Hovedbaggrund -->
+                        <Border x:Name="Bg"
                     Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
                     CornerRadius="6"/>
-            
-            <!-- Valgt element (lukket tilstand) -->
-            <ContentPresenter
+
+                        <!-- Valgt element (lukket tilstand) -->
+                        <ContentPresenter
                 Margin="{TemplateBinding Padding}"
                 VerticalAlignment="Center"
                 RecognizesAccessKey="True"
@@ -245,10 +256,10 @@
                 ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                 ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
                 Content="{TemplateBinding SelectionBoxItem}"
-                TextElement.Foreground="{TemplateBinding Foreground}" />    
+                TextElement.Foreground="{TemplateBinding Foreground}" />
 
-            <!-- Dropdown pil knap -->
-            <ToggleButton x:Name="DropDownToggle"
+                        <!-- Dropdown pil knap -->
+                        <ToggleButton x:Name="DropDownToggle"
                           Grid.ZIndex="1"
                           Focusable="False"
                           Background="{StaticResource Brush.Transparent}"
@@ -258,278 +269,278 @@
                           Width="28"
                           Padding="0"
                           IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-              <Path Data="M 0 0 L 4 4 L 8 0"
+                            <Path Data="M 0 0 L 4 4 L 8 0"
                     Stretch="Uniform"
                     Width="10" Height="6"
                     StrokeThickness="2"
                     Stroke="{TemplateBinding Foreground}"
-                    HorizontalAlignment="Center" VerticalAlignment="Center"/> 
-            </ToggleButton>
+                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </ToggleButton>
 
-            <!-- Dropdown popup med valgmuligheder -->
-            <Popup x:Name="PART_Popup"
+                        <!-- Dropdown popup med valgmuligheder -->
+                        <Popup x:Name="PART_Popup"
                    Placement="Bottom"
                    AllowsTransparency="True"
                    Focusable="False"
                    IsOpen="{TemplateBinding IsDropDownOpen}"
                    PopupAnimation="Slide">
-              <Border Background="{StaticResource Brush.SurfaceAlt}"
+                            <Border Background="{StaticResource Brush.SurfaceAlt}"
                       BorderBrush="{StaticResource Brush.Border}"
                       BorderThickness="1"
                       CornerRadius="6" Padding="4"
                       MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
-                <ScrollViewer CanContentScroll="True">
-                  <StackPanel IsItemsHost="True"/>
-                </ScrollViewer>
-              </Border>
-            </Popup>
-          </Grid>
+                                <ScrollViewer CanContentScroll="True">
+                                    <StackPanel IsItemsHost="True"/>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
 
-          <ControlTemplate.Triggers>
-              
-            <!-- Deaktiveret tilstand -->
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter TargetName="Bg" Property="Opacity" Value="0.6"/>
-            </Trigger>
-              
-            <!-- Hover effekt - orange ramme -->
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter TargetName="Bg" Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
-            </Trigger>
-              
-            <!-- Fokus effekt - orange ramme -->
-            <Trigger Property="IsKeyboardFocusWithin" Value="True">
-              <Setter TargetName="Bg" Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
-            </Trigger>
-          </ControlTemplate.Triggers>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
+                    <ControlTemplate.Triggers>
 
-    <!-- Stil for dropdown elementer -->
-    <Setter Property="ItemContainerStyle">
-      <Setter.Value>
-        <Style TargetType="ComboBoxItem">
-          <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-          <Setter Property="Background" Value="Transparent"/>
-          <Setter Property="Padding" Value="8,6"/>
-          <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-          <Setter Property="VerticalContentAlignment" Value="Center"/>
-          <Style.Triggers>
-              
-            <!-- Hover effekt på dropdown element -->
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter Property="Background" Value="{StaticResource Brush.Border}"/>
-            </Trigger>
-              
-            <!-- Valgt element - orange baggrund -->
-            <Trigger Property="IsSelected" Value="True">
-              <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
-              <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
-            </Trigger>
-          </Style.Triggers>
-        </Style>
-      </Setter.Value>
-    </Setter>
-  </Style>
+                        <!-- Deaktiveret tilstand -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bg" Property="Opacity" Value="0.6"/>
+                        </Trigger>
+
+                        <!-- Hover effekt - orange ramme -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                        </Trigger>
+
+                        <!-- Fokus effekt - orange ramme -->
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="Bg" Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <!-- Stil for dropdown elementer -->
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Padding" Value="8,6"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Style.Triggers>
+
+                        <!-- Hover effekt på dropdown element -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource Brush.Border}"/>
+                        </Trigger>
+
+                        <!-- Valgt element - orange baggrund -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+                            <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 
 
-  <!-- ===== POPUP VINDUER ===== -->
-  <!-- Stilarter til popup vinduer og dialogbokse.  -->
-  
-  <!-- Popup vindue - Hovedcontainer for dialogbokse -->
-  <Style x:Key="Popup.Window" TargetType="Border">
-    <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
-    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
-    <Setter Property="BorderThickness" Value="2"/>
-    <Setter Property="CornerRadius" Value="12"/>
-    <Setter Property="Padding" Value="24"/>
-    <Setter Property="MinWidth" Value="400"/>
-    <Setter Property="MinHeight" Value="300"/>
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect Color="Black" Opacity="0.3" ShadowDepth="8" BlurRadius="20"/>
-      </Setter.Value>
-    </Setter>
-  </Style>
-  
-  <!-- Popup overskrift - Titel til popup vinduer -->
-  <Style x:Key="Popup.Title" TargetType="TextBlock" BasedOn="{StaticResource Text.H2}">
-    <Setter Property="Margin" Value="0,0,0,20"/>
-    <Setter Property="HorizontalAlignment" Value="Center"/>
-  </Style>
-  
-  <!-- Popup knap - Primær handling i popup vinduer -->
-  <Style x:Key="Popup.Button" TargetType="Button" BasedOn="{StaticResource Button.Primary}">
-    <Setter Property="Margin" Value="0,20,0,0"/>
-    <Setter Property="HorizontalAlignment" Value="Center"/>
-    <Setter Property="MinWidth" Value="120"/>
-    <Setter Property="Padding" Value="16,10"/>
-  </Style>
-  
-  <!-- Fejl tekst - Til validering og fejlmeddelelser -->
-  <Style x:Key="Text.Error" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
-    <Setter Property="Foreground" Value="#FF6B6B"/>
-    <Setter Property="FontSize" Value="12"/>
-    <Setter Property="Margin" Value="0,4,0,0"/>
-    <Setter Property="Visibility" Value="Collapsed"/>
-  </Style>
+    <!-- ===== POPUP VINDUER ===== -->
+    <!-- Stilarter til popup vinduer og dialogbokse.  -->
 
-  <!-- Label-tekst til formularfelter -->
-  <Style x:Key="Text.Label" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
-    <Setter Property="FontSize" Value="14"/>
-    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-    <Setter Property="Margin" Value="0,0,0,2"/>
-  </Style>
+    <!-- Popup vindue - Hovedcontainer for dialogbokse -->
+    <Style x:Key="Popup.Window" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="24"/>
+        <Setter Property="MinWidth" Value="400"/>
+        <Setter Property="MinHeight" Value="300"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="Black" Opacity="0.3" ShadowDepth="8" BlurRadius="20"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
-  <!-- Fælles månedsliste (dansk) -->
-  <x:Array x:Key="MonthsDa" Type="{x:Type sys:String}">
-    <sys:String>Januar</sys:String>
-    <sys:String>Februar</sys:String>
-    <sys:String>Marts</sys:String>
-    <sys:String>April</sys:String>
-    <sys:String>Maj</sys:String>
-    <sys:String>Juni</sys:String>
-    <sys:String>Juli</sys:String>
-    <sys:String>August</sys:String>
-    <sys:String>September</sys:String>
-    <sys:String>Oktober</sys:String>
-    <sys:String>November</sys:String>
-    <sys:String>December</sys:String>
-  </x:Array>
+    <!-- Popup overskrift - Titel til popup vinduer -->
+    <Style x:Key="Popup.Title" TargetType="TextBlock" BasedOn="{StaticResource Text.H2}">
+        <Setter Property="Margin" Value="0,0,0,20"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
 
-  <!-- Fælles månedsliste (dansk) -->
-  <x:Array x:Key="YearDa" Type="{x:Type sys:String}">
-      <sys:String>2024</sys:String>
-      <sys:String>2025</sys:String>
-      <sys:String>2026</sys:String>
-      <sys:String>2027</sys:String>
-      <sys:String>2028</sys:String>      
-  </x:Array>
+    <!-- Popup knap - Primær handling i popup vinduer -->
+    <Style x:Key="Popup.Button" TargetType="Button" BasedOn="{StaticResource Button.Primary}">
+        <Setter Property="Margin" Value="0,20,0,0"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="MinWidth" Value="120"/>
+        <Setter Property="Padding" Value="16,10"/>
+    </Style>
+
+    <!-- Fejl tekst - Til validering og fejlmeddelelser -->
+    <Style x:Key="Text.Error" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
+        <Setter Property="Foreground" Value="#FF6B6B"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Margin" Value="0,4,0,0"/>
+        <Setter Property="Visibility" Value="Collapsed"/>
+    </Style>
+
+    <!-- Label-tekst til formularfelter -->
+    <Style x:Key="Text.Label" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="Margin" Value="0,0,0,2"/>
+    </Style>
+
+    <!-- Fælles månedsliste (dansk) -->
+    <x:Array x:Key="MonthsDa" Type="{x:Type sys:String}">
+        <sys:String>Januar</sys:String>
+        <sys:String>Februar</sys:String>
+        <sys:String>Marts</sys:String>
+        <sys:String>April</sys:String>
+        <sys:String>Maj</sys:String>
+        <sys:String>Juni</sys:String>
+        <sys:String>Juli</sys:String>
+        <sys:String>August</sys:String>
+        <sys:String>September</sys:String>
+        <sys:String>Oktober</sys:String>
+        <sys:String>November</sys:String>
+        <sys:String>December</sys:String>
+    </x:Array>
+
+    <!-- Fælles månedsliste (dansk) -->
+    <x:Array x:Key="YearDa" Type="{x:Type sys:String}">
+        <sys:String>2024</sys:String>
+        <sys:String>2025</sys:String>
+        <sys:String>2026</sys:String>
+        <sys:String>2027</sys:String>
+        <sys:String>2028</sys:String>
+    </x:Array>
 
 
 
     <!-- ===== SYSTEM INTEGRATION ===== -->
-  <!--   Integration med Windows system farver og standarder.  -->
-  
-  <!-- Applikations hovedbaggrund - sætter system vindue farve -->
-  <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="{StaticResource Color.Surface}"/>
+    <!--   Integration med Windows system farver og standarder.  -->
 
-  <!-- ===== WINDOW OG OVERLAY STYLES ===== -->
-  <!-- Standard style for applikationens vinduer -->
-  <Style x:Key="App.Window" TargetType="Window">
-    <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
-  </Style>
+    <!-- Applikations hovedbaggrund - sætter system vindue farve -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="{StaticResource Color.Surface}"/>
 
-  <!-- Genbrugelig style for overlay grid der dækker hele vinduet -->
-  <Style x:Key="Overlay.Grid" TargetType="Grid">
-    <Setter Property="Background" Value="#80000000"/>
-    <Setter Property="Visibility" Value="Collapsed"/>
-    <Setter Property="Grid.RowSpan" Value="2"/>
-    <Setter Property="Grid.ColumnSpan" Value="2"/>
-  </Style>
+    <!-- ===== WINDOW OG OVERLAY STYLES ===== -->
+    <!-- Standard style for applikationens vinduer -->
+    <Style x:Key="App.Window" TargetType="Window">
+        <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
+    </Style>
 
-  <!-- ===== STATUS BAR STYLES ===== -->
-  <!-- Container for statusbar nederst -->
-  <Style x:Key="StatusBar.Container" TargetType="Border">
-    <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
-    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
-    <Setter Property="BorderThickness" Value="0,1,0,0"/>
-    <Setter Property="Padding" Value="12,8"/>
-  </Style>
+    <!-- Genbrugelig style for overlay grid der dækker hele vinduet -->
+    <Style x:Key="Overlay.Grid" TargetType="Grid">
+        <Setter Property="Background" Value="#80000000"/>
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Setter Property="Grid.RowSpan" Value="2"/>
+        <Setter Property="Grid.ColumnSpan" Value="2"/>
+    </Style>
 
-  <!-- Lille statusindikator (rød/grøn) - bind bool til Tag på elementet -->
-  <Style x:Key="Status.Indicator" TargetType="Ellipse">
-    <Setter Property="Width" Value="10"/>
-    <Setter Property="Height" Value="10"/>
-    <Setter Property="Fill" Value="#B91C1C"/>
-    <Style.Triggers>
-      <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" Value="True">
-        <Setter Property="Fill" Value="{StaticResource Brush.Accent}"/>
-      </DataTrigger>
-    </Style.Triggers>
-  </Style>
+    <!-- ===== STATUS BAR STYLES ===== -->
+    <!-- Container for statusbar nederst -->
+    <Style x:Key="StatusBar.Container" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="0,1,0,0"/>
+        <Setter Property="Padding" Value="12,8"/>
+    </Style>
 
-  <!-- Status tekst (Offline/Forbundet) - bind bool til Tag på elementet -->
-  <Style x:Key="Status.Text" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
-    <Setter Property="Text" Value="Offline"/>
-    <Setter Property="Foreground" Value="{StaticResource Brush.TextDim}"/>
-    <Style.Triggers>
-      <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" Value="True">
-        <Setter Property="Text" Value="Online"/>
+    <!-- Lille statusindikator (rød/grøn) - bind bool til Tag på elementet -->
+    <Style x:Key="Status.Indicator" TargetType="Ellipse">
+        <Setter Property="Width" Value="10"/>
+        <Setter Property="Height" Value="10"/>
+        <Setter Property="Fill" Value="#B91C1C"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" Value="True">
+                <Setter Property="Fill" Value="{StaticResource Brush.Accent}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Status tekst (Offline/Forbundet) - bind bool til Tag på elementet -->
+    <Style x:Key="Status.Text" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
+        <Setter Property="Text" Value="Offline"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.TextDim}"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" Value="True">
+                <Setter Property="Text" Value="Online"/>
+                <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ===== HYLDE KNAPPER ===== -->
+    <!-- Horisontal hylde knap - 45x35 pixels -->
+    <Style x:Key="Stand.Horizontal" TargetType="Button">
+        <Setter Property="Width" Value="45"/>
+        <Setter Property="Height" Value="35"/>
         <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-      </DataTrigger>
-    </Style.Triggers>
-  </Style>
-
-  <!-- ===== HYLDE KNAPPER ===== -->
-  <!-- Horisontal hylde knap - 45x35 pixels -->
-  <Style x:Key="Stand.Horizontal" TargetType="Button">
-    <Setter Property="Width" Value="45"/>
-    <Setter Property="Height" Value="35"/>
-    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-    <Setter Property="Background" Value="{StaticResource Brush.Card}"/>
-    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
-    <Setter Property="BorderThickness" Value="1.5"/>
-    <Setter Property="Cursor" Value="Hand"/>
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="Button">
-          <Border x:Name="bd" Background="{TemplateBinding Background}"
+        <Setter Property="Background" Value="{StaticResource Brush.Card}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="bd" Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="{TemplateBinding BorderThickness}"
                   CornerRadius="6">
-            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-          </Border>
-          <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
-            </Trigger>
-            <Trigger Property="IsPressed" Value="True">
-              <Setter TargetName="bd" Property="Background" Value="#0B1220"/>
-            </Trigger>
-          </ControlTemplate.Triggers>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="#0B1220"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
-  <!-- Vertikal hylde knap - 35x45 pixels (arver fra horisontal) -->
-  <Style x:Key="Stand.Vertical" TargetType="Button" BasedOn="{StaticResource Stand.Horizontal}">
-    <Setter Property="Width" Value="35"/>
-    <Setter Property="Height" Value="45"/>
-  </Style>
+    <!-- Vertikal hylde knap - 35x45 pixels (arver fra horisontal) -->
+    <Style x:Key="Stand.Vertical" TargetType="Button" BasedOn="{StaticResource Stand.Horizontal}">
+        <Setter Property="Width" Value="35"/>
+        <Setter Property="Height" Value="45"/>
+    </Style>
 
-  <!-- ===== OPTION RADIO (PILL) ===== -->
-  <Style x:Key="Option.Radio" TargetType="RadioButton">
-    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-    <Setter Property="Cursor" Value="Hand"/>
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="RadioButton">
-          <Border x:Name="bd"
+    <!-- ===== OPTION RADIO (PILL) ===== -->
+    <Style x:Key="Option.Radio" TargetType="RadioButton">
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="bd"
                   Background="{StaticResource Brush.Transparent}"
                   BorderBrush="{StaticResource Brush.Border}"
                   BorderThickness="1.5"
                   CornerRadius="10"
                   Padding="12,8">
-            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-          </Border>
-          <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-              <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
-            </Trigger>
-            <Trigger Property="IsChecked" Value="True">
-              <Setter TargetName="bd" Property="Background" Value="{StaticResource Brush.Primary}"/>
-              <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter Property="Opacity" Value="0.6"/>
-            </Trigger>
-          </ControlTemplate.Triggers>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{StaticResource Brush.Primary}"/>
+                            <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

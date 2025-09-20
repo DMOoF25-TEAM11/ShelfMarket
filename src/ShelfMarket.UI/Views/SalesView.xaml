@@ -19,11 +19,6 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <!-- Title: Centered heading describing the page purpose (Danish) -->
-        <TextBlock Grid.Row="0"
-                   Text="Tilføj og rediger reol typer"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
 
         <!-- Form Inputs: StackPanel with labeled TextBoxes for Name and Description -->
         <StackPanel Grid.Row="1" Margin="0,10,0,0">
@@ -33,5 +28,26 @@
             <TextBlock Text="Pris:"/>
             <TextBox x:Name="PriceTextBox" Margin="0,0,0,10"/>
         </StackPanel>
+
+        <!-- Action Buttons: Horizontal StackPanel with Add, Save, Delete, and Cancel buttons -->
+        <!--
+          Buttons:
+            - Visibility driven by IsAddMode/IsEditMode via BoolToVis converter.
+            - Commands should be implemented in the ViewModel.
+            - "Annuller" (Cancel) is always visible to reset or leave edit state.
+        -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,0">
+
+        </StackPanel>
+
+        <uc:SalesLineListView Grid.Row="3" Margin="0,10,0,0"/>
+
+        <StackPanel Grid.Row="4" Margin="0,10,0,0">
+            <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource Brush.TextDim}"/>
+        </StackPanel>
+
     </Grid>
 </UserControl>

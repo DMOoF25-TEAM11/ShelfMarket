@@ -8,11 +8,11 @@ class SalesLineListItemViewModel
     {
         Id = salesLine.Id;
         EAN = salesLine.EAN;
-        ReolNummer = salesLine.ShelfNumber;
-        Pris = salesLine.Price;
+        ShelfNumber = salesLine.ShelfNumber;
+        Price = salesLine.Price;
     }
     public Guid? Id { get; }
     public string? EAN { get; }
-    public uint ReolNummer { get; }
-    public decimal Pris { get; }
+    public uint ShelfNumber { get; }
+    public decimal Price { get; }
 }
