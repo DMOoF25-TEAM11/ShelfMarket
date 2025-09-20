@@ -3,11 +3,14 @@ using ShelfMarket.Application.Interfaces;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
+using ShelfMarket.UI.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Navigation;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ShelfMarket.UI.ViewModels;
@@ -135,6 +138,21 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
         }
     }
 
+    private string _status = string.Empty;
+    public string Status
+    {
+        get => _status;
+        set
+        {
+            if (_status != value)
+            {
+                _status = value;
+                OnPropertyChanged();
+                RefreshCommandStates();
+            }
+        }
+    }
+
     private ShelfTenant? _selectedTenant;
     public ShelfTenant? SelectedTenant
     {
@@ -171,12 +189,19 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
     #region Extra Commands
     public ICommand ResetFormCommand { get; }
     public ICommand RefreshCommand { get; }
+
+    // Skal bruges til at åbne TenantContracts vindue
+    //private readonly relaycommand _movetotenantcontractscommand;
+    //public icommand movetotenantcontractscommand => _movetotenantcontractscommand;
     #endregion
 
     public TenantsViewModel(ITenantRepository tenantRepository)
         : base(tenantRepository)
     {
         _tenantRepository = tenantRepository;
+
+        // Skal bruges til at åbne TenantContracts vindue
+        //_moveToTenantContractsCommand = new RelayCommand(async () => await OpenTenantContractsAsync());
 
         ResetFormCommand = new RelayCommand(async () => await OnResetFormAsync(),
             () => IsEditMode ||
@@ -306,5 +331,34 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
         PhoneNumber = entity.PhoneNumber;
         return Task.CompletedTask;
     }
+
+    // Skal bruges til at åbne TenantContracts vindue
+    //private async Task OpenTenantContractsAsync()
+    //{
+    //    // Create the Page and its VM (replace with DI if you prefer)
+    //    var page = new ManagesShelfTanentContractView
+    //    {
+    //        DataContext = new ManagesShelfTanentContractViewModel()
+    //    };
+
+    //    // Host the Page inside a Window (no Application.Current needed)
+    //    var frame = new System.Windows.Controls.Frame
+    //    {
+    //        NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden,
+    //        Content = page
+    //    };
+
+    //    var win = new System.Windows.Window
+    //    {
+    //        Title = page.Title,
+    //        Content = frame,
+    //        Width = 1000,
+    //        Height = 700,
+    //        WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen
+    //    };
+
+    //    win.Show(); // or ShowDialog();
+    //}
+
     #endregion
 }

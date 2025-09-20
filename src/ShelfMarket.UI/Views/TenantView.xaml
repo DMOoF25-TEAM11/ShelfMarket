@@ -128,8 +128,13 @@
                 <Button Content="Annuller"
                         Command="{Binding CancelCommand}"
                         Width="90"/>
+                <!-- Skal bruges til at åbne TenantContracts vindue
+                <Button Content="Gå til lejekontrakter"
+                        Command="{Binding MoveToTenantContractsCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                        Width="110"/> -->
             </StackPanel>
-
+           
             <TextBlock Text="{Binding InfoMessage}"
                        Foreground="#2e7d32"
                        Margin="0,0,0,4"
