@@ -7,6 +7,7 @@ using ShelfMarket.UI.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -226,24 +227,35 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
 
     #region Command Overrides
     protected override bool CanAdd() =>
-        base.CanAdd() &&
-        !string.IsNullOrWhiteSpace(FirstName) &&
-        !string.IsNullOrWhiteSpace(LastName) &&
-        !string.IsNullOrWhiteSpace(Address) &&
-        !string.IsNullOrWhiteSpace(PostalCode) &&
-        !string.IsNullOrWhiteSpace(City) &&
-        !string.IsNullOrWhiteSpace(Email) &&
-        !string.IsNullOrWhiteSpace(PhoneNumber);
+        base.CanAdd()
+        && !string.IsNullOrWhiteSpace(FirstName) && Regex.IsMatch(FirstName, @"^[\p{L}\p{M}'\- ]{2,100}$")
+        && !string.IsNullOrWhiteSpace(LastName) && Regex.IsMatch(LastName, @"^[\p{L}\p{M}'\- ]{2,100}$")
+        && !string.IsNullOrWhiteSpace(Address) && Regex.IsMatch(Address, @"^[\p{L}\p{M}\p{N}\s\.,'\-/#]{5,200}$")
+        && !string.IsNullOrWhiteSpace(PostalCode) && Regex.IsMatch(PostalCode ?? string.Empty, @"^\d{4}$")   
+        && !string.IsNullOrWhiteSpace(City) && Regex.IsMatch(City, @"^[\p{L}\p{M}'\- ]{2,100}$")
+        && !string.IsNullOrWhiteSpace(Email) && Regex.IsMatch(Email ?? string.Empty, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") 
+        && !string.IsNullOrWhiteSpace(PhoneNumber) && Regex.IsMatch(PhoneNumber ?? string.Empty, @"^[+\d][\d\s\-]{7,14}$");
 
     protected override bool CanSave() =>
-        base.CanSave() && CurrentEntity != null &&
-        (!string.IsNullOrWhiteSpace(FirstName) && FirstName != CurrentEntity.FirstName ||
-         !string.IsNullOrWhiteSpace(LastName) && LastName != CurrentEntity.LastName ||
-         !string.IsNullOrWhiteSpace(Address) && Address != CurrentEntity.Address ||
-         !string.IsNullOrWhiteSpace(PostalCode) && PostalCode != CurrentEntity.PostalCode ||
-         !string.IsNullOrWhiteSpace(City) && City != CurrentEntity.City ||
-         !string.IsNullOrWhiteSpace(Email) && Email != CurrentEntity.Email ||
-         !string.IsNullOrWhiteSpace(PhoneNumber) && PhoneNumber != CurrentEntity.PhoneNumber);
+        base.CanSave() && CurrentEntity != null
+
+        && !string.IsNullOrWhiteSpace(FirstName) && Regex.IsMatch(FirstName, @"^[\p{L}\p{M}'\- ]{2,100}$")
+        && !string.IsNullOrWhiteSpace(LastName) && Regex.IsMatch(LastName, @"^[\p{L}\p{M}'\- ]{2,100}$")
+        && !string.IsNullOrWhiteSpace(Address) && Regex.IsMatch(Address, @"^[\p{L}\p{M}\p{N}\s\.,'\-/#]{5,200}$")
+        && !string.IsNullOrWhiteSpace(PostalCode) && Regex.IsMatch(PostalCode ?? string.Empty, @"^\d{4}$")
+        && !string.IsNullOrWhiteSpace(City) && Regex.IsMatch(City, @"^[\p{L}\p{M}'\- ]{2,100}$")
+        && !string.IsNullOrWhiteSpace(Email) && Regex.IsMatch(Email ?? string.Empty, @"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+        && !string.IsNullOrWhiteSpace(PhoneNumber) && Regex.IsMatch(PhoneNumber ?? string.Empty, @"^[+\d][\d\s\-]{7,14}$")
+
+        && (
+        FirstName != CurrentEntity.FirstName ||
+        LastName != CurrentEntity.LastName ||
+        Address != CurrentEntity.Address ||
+        PostalCode != CurrentEntity.PostalCode ||
+        City != CurrentEntity.City ||
+        Email != CurrentEntity.Email ||
+        PhoneNumber != CurrentEntity.PhoneNumber
+        );
 
     protected override bool CanDelete() =>
         base.CanDelete() && CurrentEntity != null;
