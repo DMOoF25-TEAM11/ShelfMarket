@@ -1,9 +1,10 @@
-<UserControl x:Class="ShelfMarket.UI.Views.ShelfView"
+﻿<UserControl x:Class="ShelfMarket.UI.Views.ShelfView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:ShelfMarket.UI.Views"
+             xmlns:ui="clr-namespace:ShelfMarket.UI.AttachedProperties"
              mc:Ignorable="d" Height="949" Width="1280">
 
     <!-- ===== RESSOURCER ===== -->
@@ -103,14 +104,14 @@
 
                     <!-- Grid baggrund med subtile linjer -->
                     <Grid.Background>
-                        <DrawingBrush Viewport="0,0,51,51" ViewportUnits="Absolute" TileMode="Tile">
+                        <DrawingBrush Viewport="0,0,25,25" ViewportUnits="Absolute" TileMode="Tile">
                             <DrawingBrush.Drawing>
                                 <GeometryDrawing>
                                     <GeometryDrawing.Brush>
                                         <SolidColorBrush Color="{Binding Source={StaticResource Brush.SurfaceAlt}, Path=Color}"/>
                                     </GeometryDrawing.Brush>
                                     <GeometryDrawing.Geometry>
-                                        <RectangleGeometry Rect="0,0,51,51"/>
+                                        <RectangleGeometry Rect="0,0,25,25"/>
                                     </GeometryDrawing.Geometry>
                                     <GeometryDrawing.Pen>
                                         <Pen Brush="{StaticResource Brush.Border}" Thickness="0.5"/>
@@ -120,207 +121,62 @@
                         </DrawingBrush>
                     </Grid.Background>
 
-                    <!-- Grid definitioner - 23 kolonner x 17 rækker (udvidet med ekstra vægge) -->
+                    <!-- 19 columns -->
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="51"/>
-                        <!-- Venstre væg synlig -->
-                        <ColumnDefinition Width="51"/>
-                        <!-- Venstre væg synlig -->
-                        <ColumnDefinition Width="51"/>
-                        <!-- Lodret reol område -->
-                        <ColumnDefinition Width="51"/>
-                        <!-- Grid område -->
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>                        
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <ColumnDefinition Width="51"/>
-                        <!-- Højre væg synlig -->
-                        <ColumnDefinition Width="51"/>
-                        <!-- Højre væg synlig -->
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
                     </Grid.ColumnDefinitions>
 
+                    <!-- 27 rows -->
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="51"/>
-                        <!-- Ekstra top række -->
-                        <RowDefinition Height="51"/>
-                        <!-- Top væg synlig -->
-                        <RowDefinition Height="51"/>
-                        <!-- Top væg synlig -->
-                        <RowDefinition Height="51"/>
-                        <!-- Top væg synlig -->
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>
-                        <RowDefinition Height="51"/>                    
-                        <RowDefinition Height="51"/>                        
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Væg ramme rundt om ydre grid (tykkere streg) -->
-                    <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="23" Grid.RowSpan="16" 
-                               Stroke="{StaticResource Brush.Border}" StrokeThickness="3" Fill="Transparent" Margin="0,0,0,0"/>
-
-
-                    <!-- ===== LODRET REOLER (1-13) ===== -->
-                    <Button x:Name="Shelf13" Content="13" Style="{StaticResource Stand.Vertical}" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 13"/>
-                    <Button x:Name="Shelf12" Content="12" Style="{StaticResource Stand.Vertical}" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 12"/>
-                    <Button x:Name="Shelf11" Content="11" Style="{StaticResource Stand.Vertical}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 11"/>
-                    <Button x:Name="Shelf10" Content="10" Style="{StaticResource Stand.Vertical}" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 10"/>
-                    <Button x:Name="Shelf9"  Content="9"  Style="{StaticResource Stand.Vertical}" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 9"/>
-                    <Button x:Name="Shelf8"  Content="8"  Style="{StaticResource Stand.Vertical}" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 8"/>
-                    <Button x:Name="Shelf7"  Content="7"  Style="{StaticResource Stand.Vertical}" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 7"/>
-                    <Button x:Name="Shelf6"  Content="6"  Style="{StaticResource Stand.Vertical}" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 6"/>
-                    <Button x:Name="Shelf5"  Content="5"  Style="{StaticResource Stand.Vertical}" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 5"/>
-                    <Button x:Name="Shelf4"  Content="4"  Style="{StaticResource Stand.Vertical}" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 4"/>
-                    <Button x:Name="Shelf3"  Content="3"  Style="{StaticResource Stand.Vertical}" Grid.Row="10" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 3"/>
-                    <Button x:Name="Shelf2"  Content="2"  Style="{StaticResource Stand.Vertical}" Grid.Row="11" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 2"/>
-                    <Button x:Name="Shelf1"  Content="1"  Style="{StaticResource Stand.Vertical}" Grid.Row="12" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 1"/>
-
-                    <!-- ===== VANDRET REOLER (14-80) - Placeret i grid ===== -->
-                    <Button x:Name="Shelf14" Content="14" Style="{StaticResource Stand.Horizontal}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 14"/>
-                    <Button x:Name="Shelf15" Content="15" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 15"/>
-                    <Button x:Name="Shelf16" Content="16" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 16"/>
-                    <Button x:Name="Shelf17" Content="17" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 17"/>
-                    <Button x:Name="Shelf18" Content="18" Style="{StaticResource Stand.Horizontal}" Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 18"/>
-
-                    <Button x:Name="Shelf19" Content="19" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 19"/>
-                    <Button x:Name="Shelf20" Content="20" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 20"/>
-                    <Button x:Name="Shelf21" Content="21" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 21"/>
-                    <Button x:Name="Shelf22" Content="22" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 22"/>
-                    <Button x:Name="Shelf23" Content="23" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 23"/>
-                    <Button x:Name="Shelf24" Content="24" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 24"/>
-
-                    <Button x:Name="Shelf25" Content="25" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 25"/>
-                    <Button x:Name="Shelf26" Content="26" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 26"/>
-                    <Button x:Name="Shelf27" Content="27" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 27"/>
-                    <Button x:Name="Shelf28" Content="28" Style="{StaticResource Stand.Horizontal}" Grid.Column="6" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 28"/>
-                    <Button x:Name="Shelf29" Content="29" Style="{StaticResource Stand.Horizontal}" Grid.Column="7" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 29"/>
-                    <Button x:Name="Shelf30" Content="30" Style="{StaticResource Stand.Horizontal}" Grid.Column="8" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 30"/>
-                    <Button x:Name="Shelf31" Content="31" Style="{StaticResource Stand.Horizontal}" Grid.Column="9" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 31"/>
-
-                    <Button x:Name="Shelf32" Content="32" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 32"/>
-                    <Button x:Name="Shelf33" Content="33" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 33"/>
-                    <Button x:Name="Shelf34" Content="34" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 34"/>
-                    <Button x:Name="Shelf35" Content="35" Style="{StaticResource Stand.Horizontal}" Grid.Column="6" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 35"/>
-                    <Button x:Name="Shelf36" Content="36" Style="{StaticResource Stand.Horizontal}" Grid.Column="7" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 36"/>
-                    <Button x:Name="Shelf37" Content="37" Style="{StaticResource Stand.Horizontal}" Grid.Column="8" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 37 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf38" Content="38" Style="{StaticResource Stand.Horizontal}" Grid.Column="9" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 38 - Klik og træk for at flytte"/>
-
-                    <Button x:Name="Shelf39" Content="39" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 39 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf40" Content="40" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 40 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf41" Content="41" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 41 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf42" Content="42" Style="{StaticResource Stand.Horizontal}" Grid.Column="6" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 42 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf43" Content="43" Style="{StaticResource Stand.Horizontal}" Grid.Column="7" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 43 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf44" Content="44" Style="{StaticResource Stand.Horizontal}" Grid.Column="8" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 44 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf45" Content="45" Style="{StaticResource Stand.Horizontal}" Grid.Column="9" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 45 - Klik og træk for at flytte"/>
-
-                    <Button x:Name="Shelf46" Content="46" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 46 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf47" Content="47" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 47 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf48" Content="48" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 48 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf49" Content="49" Style="{StaticResource Stand.Horizontal}" Grid.Column="6" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 49 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf50" Content="50" Style="{StaticResource Stand.Horizontal}" Grid.Column="7" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 50 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf51" Content="51" Style="{StaticResource Stand.Horizontal}" Grid.Column="8" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 51 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf52" Content="52" Style="{StaticResource Stand.Horizontal}" Grid.Column="9" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 52 - Klik og træk for at flytte"/>
-
-                    <Button x:Name="Shelf53" Content="53" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" Grid.Row="11" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 53 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf54" Content="54" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" Grid.Row="11" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 54 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf55" Content="55" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" Grid.Row="11" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 55 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf56" Content="56" Style="{StaticResource Stand.Horizontal}" Grid.Column="6" Grid.Row="11" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 56 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf57" Content="57" Style="{StaticResource Stand.Horizontal}" Grid.Column="7" Grid.Row="11" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 57 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf58" Content="58" Style="{StaticResource Stand.Horizontal}" Grid.Column="8" Grid.Row="11" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="Reol 58 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf59" Content="59" Style="{StaticResource Stand.Horizontal}" Grid.Column="9" Grid.Row="11"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 59 - Klik og træk for at flytte"/>
-
-                    <Button x:Name="Shelf60" Content="60" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" Grid.Row="12"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 60 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf61" Content="61" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" Grid.Row="12"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 61 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf62" Content="62" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" Grid.Row="12"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 62 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf63" Content="63" Style="{StaticResource Stand.Horizontal}" Grid.Column="6" Grid.Row="12"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 63 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf64" Content="64" Style="{StaticResource Stand.Horizontal}" Grid.Column="7" Grid.Row="12"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 64 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf65" Content="65" Style="{StaticResource Stand.Horizontal}" Grid.Column="8" Grid.Row="12"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 65 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf66" Content="66" Style="{StaticResource Stand.Horizontal}" Grid.Column="9" Grid.Row="12"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 66 - Klik og træk for at flytte"/>
-
-                    <Button x:Name="Shelf67" Content="67" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" Grid.Row="14"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 67 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf68" Content="68" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" Grid.Row="14"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 68 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf69" Content="69" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" Grid.Row="14"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 69 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf70" Content="70" Style="{StaticResource Stand.Horizontal}" Grid.Column="6" Grid.Row="14"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 70 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf71" Content="71" Style="{StaticResource Stand.Horizontal}" Grid.Column="7" Grid.Row="14"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 71 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf72" Content="72" Style="{StaticResource Stand.Horizontal}" Grid.Column="3" Grid.Row="15"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 72 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf73" Content="73" Style="{StaticResource Stand.Horizontal}" Grid.Column="4" Grid.Row="15"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 73 - Klik og træk for at flytte"/>
-
-                    <Button x:Name="Shelf74" Content="74" Style="{StaticResource Stand.Horizontal}" Grid.Column="5" Grid.Row="15"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 74 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf75" Content="75" Style="{StaticResource Stand.Horizontal}" Grid.Column="6" Grid.Row="15"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 75 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf76" Content="76" Style="{StaticResource Stand.Horizontal}" Grid.Column="7" Grid.Row="15"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 76 - Klik og træk for at flytte"/>
-                    
-                    <!-- Lodrette reoler i bunden -->
-                    <Button x:Name="Shelf77" Content="77" Style="{StaticResource Stand.Vertical}" Grid.Column="10" Grid.Row="14"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 77 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf78" Content="78" Style="{StaticResource Stand.Vertical}" Grid.Column="11" Grid.Row="14"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 78 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf79" Content="79" Style="{StaticResource Stand.Vertical}" Grid.Column="13" Grid.Row="14"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            ToolTip="Reol 79 - Klik og træk for at flytte"/>
-                    <Button x:Name="Shelf80" Content="80" Style="{StaticResource Stand.Vertical}" Grid.Column="14" Grid.Row="14"
-                            HorizontalAlignment="Left" VerticalAlignment="Center"
-                            ToolTip="Reol 80 - Klik og træk for at flytte" Margin="10,0,0,0"/>
+                    <!-- Existing shelf buttons and elements go here, update their Grid.Row and Grid.Column as needed -->
                 </Grid>
             </ScrollViewer>
         </Border>
