@@ -99,8 +99,8 @@
                 Margin="8,4,8,8">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <Grid x:Name="ShelfGrid" AllowDrop="True"
-                      Width="1173" 
-                      Height="816">
+                      Width="475"
+                      Height="700">
 
                     <!-- Grid baggrund med subtile linjer -->
                     <Grid.Background>
