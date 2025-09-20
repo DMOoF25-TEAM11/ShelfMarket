@@ -38,5 +38,6 @@ public class ShelfMarketDbContext : DbContext
         //ShelfTenant
         modelBuilder.Entity<ShelfTenant>()
             .ToTable("SHELFTENANT");
+        modelBuilder.Entity<ShelfTenant>().Property(p => p.PhoneNumber).HasColumnName("PhoneNumber");
     }
 }
