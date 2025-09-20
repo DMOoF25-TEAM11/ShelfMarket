@@ -18,7 +18,7 @@ namespace ShelfMarket.UI.Views
         #region variables
         // Grid shape (19 x 27), cell size in pixels
         private const int GridColumns = 19;
-        private const int GridRows = 27;
+        private const int GridRows = 28;
         private const double CellSizePx = 25.0;
         #endregion
 
