@@ -14,7 +14,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="Reoltype (liste)"/>
+            <TextBlock Grid.Row="0" Text="Salgs linjer"/>
             <Border Grid.Row="1">
                 <ListView ItemsSource="{Binding Items}"
                   SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
@@ -23,13 +23,13 @@
                     <ListView.View>
                         <GridView>
                             <!--<GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding Id}" />-->
-                            <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}" />
-                            <GridViewColumn Header="Description" Width="400" DisplayMemberBinding="{Binding Description}" />
+                            <GridViewColumn Header="EAN" Width="200" DisplayMemberBinding="{Binding EAN}" />
+                            <GridViewColumn Header="Reol nummer" Width="100" DisplayMemberBinding="{Binding ShelfNumber}" />
+                            <GridViewColumn Header="Pris" Width="100" DisplayMemberBinding="{Binding Price}" />
                         </GridView>
                     </ListView.View>
                 </ListView>
             </Border>
-            <TextBlock Grid.Row="2" Text="Automatisk opdatering ved gemning." />
         </Grid>
     </Grid>
 </UserControl>
