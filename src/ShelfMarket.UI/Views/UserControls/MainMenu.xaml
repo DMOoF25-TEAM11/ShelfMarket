@@ -7,6 +7,7 @@
              mc:Ignorable="d">
     <StackPanel>
         <Menu>
+
             <MenuItem Header="_Fil">
                 <!--<MenuItem Header="Åbn" />
             <MenuItem Header="Gem" />
@@ -16,7 +17,7 @@
 
             <MenuItem Header="_Visninger">
                 <MenuItem Header="Salg"/>
-                <MenuItem Header="Reoltyper" Click="MenuViews_ShelfType"/>
+                <MenuItem Header="Reoltyper"/>
                 <MenuItem Header="Leje kontrakter"/>
             </MenuItem>
             <MenuItem Header="_Hjælp">

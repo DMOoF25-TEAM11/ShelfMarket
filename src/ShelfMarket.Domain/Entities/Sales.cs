@@ -2,21 +2,21 @@
 
 namespace ShelfMarket.Domain.Entities;
 
-public class Sale
+public class Sales
 {
     public Guid? Id { get; set; }
     public uint? Number { get; set; }
     public DateTime Date { get; set; }
-    public PaymentMetod PaymentMetode { get; set; }
+    public PaymentMethod PaymentMethod { get; set; }
 
-    public Sale()
+    public Sales()
     {
 
     }
 
-    public Sale(PaymentMetod paymentMetode = PaymentMetod.Cash)
+    public Sales(PaymentMethod paymentMethod = PaymentMethod.Cash)
     {
         Date = DateTime.Now;
-        PaymentMetode = paymentMetode;
+        PaymentMethod = paymentMethod;
     }
 }

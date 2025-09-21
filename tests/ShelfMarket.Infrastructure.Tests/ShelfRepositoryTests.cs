@@ -44,8 +44,8 @@ public class ShelfRepositoryTests
         await using var assertCtx = CreateDbContext(dbName);
         var stored = await assertCtx.Shelves.SingleAsync();
         Assert.AreEqual(shelf.Id, stored.Id);
-        Assert.AreEqual((uint)2, stored.LocationX);
-        Assert.AreEqual((uint)3, stored.LocationY);
+        Assert.AreEqual((int)2, (int)stored.LocationX);
+        Assert.AreEqual((int)3, (int)stored.LocationY);
         Assert.IsTrue(stored.OrientationHorizontal);
     }
 
@@ -94,8 +94,8 @@ public class ShelfRepositoryTests
 
         await using var assertCtx = CreateDbContext(dbName);
         var stored = await assertCtx.Shelves.AsNoTracking().SingleAsync(s => s.Id == shelf.Id);
-        Assert.AreEqual<uint>(11, stored.Number);
-        Assert.AreEqual<uint>(6, stored.LocationX);
+        Assert.AreEqual(11, stored.Number);
+        Assert.AreEqual(6, stored.LocationX);
         Assert.IsFalse(stored.OrientationHorizontal);
     }
 

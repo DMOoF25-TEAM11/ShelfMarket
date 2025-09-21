@@ -1,6 +1,6 @@
-using ShelfMarket.Domain.Entities;
+﻿using ShelfMarket.Domain.Entities;
 
-namespace ShelfMarket.Application.Interfaces;
+namespace ShelfMarket.Application.Abstract.Services;
 
 /// <summary>
 /// Application service concerned with shelf layout (grid positions and orientation).
@@ -12,7 +12,7 @@ public interface IShelfLayoutService
     /// <summary>
     /// Tries to create a new shelf at the given position. Fails if number exists or cell is occupied.
     /// </summary>
-        Task<bool> TryCreateShelfAsync(int number, bool orientationHorizontal, int locationX = 22, int locationY = 0, CancellationToken cancellationToken = default);
+    Task<bool> TryCreateShelfAsync(int number, bool orientationHorizontal, int locationX = 22, int locationY = 0, CancellationToken cancellationToken = default);
 }
 
 

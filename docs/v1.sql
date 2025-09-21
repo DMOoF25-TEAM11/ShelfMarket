@@ -35,7 +35,7 @@ BEGIN
         [LocationY] INT NOT NULL,
         [OrientationHorizontal] BIT NOT NULL CONSTRAINT DF_SHELF_OrientationHorizontal DEFAULT(1),
         CONSTRAINT [FK_SHELF_SHELFTTYPE] FOREIGN KEY ([ShelfTypeId])
-            REFERENCES [dbo].[SHELFTYPE]([Id]),
+            REFERENCES [dbo].[SHELFTYPE]([Id]) ON DELETE CASCADE,
             UNIQUE ([LocationX], [LocationY])
     );
 END
@@ -69,7 +69,7 @@ BEGIN
         [StartDate] DATE NOT NULL,
         [EndDate] DATE NOT NULL,
         [Cancelled] DATE NULL,
-        CONSTRAINT [FK_ShelfTenant] FOREIGN KEY ([ShelfTenantId]) REFERENCES [dbo].[HELFTENANT]([Id])
+        CONSTRAINT [FK_ShelfTenant] FOREIGN KEY ([ShelfTenantId]) REFERENCES [dbo].[HELFTENANT]([Id]) ON DELETE CASCADE
     );
 END
 GO
@@ -84,7 +84,7 @@ BEGIN
         [Description] NVARCHAR(255) NOT NULL,
         [Amount] DECIMAL(18, 2) NOT NULL,
         CONSTRAINT [UQ_ShelfRentContract_LineNumber] UNIQUE ([ShelfRentContractId], [LineNumber]),
-        CONSTRAINT [FK_ShelfRentContract] FOREIGN KEY ([ShelfRentContractId]) REFERENCES [dbo].[SHELFRENTCONTRACT]([Id])
+        CONSTRAINT [FK_ShelfRentContract] FOREIGN KEY ([ShelfRentContractId]) REFERENCES [dbo].[SHELFRENTCONTRACT]([Id]) ON DELETE CASCADE
     );
 END
 GO

@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="ShelfMarket.UI.Views.UserControls.SalesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:uc="clr-namespace:ShelfMarket.UI.Views.UserControls"
+             xmlns:controls="clr-namespace:ShelfMarket.UI.Views.UserControls" 
+             xmlns:viewmodels="clr-namespace:ShelfMarket.UI.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}"
+             mc:Ignorable="d">
+    <Grid>
+        <!--
+            Layout root:
+            - 5 rows:
+                0: Title (Auto)
+                1: Form inputs (Auto)
+                2: Action buttons (Auto)
+                3: List/UserControl area (*)
+                4: Status messages (Auto)
+        -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Form Inputs: StackPanel with labeled TextBoxes for Name and Description -->
+        <StackPanel Grid.Row="1" Margin="0,10,0,0">
+            <TextBlock Text="Reol nummer / EAN:"/>
+            <TextBox x:Name="ReolTextBox" 
+                     DataContext="{Binding EanNumber, Mode=TwoWay}"
+                     Margin="0,0,0,10"/>
+
+            <TextBlock Text="Pris:"/>
+            <TextBox x:Name="PriceTextBox" 
+                     DataContext="{Binding Price, Mode=TwoWay}"
+                     Margin="0,0,0,10"/>
+        </StackPanel>
+
+        <!-- Action Buttons: Horizontal StackPanel with Add, Save, Delete, and Cancel buttons -->
+        <!--
+          Buttons:
+            - Visibility driven by IsAddMode/IsEditMode via BoolToVis converter.
+            - Commands should be implemented in the ViewModel.
+            - "Annuller" (Cancel) is always visible to reset or leave edit state.
+        -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,0">
+
+        </StackPanel>
+
+        <uc:SalesLineListView Grid.Row="3" Margin="0,10,0,0"/>
+
+        <StackPanel Grid.Row="4" Margin="0,10,0,0">
+            <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource Brush.TextDim}"/>
+        </StackPanel>
+
+    </Grid>
+</UserControl>
