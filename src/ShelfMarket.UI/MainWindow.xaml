@@ -1,4 +1,4 @@
-<Window x:Class="ShelfMarket.UI.MainWindow"
+﻿<Window x:Class="ShelfMarket.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -14,45 +14,53 @@
     
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="260"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <!-- Venstre rail -->
-        <uc:SideMenu x:Name="SideMenuControl" Grid.Row="0" Grid.Column="0"
+        <uc:MainMenu Grid.Row="0"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!-- Venstre rail -->
+            <uc:SideMenu x:Name="SideMenuControl" Grid.Column="0"
                      SelectedItem="{Binding SelectedMenu, Mode=TwoWay}"/>
+            <!-- Indhold -->
+            <Grid Grid.Column="1" Margin="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <!-- Indhold -->
-        <Grid Grid.Row="0" Grid.Column="1" Margin="16">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <!-- Header -->
-            <Grid Grid.Row="0" Margin="0,0,0,12">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding ElementName=SideMenuControl, Path=SelectedItem}" Style="{StaticResource Text.H1}"/>
-                <Border Grid.Column="1" Background="{StaticResource Brush.Border}" Height="1"
+                <!-- Header -->
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding ElementName=SideMenuControl, Path=SelectedItem}" Style="{StaticResource Text.H1}"/>
+                    <Border Grid.Column="1" Background="{StaticResource Brush.Border}" Height="1"
                 Margin="16,18,0,0" VerticalAlignment="Top"/>
-            </Grid>
+                </Grid>
 
-            <!-- Views -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                <ContentControl Content="{Binding CurrentViewModel}"/>
-            </ScrollViewer>
+                <!-- Views -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <ContentControl Content="{Binding CurrentViewModel}"/>
+                </ScrollViewer>
+            </Grid>
         </Grid>
 
-        <!-- ===== STATUS BAR (BOTTOM) ===== -->
-        <uc:StatusBar Grid.Row="1" Grid.ColumnSpan="2"/>
 
+        <!-- ===== STATUS BAR (BOTTOM) ===== -->
+        <uc:StatusBar Grid.Row="2" />
+
+        
+        <!-- TODO : Remove all popup code as is should be done in view where it's needed -->
+        
         <!-- ===== GLOBAL POPUP OVERLAY ===== -->
         <!-- Overlay der dækker hele vinduet når popup er åben -->
         <Grid x:Name="PopupOverlay" Style="{StaticResource Overlay.Grid}">

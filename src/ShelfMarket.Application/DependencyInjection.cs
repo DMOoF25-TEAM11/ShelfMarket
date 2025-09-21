@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstracts.Services;
-using ShelfMarket.Application.Interfaces;
 using ShelfMarket.Application.Services;
 
 namespace ShelfMarket.Application;
@@ -11,7 +10,6 @@ public static class DependencyInjection
     {
         // Register application services here
         services.AddScoped<IShelfLayoutService, ShelfLayoutService>();
-        services.AddScoped<IEan13BarCode, Ean13BarCode>();
         return services;
     }
 }

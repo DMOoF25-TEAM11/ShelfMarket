@@ -1,10 +1,10 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using ShelfMarket.Application.Interfaces;
 using System.Windows.Media;
 using System.Linq;
 using System.Threading.Tasks;
+using ShelfMarket.Application.Abstracts.Services;
 
 namespace ShelfMarket.UI.Views.Windows;
 

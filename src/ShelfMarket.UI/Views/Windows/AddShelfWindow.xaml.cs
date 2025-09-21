@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using ShelfMarket.Application.Interfaces;
+using ShelfMarket.Application.Abstracts.Services;
 using ShelfMarket.Infrastructure.Persistence;
 
 namespace ShelfMarket.UI.Views.Windows
