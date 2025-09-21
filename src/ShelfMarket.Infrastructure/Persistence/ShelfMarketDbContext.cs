@@ -33,6 +33,12 @@ public class ShelfMarketDbContext : DbContext
             .ToTable("SHELFTENANTCONTRACT");
         modelBuilder.Entity<ShelfTenantContractLine>()
             .ToTable("SHELFTENANTCONTRACTLINE");
+            
+        //ShelfTenant
+        modelBuilder.Entity<ShelfTenant>()
+            .ToTable("SHELFTENANT");
+        modelBuilder.Entity<ShelfTenant>().Property(p => p.PhoneNumber).HasColumnName("PhoneNumber");
+
         modelBuilder.Entity<Ean>()
             .ToTable("EAN");
         modelBuilder.Entity<SalesLine>()
