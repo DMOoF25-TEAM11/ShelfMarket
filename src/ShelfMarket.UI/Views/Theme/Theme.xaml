@@ -56,12 +56,45 @@
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
-  
+
     <!-- ===== KNAPPER ===== -->
     <!-- 
       Her defineres knapstilarter for forskellige formål i applikationen.
       Knapperne har hover-effekter og disabled states for bedre brugeroplevelse.
   -->
+
+    <Style TargetType="Button">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
+        <Setter Property="Background" Value="{StaticResource Brush.Primary}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="8">
+                        <ContentPresenter Margin="4"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Hover effekt - lysere orange -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#FF7C21"/>
+                        </Trigger>
+                        <!-- Tryk effekt - mørkere orange -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#E65F00"/>
+                        </Trigger>
+                        <!-- Deaktiveret tilstand - gennemsigtig -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
 
     <!-- Primær knap - Hovedhandlinger som "Gem", "Opret", "Tilføj" -->
     <Style x:Key="Button.Primary" TargetType="Button">
@@ -228,11 +261,6 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="10,6"/>
         <Setter Property="CaretBrush" Value="{StaticResource Brush.Text}"/>
-    </Style>
-
-    <Style TargetType="ListView" BasedOn="{StaticResource Nav.ListBox}">
-        <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
-        <Setter Property="TextBlock.Foreground" Value="Black"/>
     </Style>
 
     <!-- ComboBox - Dropdown lister til valg af muligheder -->
@@ -562,73 +590,152 @@
     </Style>
 
     <!-- Ensures submenu popups use dark background and header text is visible -->
-<Style TargetType="MenuItem">
-    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
-    <Setter Property="Background" Value="Transparent"/>
-    <Setter Property="Padding" Value="12,8"/>
-    <Setter Property="Cursor" Value="Hand"/>
-    <Setter Property="Template">
-        <Setter.Value>
-            <ControlTemplate TargetType="MenuItem">
-                <Grid>
-                    <!-- Header background -->
-                    <Border x:Name="HeaderBg" Background="{TemplateBinding Background}">
-                        <ContentPresenter
+    <Style TargetType="MenuItem">
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuItem">
+                    <Grid>
+                        <!-- Header background -->
+                        <Border x:Name="HeaderBg" Background="{TemplateBinding Background}">
+                            <ContentPresenter
                             Margin="{TemplateBinding Padding}"
                             VerticalAlignment="Center"
                             RecognizesAccessKey="True"
                             ContentSource="Header"
                             TextElement.Foreground="{TemplateBinding Foreground}"/>
-                    </Border>
+                        </Border>
 
-                    <!-- Submenu popup -->
-                    <Popup x:Name="PART_Popup"
+                        <!-- Submenu popup -->
+                        <Popup x:Name="PART_Popup"
                            Placement="Bottom"
                            AllowsTransparency="True"
                            Focusable="False"
                            IsOpen="{TemplateBinding IsSubmenuOpen}">
-                        <Border Background="{StaticResource Brush.SurfaceAlt}"
+                            <Border Background="{StaticResource Brush.SurfaceAlt}"
                                 BorderBrush="{StaticResource Brush.Border}"
                                 BorderThickness="1"
                                 CornerRadius="6"
                                 Padding="4"
                                 SnapsToDevicePixels="True">
-                            <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto">
-                                <StackPanel IsItemsHost="True"
+                                <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                    <StackPanel IsItemsHost="True"
                                             KeyboardNavigation.DirectionalNavigation="Cycle"/>
-                            </ScrollViewer>
-                        </Border>
-                    </Popup>
-                </Grid>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
 
-                <ControlTemplate.Triggers>
-                    <!-- Hover/Highlight -->
-                    <Trigger Property="IsHighlighted" Value="True">
-                        <Setter TargetName="HeaderBg" Property="Background" Value="{StaticResource Brush.Border}"/>
-                    </Trigger>
+                    <ControlTemplate.Triggers>
+                        <!-- Hover/Highlight -->
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="HeaderBg" Property="Background" Value="{StaticResource Brush.Border}"/>
+                        </Trigger>
 
-                    <!-- Open submenu or pressed -->
-                    <Trigger Property="IsSubmenuOpen" Value="True">
-                        <Setter TargetName="HeaderBg" Property="Background" Value="{StaticResource Brush.Primary}"/>
-                        <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
-                    </Trigger>
+                        <!-- Open submenu or pressed -->
+                        <Trigger Property="IsSubmenuOpen" Value="True">
+                            <Setter TargetName="HeaderBg" Property="Background" Value="{StaticResource Brush.Primary}"/>
+                            <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
+                        </Trigger>
 
-                    <!-- Top-level vs submenu placement -->
-                    <Trigger Property="Role" Value="TopLevelHeader">
-                        <Setter TargetName="PART_Popup" Property="Placement" Value="Bottom"/>
-                    </Trigger>
-                    <Trigger Property="Role" Value="SubmenuHeader">
-                        <Setter TargetName="PART_Popup" Property="Placement" Value="Right"/>
-                    </Trigger>
+                        <!-- Top-level vs submenu placement -->
+                        <Trigger Property="Role" Value="TopLevelHeader">
+                            <Setter TargetName="PART_Popup" Property="Placement" Value="Bottom"/>
+                        </Trigger>
+                        <Trigger Property="Role" Value="SubmenuHeader">
+                            <Setter TargetName="PART_Popup" Property="Placement" Value="Right"/>
+                        </Trigger>
 
-                    <!-- Disabled -->
-                    <Trigger Property="IsEnabled" Value="False">
-                        <Setter Property="Opacity" Value="0.6"/>
-                        <Setter Property="Cursor" Value="Arrow"/>
-                    </Trigger>
-                </ControlTemplate.Triggers>
-            </ControlTemplate>
-        </Setter.Value>
-    </Setter>
-</Style>
+                        <!-- Disabled -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                            <Setter Property="Cursor" Value="Arrow"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- Dark ListView style -->
+    <Style TargetType="ListView">
+        <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="AlternationCount" Value="2"/>
+
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+                    <Setter Property="Background" Value="{StaticResource Brush.Card}"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="8,6"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <!-- Preserve GridView columns while coloring the row -->
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border x:Name="Bd"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="6"
+                                    BorderBrush="{StaticResource Brush.Transparent}"
+                                    BorderThickness="1"
+                                    SnapsToDevicePixels="True">
+                                    <GridViewRowPresenter
+                                    Content="{TemplateBinding Content}"
+                                    Columns="{Binding RelativeSource={RelativeSource AncestorType=ListView}, Path=View.Columns}"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <!-- Zebra rows (optional dark alt) -->
+                                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                        <Setter TargetName="Bd" Property="Background" Value="#121A2F"/>
+                                    </Trigger>
+                                    <!-- Hover -->
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="{StaticResource Brush.Border}"/>
+                                    </Trigger>
+                                    <!-- Selected -->
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="{StaticResource Brush.Primary}"/>
+                                        <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
+                                    </Trigger>
+                                    <!-- Disabled -->
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.6"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="GridView.ColumnHeaderContainerStyle">
+            <Setter.Value>
+                <Style TargetType="GridViewColumnHeader">
+                    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+                    <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                    <Setter Property="Padding" Value="8,6"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#151E32"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!--<Style TargetType="ListView" BasedOn="{StaticResource Nav.ListBox}">
+        <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
+        <Setter Property="TextBlock.Foreground" Value="Black"/>
+    </Style>-->
 </ResourceDictionary>

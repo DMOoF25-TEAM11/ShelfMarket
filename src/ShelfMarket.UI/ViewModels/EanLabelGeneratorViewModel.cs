@@ -5,7 +5,11 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Extensions.DependencyInjection;
+using ShelfMarket.Application.Abstract;
 using ShelfMarket.Application.Abstract.Services.Barcodes;
+using ShelfMarket.Application.Interfaces;
+using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
 
@@ -23,11 +27,18 @@ public sealed class EanLabelGeneratorViewModel : ModelBase
     {
         _barcode = barcode ?? throw new ArgumentNullException(nameof(barcode));
         GenerateCommand = new RelayCommand(OnGenerate, CanGenerate);
+        _shelfTenantsRepository = App.HostInstance.Services.GetRequiredService<IShelfTenantRepository>();
+        _shelfRepository = App.HostInstance.Services.GetRequiredService<IShelfRepository>();
+
+        GetShelfTenantsAsync().GetAwaiter();
     }
 
+    #region Form Fields
     // Collections for dropdowns
-    public ObservableCollection<string> ShelfTenants { get; } = new();
-    public ObservableCollection<int> ShelfNumbers { get; } = new();
+    private readonly IShelfTenantRepository _shelfTenantsRepository;
+    public ObservableCollection<ShelfTenant> ShelfTenants { get; } = new();
+    private readonly IShelfRepository _shelfRepository;
+    public ObservableCollection<Shelf> Shelfs { get; } = new();
 
     private string? _selectedShelfTenant;
     public string? SelectedShelfTenant
@@ -39,8 +50,9 @@ public sealed class EanLabelGeneratorViewModel : ModelBase
             {
                 // TODO: Load shelf numbers for selected tenant from your repository/service.
                 // For now, clear and keep current selection consistent.
-                ShelfNumbers.Clear();
+                Shelfs.Clear();
                 SelectedShelfNumber = null;
+                GetShelfsForTenantAsync(Guid.Parse(value ?? Guid.Empty.ToString())).GetAwaiter();
                 OnPropertyChanged(nameof(CanGenerate));
             }
         }
@@ -104,12 +116,35 @@ public sealed class EanLabelGeneratorViewModel : ModelBase
     // Derived displays
     public string ShelfDisplay => SelectedShelfNumber is int n ? n.ToString("000000", CultureInfo.InvariantCulture) : string.Empty;
     public string PriceDisplay => Price.ToString("C", CultureInfo.CurrentCulture);
+    #endregion
 
-    // Commands
+    #region Load handler
+    private async Task GetShelfTenantsAsync()
+    {
+        foreach (var t in await _shelfTenantsRepository.GetAllAsync())
+            ShelfTenants.Add(t);
+    }
+
+    private async Task GetShelfsForTenantAsync(Guid tenant)
+    {
+        var shelf = await _shelfRepository.GetByIdAsync(tenant);
+        if (shelf != null)
+            Shelfs.Add(shelf);
+    }
+    //private async Task GetShelfNumbersForTenant(string tenant)
+    //{
+    //    foreach (var n in await _shelfTenantsRepository.GetShelfNumbersAsync(tenant))
+    //        ShelfNumbers.Add(n);
+    //}
+    #endregion
+
+    #region CanXXX Command States
     private bool CanGenerate()
         => SelectedShelfNumber is int n && n >= 0 && n <= 999_999
            && Price >= 0m && Price <= 9_999.99m;
+    #endregion
 
+    #region OnXXX Command Handlers
     private void OnGenerate()
     {
         Error = null;
@@ -132,6 +167,8 @@ public sealed class EanLabelGeneratorViewModel : ModelBase
             Error = ex.Message;
         }
     }
+    #endregion
+
 
     // Helpers
     private static ImageSource ToImageSource(byte[] data)
@@ -144,19 +181,6 @@ public sealed class EanLabelGeneratorViewModel : ModelBase
         bi.EndInit();
         bi.Freeze();
         return bi;
-    }
-
-    // Utility to allow host to populate dropdowns from outside (repository, etc.)
-    public void SetShelfTenants(params string[] tenants)
-    {
-        ShelfTenants.Clear();
-        foreach (var t in tenants) ShelfTenants.Add(t);
-    }
-
-    public void SetShelfNumbers(params int[] numbers)
-    {
-        ShelfNumbers.Clear();
-        foreach (var n in numbers) ShelfNumbers.Add(n);
     }
 
 

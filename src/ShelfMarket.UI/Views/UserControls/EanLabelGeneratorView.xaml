@@ -23,14 +23,24 @@
                 <ComboBox Width="200"
                           ItemsSource="{Binding ShelfTenants}"
                           SelectedItem="{Binding SelectedShelfTenant, Mode=TwoWay}"
-                          IsEditable="False"/>
+                          IsEditable="False">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding FirstName}" />
+                                <Run Text=" " />
+                                <Run Text="{Binding LastName}" />
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
 
             <StackPanel>
                 <TextBlock Text="Shelf number" Margin="16,0,0,4"/>
                 <ComboBox Width="140"
-                          ItemsSource="{Binding ShelfNumbers}"
-                          SelectedItem="{Binding SelectedShelfNumber, Mode=TwoWay}"
+                          ItemsSource="{Binding Shelfs}"
+                          SelectedItem="{Binding SelectedShelf, Mode=TwoWay}"
                           IsEditable="False"/>
             </StackPanel>
 
@@ -52,9 +62,10 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="200"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Grid.Row="0">
                     <TextBlock Text="Shelf:" FontWeight="SemiBold"/>
                     <TextBlock Text="{Binding ShelfDisplay}"/>
                     <TextBlock Text="Price:" FontWeight="SemiBold" Margin="20,0,0,0"/>
@@ -68,9 +79,8 @@
                 </ScrollViewer>
             </Grid>
         </Border>
-
         <!-- Errors -->
-        <TextBlock Grid.Row="3"
+        <TextBlock Grid.Row="2"
                    Margin="0,12,0,0"
                    Foreground="Firebrick"
                    TextWrapping="Wrap"

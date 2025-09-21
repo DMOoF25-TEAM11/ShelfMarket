@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ShelfMarket.Application;
-using ShelfMarket.Application.Interfaces;
+using ShelfMarket.Application.Abstract;
 using ShelfMarket.Infrastructure;
 using ShelfMarket.Infrastructure.Repositories;
 using ShelfMarket.UI.ViewModels;
@@ -39,7 +39,7 @@ public partial class App : System.Windows.Application
                 services.AddTransient<ManagesShelfTanentContractViewModel>();
 
                 // ShelfTenant
-                services.AddSingleton<ITenantRepository, TenantRepository>();
+                services.AddSingleton<IShelfTenantRepository, TenantRepository>();
                 services.AddTransient<TenantsViewModel>();
                 services.AddTransient<MainWindowViewModel>();
                 
