@@ -1,12 +1,13 @@
 ﻿using ShelfMarket.Application.Interfaces;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
+using ShelfMarket.UI.ViewModels.List.Item;
 
-namespace ShelfMarket.UI.ViewModels;
+namespace ShelfMarket.UI.ViewModels.List;
 
-public sealed class ManagesShelfTypeListViewModel : ListViewModelBase<IShelfTypeRepository, ManagesShelfTypeListItemViewModel>
+public class ManagesShelfTanentContractListViewModel : ListViewModelBase<IShelfTenantContractRepository, ManagesShelfTenantContractListItemViewModel>
 {
-    public ManagesShelfTypeListViewModel(IShelfTypeRepository repository) : base(repository)
+    public ManagesShelfTanentContractListViewModel(IShelfTenantContractRepository repository) : base(repository)
     {
     }
 
@@ -23,7 +24,7 @@ public sealed class ManagesShelfTypeListViewModel : ListViewModelBase<IShelfType
             Items.Clear();
             foreach (var item in items)
             {
-                Items.Add(new ManagesShelfTypeListItemViewModel(item));
+                Items.Add(new ManagesShelfTenantContractListItemViewModel(item));
             }
         }
         catch (Exception ex)

@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.UI.ViewModels;
+using ShelfMarket.UI.ViewModels.List;
 
 namespace ShelfMarket.UI.Views;
 
