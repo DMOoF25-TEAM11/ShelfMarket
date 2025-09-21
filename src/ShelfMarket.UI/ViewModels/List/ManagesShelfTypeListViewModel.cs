@@ -1,12 +1,13 @@
 ﻿using ShelfMarket.Application.Interfaces;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
+using ShelfMarket.UI.ViewModels.List.Item;
 
-namespace ShelfMarket.UI.ViewModels;
+namespace ShelfMarket.UI.ViewModels.List;
 
-class SalesLineListViewModel : ListViewModelBase<ISalesLineRepository, SalesLineListItemViewModel>
+public sealed class ManagesShelfTypeListViewModel : ListViewModelBase<IShelfTypeRepository, ManagesShelfTypeListItemViewModel>
 {
-    public SalesLineListViewModel(ISalesLineRepository repository) : base(repository)
+    public ManagesShelfTypeListViewModel(IShelfTypeRepository repository) : base(repository)
     {
     }
 
@@ -23,7 +24,7 @@ class SalesLineListViewModel : ListViewModelBase<ISalesLineRepository, SalesLine
             Items.Clear();
             foreach (var item in items)
             {
-                Items.Add(new SalesLineListItemViewModel(item));
+                Items.Add(new ManagesShelfTypeListItemViewModel(item));
             }
         }
         catch (Exception ex)

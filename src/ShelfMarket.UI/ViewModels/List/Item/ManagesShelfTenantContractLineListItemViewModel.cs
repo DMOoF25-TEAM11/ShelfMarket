@@ -1,4 +1,4 @@
-﻿namespace ShelfMarket.UI.ViewModels;
+﻿namespace ShelfMarket.UI.ViewModels.List.Item;
 
 public class ManagesShelfTenantContractLineListItemViewModel
 {

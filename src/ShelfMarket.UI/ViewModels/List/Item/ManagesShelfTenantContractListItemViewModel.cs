@@ -1,6 +1,6 @@
 ﻿using ShelfMarket.Domain.Entities;
 
-namespace ShelfMarket.UI.ViewModels;
+namespace ShelfMarket.UI.ViewModels.List.Item;
 
 public class ManagesShelfTenantContractListItemViewModel
 {
