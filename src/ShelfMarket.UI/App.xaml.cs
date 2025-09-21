@@ -5,6 +5,7 @@ using ShelfMarket.Application.Interfaces;
 using ShelfMarket.Infrastructure;
 using ShelfMarket.Infrastructure.Repositories;
 using ShelfMarket.UI.ViewModels;
+using ShelfMarket.UI.ViewModels.List;
 using System.Windows;
 
 namespace ShelfMarket.UI;
