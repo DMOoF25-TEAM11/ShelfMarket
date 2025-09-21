@@ -1,5 +1,5 @@
-using Microsoft.Extensions.DependencyInjection;
-using ShelfMarket.Application.Interfaces;
+ï»¿using Microsoft.Extensions.DependencyInjection;
+using ShelfMarket.Application.Abstract;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
@@ -16,7 +16,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ShelfMarket.UI.ViewModels;
 
-public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
+public class TenantsViewModel : ViewModelBase<IShelfTenantRepository, ShelfTenant>
 {
     #region Form Fields
     private Guid _tenantId;
@@ -183,7 +183,7 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
     #endregion
 
     public TenantsViewModel()
-        : this(App.HostInstance.Services.GetRequiredService<ITenantRepository>())
+        : this(App.HostInstance.Services.GetRequiredService<IShelfTenantRepository>())
     {
     }
 
@@ -191,17 +191,17 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
     public ICommand ResetFormCommand { get; }
     public ICommand RefreshCommand { get; }
 
-    // Skal bruges til at åbne TenantContracts vindue
+    // Skal bruges til at Ã¥bne TenantContracts vindue
     //private readonly relaycommand _movetotenantcontractscommand;
     //public icommand movetotenantcontractscommand => _movetotenantcontractscommand;
     #endregion
 
-    public TenantsViewModel(ITenantRepository tenantRepository)
+    public TenantsViewModel(IShelfTenantRepository tenantRepository)
         : base(tenantRepository)
     {
         _tenantRepository = tenantRepository;
 
-        // Skal bruges til at åbne TenantContracts vindue
+        // Skal bruges til at Ã¥bne TenantContracts vindue
         //_moveToTenantContractsCommand = new RelayCommand(async () => await OpenTenantContractsAsync());
 
         ResetFormCommand = new RelayCommand(async () => await OnResetFormAsync(),
@@ -221,7 +221,7 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
     }
 
     #region Dropdown Fields
-    private readonly ITenantRepository _tenantRepository;
+    private readonly IShelfTenantRepository _tenantRepository;
     public ObservableCollection<ShelfTenant> Tenants { get; private set; } = [];
     #endregion
 
@@ -276,7 +276,7 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
         }
         catch (Exception ex)
         {
-            Error = $"Fejl ved indlæsning af lejer: {ex.Message}";
+            Error = $"Fejl ved indlÃ¦sning af lejer: {ex.Message}";
         }
         finally
         {
@@ -344,7 +344,7 @@ public class TenantsViewModel : ViewModelBase<ITenantRepository, ShelfTenant>
         return Task.CompletedTask;
     }
 
-    // Skal bruges til at åbne TenantContracts vindue
+    // Skal bruges til at Ã¥bne TenantContracts vindue
     //private async Task OpenTenantContractsAsync()
     //{
     //    // Create the Page and its VM (replace with DI if you prefer)
