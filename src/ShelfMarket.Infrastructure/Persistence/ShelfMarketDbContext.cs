@@ -10,7 +10,6 @@ public class ShelfMarketDbContext : DbContext
     public DbSet<ShelfTenant> ShelfTenants { get; set; }
     public DbSet<ShelfTenantContract> ShelfTenantContracts { get; set; }
     public DbSet<ShelfTenantContractLine> ShelfTenantContractLines { get; set; }
-    public DbSet<Ean> Eans { get; set; }
     public DbSet<SalesLine> SalesLines { get; set; }
     public DbSet<Sales> Sales { get; set; }
 
@@ -33,14 +32,10 @@ public class ShelfMarketDbContext : DbContext
             .ToTable("SHELFTENANTCONTRACT");
         modelBuilder.Entity<ShelfTenantContractLine>()
             .ToTable("SHELFTENANTCONTRACTLINE");
-            
+
         //ShelfTenant
         modelBuilder.Entity<ShelfTenant>()
             .ToTable("SHELFTENANT");
-        modelBuilder.Entity<ShelfTenant>().Property(p => p.PhoneNumber).HasColumnName("PhoneNumber");
-
-        modelBuilder.Entity<Ean>()
-            .ToTable("EAN");
         modelBuilder.Entity<SalesLine>()
             .ToTable("SALESLINE");
         modelBuilder.Entity<Sales>()

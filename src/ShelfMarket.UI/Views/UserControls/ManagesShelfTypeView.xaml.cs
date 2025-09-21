@@ -8,7 +8,7 @@ namespace ShelfMarket.UI.Views;
 /// <summary>
 /// Interaction logic for EditShelfType.xaml
 /// </summary>
-public partial class ManagesShelfTypeView : Page
+public partial class ManagesShelfTypeView : UserControl
 {
     private ManagesShelfTypeListViewModel? _listVm;
     private ManagesShelfTypeViewModel? _vm;

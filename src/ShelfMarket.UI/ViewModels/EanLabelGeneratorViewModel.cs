@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ShelfMarket.Application.Abstracts.Services;
+using ShelfMarket.Application.Abstract.Services.Barcodes;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
 
@@ -13,13 +13,13 @@ namespace ShelfMarket.UI.ViewModels;
 
 public sealed class EanLabelGeneratorViewModel : ModelBase
 {
-    private readonly IEan13BarCode _barcode;
+    private readonly IEan13Generator _barcode;
 
     #region Commands Declaration
     public ICommand GenerateCommand { get; }
     #endregion
 
-    public EanLabelGeneratorViewModel(IEan13BarCode barcode)
+    public EanLabelGeneratorViewModel(IEan13Generator barcode)
     {
         _barcode = barcode ?? throw new ArgumentNullException(nameof(barcode));
         GenerateCommand = new RelayCommand(OnGenerate, CanGenerate);
@@ -117,10 +117,10 @@ public sealed class EanLabelGeneratorViewModel : ModelBase
         {
             if (SelectedShelfNumber is not int shelf) return;
 
-            var ean = _barcode.Build(shelf, Price);
+            var ean = _barcode.Build(shelf.ToString(), Price);
             Ean = ean;
 
-            var bytes = _barcode.RenderPng(ean, width: 372, height: 180, includeText: true);
+            var bytes = _barcode.RenderPng(ean, scale: 3, barHeight: 60, includeNumbers: true);
             BarcodeImage = ToImageSource(bytes);
         }
         catch (ArgumentOutOfRangeException ex)

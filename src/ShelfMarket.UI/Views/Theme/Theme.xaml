@@ -33,6 +33,11 @@
     <SolidColorBrush x:Key="Brush.Border" Color="{StaticResource Color.Border}"/>
     <SolidColorBrush x:Key="Brush.Transparent" Color="Transparent"/>
 
+    <Style TargetType="UserControl">
+        <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+    </Style>
+
     <!-- ===== TYPOGRAFI ===== -->
     <Style x:Key="Text.H1" TargetType="TextBlock">
         <Setter Property="FontSize" Value="28"/>
@@ -51,6 +56,7 @@
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
+  
     <!-- ===== KNAPPER ===== -->
     <!-- 
       Her defineres knapstilarter for forskellige formål i applikationen.
@@ -211,6 +217,7 @@
     <!-- TextBlock - Afkrydsningsfelter -->
     <Style TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="Background" Value="Transparent"/>
     </Style>
 
     <!-- TextBox - Tekst input felter -->
@@ -543,4 +550,85 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- ===== DARK MENU (MainMenu) ===== -->
+    <Style TargetType="Menu">
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+    </Style>
+
+    <!-- Ensures submenu popups use dark background and header text is visible -->
+<Style TargetType="MenuItem">
+    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Padding" Value="12,8"/>
+    <Setter Property="Cursor" Value="Hand"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="MenuItem">
+                <Grid>
+                    <!-- Header background -->
+                    <Border x:Name="HeaderBg" Background="{TemplateBinding Background}">
+                        <ContentPresenter
+                            Margin="{TemplateBinding Padding}"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True"
+                            ContentSource="Header"
+                            TextElement.Foreground="{TemplateBinding Foreground}"/>
+                    </Border>
+
+                    <!-- Submenu popup -->
+                    <Popup x:Name="PART_Popup"
+                           Placement="Bottom"
+                           AllowsTransparency="True"
+                           Focusable="False"
+                           IsOpen="{TemplateBinding IsSubmenuOpen}">
+                        <Border Background="{StaticResource Brush.SurfaceAlt}"
+                                BorderBrush="{StaticResource Brush.Border}"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Padding="4"
+                                SnapsToDevicePixels="True">
+                            <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                <StackPanel IsItemsHost="True"
+                                            KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                            </ScrollViewer>
+                        </Border>
+                    </Popup>
+                </Grid>
+
+                <ControlTemplate.Triggers>
+                    <!-- Hover/Highlight -->
+                    <Trigger Property="IsHighlighted" Value="True">
+                        <Setter TargetName="HeaderBg" Property="Background" Value="{StaticResource Brush.Border}"/>
+                    </Trigger>
+
+                    <!-- Open submenu or pressed -->
+                    <Trigger Property="IsSubmenuOpen" Value="True">
+                        <Setter TargetName="HeaderBg" Property="Background" Value="{StaticResource Brush.Primary}"/>
+                        <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
+                    </Trigger>
+
+                    <!-- Top-level vs submenu placement -->
+                    <Trigger Property="Role" Value="TopLevelHeader">
+                        <Setter TargetName="PART_Popup" Property="Placement" Value="Bottom"/>
+                    </Trigger>
+                    <Trigger Property="Role" Value="SubmenuHeader">
+                        <Setter TargetName="PART_Popup" Property="Placement" Value="Right"/>
+                    </Trigger>
+
+                    <!-- Disabled -->
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value="0.6"/>
+                        <Setter Property="Cursor" Value="Arrow"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
 </ResourceDictionary>

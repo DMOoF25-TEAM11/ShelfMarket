@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -9,7 +9,7 @@ using System.Windows.Media;
 using System.Windows.Documents;
 using ShelfMarket.UI.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using ShelfMarket.Application.Interfaces;
+using ShelfMarket.Application.Abstract.Services;
 
 namespace ShelfMarket.UI.Views
 {
