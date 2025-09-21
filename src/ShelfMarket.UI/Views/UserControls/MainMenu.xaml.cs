@@ -23,4 +23,14 @@ public partial class MainMenu : UserControl
         //mainWindow?.MainFrame.Navigate(new EditShelfTypeView());
     }
 
+    private void MenuEan_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
+        if (mainWindow != null)
+        {
+            mainWindow.MainContentControl.Content = new EanLabelGeneratorView();
+            mainWindow.Title = "Reolmarkedet - EAN Label Generator";
+            mainWindow.PageTitle.Text = "EAN Label Generator";
+        }
+    }
 }
