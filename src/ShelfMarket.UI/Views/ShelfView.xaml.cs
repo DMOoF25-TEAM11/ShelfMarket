@@ -4,7 +4,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Extensions.DependencyInjection;
-using ShelfMarket.Application.Interfaces;
+using ShelfMarket.Application.Abstract.Services;
 using ShelfMarket.UI.Views.Windows;
 
 namespace ShelfMarket.UI.Views;

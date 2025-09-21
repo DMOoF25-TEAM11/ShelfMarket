@@ -1,13 +1,14 @@
 ﻿using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.UI.ViewModels;
+using ShelfMarket.UI.ViewModels.List;
 
 namespace ShelfMarket.UI.Views;
 
 /// <summary>
 /// Interaction logic for EditShelfType.xaml
 /// </summary>
-public partial class ManagesShelfTypeView : Page
+public partial class ManagesShelfTypeView : UserControl
 {
     private ManagesShelfTypeListViewModel? _listVm;
     private ManagesShelfTypeViewModel? _vm;

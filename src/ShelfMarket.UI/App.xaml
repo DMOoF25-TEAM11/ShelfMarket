@@ -16,7 +16,7 @@
                 <views:ShelfView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:SalesViewModel}">
-                <views:SalesView/>
+                <uc:SalesView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:FinanceViewModel}">
                 <views:FinanceView/>

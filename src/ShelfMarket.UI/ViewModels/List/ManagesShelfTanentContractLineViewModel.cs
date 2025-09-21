@@ -3,7 +3,7 @@ using ShelfMarket.Application.Interfaces;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.ViewModels.Abstracts;
 
-namespace ShelfMarket.UI.ViewModels;
+namespace ShelfMarket.UI.ViewModels.List;
 
 public class ManagesShelfTanentContractLineViewModel : ViewModelBase<IShelfTenantContractLineRepository, ShelfTenantContractLine>
 {
