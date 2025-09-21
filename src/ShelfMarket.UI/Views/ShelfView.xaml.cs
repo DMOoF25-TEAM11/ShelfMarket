@@ -9,7 +9,7 @@ using System.Windows.Media;
 using System.Windows.Documents;
 using ShelfMarket.UI.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using ShelfMarket.Application.Abstracts.Services;
+using ShelfMarket.Application.Abstract.Services;
 
 namespace ShelfMarket.UI.Views
 {

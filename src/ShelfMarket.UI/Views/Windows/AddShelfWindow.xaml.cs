@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using ShelfMarket.Application.Abstracts.Services;
+using ShelfMarket.Application.Abstract.Services;
 using ShelfMarket.Infrastructure.Persistence;
 
 namespace ShelfMarket.UI.Views.Windows

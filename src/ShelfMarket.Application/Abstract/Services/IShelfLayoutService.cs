@@ -1,6 +1,6 @@
 ﻿using ShelfMarket.Domain.Entities;
 
-namespace ShelfMarket.Application.Abstracts.Services;
+namespace ShelfMarket.Application.Abstract.Services;
 
 /// <summary>
 /// Application service concerned with shelf layout (grid positions and orientation).

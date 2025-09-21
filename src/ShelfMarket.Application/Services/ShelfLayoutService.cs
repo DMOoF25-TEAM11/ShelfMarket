@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using ShelfMarket.Application.Abstracts.Services;
+using ShelfMarket.Application.Abstract.Services;
 using ShelfMarket.Application.Interfaces;
 using ShelfMarket.Domain.Entities;
 

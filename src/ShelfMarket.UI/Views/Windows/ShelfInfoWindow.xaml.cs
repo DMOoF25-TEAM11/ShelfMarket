@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Windows.Media;
 using System.Linq;
 using System.Threading.Tasks;
-using ShelfMarket.Application.Abstracts.Services;
+using ShelfMarket.Application.Abstract.Services;
 
 namespace ShelfMarket.UI.Views.Windows;
 
