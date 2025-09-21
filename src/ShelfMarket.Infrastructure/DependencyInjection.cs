@@ -9,13 +9,17 @@ namespace ShelfMarket.Infrastructure;
 
 public static class DependencyInjection
 {
+
     public static IServiceCollection AddShelfMarketInfrastructure(this IServiceCollection services)
     {
 
         var serviceProvider = services.BuildServiceProvider();
         var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+#if DEBUG
+        var connectionString = configuration.GetConnectionString("ShelfMarketDb_Dev");
+#else
         var connectionString = configuration.GetConnectionString("ShelfMarketDb");
-
+#endif
         services.AddDbContext<ShelfMarketDbContext>(options =>
             options.UseSqlServer(connectionString));
         // Register infrastructure services here (Scoped to match DbContext lifetime)
