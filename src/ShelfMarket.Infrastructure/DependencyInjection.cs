@@ -14,17 +14,15 @@ public static class DependencyInjection
 
         var serviceProvider = services.BuildServiceProvider();
         var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-#if RELEASE
         var connectionString = configuration.GetConnectionString("ShelfMarketDb");
-#else
-        var connectionString = configuration.GetConnectionString("ShelfMarketDb_Development");
-#endif
 
         services.AddDbContext<ShelfMarketDbContext>(options =>
             options.UseSqlServer(connectionString));
         // Register infrastructure services here (Scoped to match DbContext lifetime)
         services.AddScoped<IShelfRepository, ShelfRepository>();
         services.AddScoped<IShelfTypeRepository, ShelfTypeRepository>();
+        services.AddScoped<ISalesRepository, SalesRepository>();
+        services.AddScoped<IShelfTenantContractRepository, ShelfTenantContractRepository>();
         return services;
     }
 }
