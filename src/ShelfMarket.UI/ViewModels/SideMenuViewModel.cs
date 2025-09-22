@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract.Services;
@@ -17,6 +18,14 @@ public class SideMenuViewModel : ModelBase
     public SideMenuViewModel()
     {
         _privileges = App.HostInstance.Services.GetRequiredService<IPrivilegeService>();
+        _privileges.CurrentLevelChanged += (_, __) =>
+        {
+            OnPropertyChanged(nameof(CurrentLevel));
+            OnPropertyChanged(nameof(SideMenuItems)); // keep existing
+            if (MenuItemCommand is RelayCommand rc) rc.RaiseCanExecuteChanged();
+            RefreshMenuVisibilityAndSelection();
+        };
+
         MenuItemCommand = new RelayCommand(OnCommand, CanCommand);
         SideMenuItems = new ObservableCollection<SideMenuItem>
         {
@@ -33,20 +42,7 @@ public class SideMenuViewModel : ModelBase
         SelectedMenuItem ??= SideMenuItems[2];
     }
 
-
-    // Deprecated: left in place to avoid breaking references; no longer used by the view binding.
-    //private SideMenuItem? _selected;
-    //public SideMenuItem? Selected
-    //{
-    //    get => _selected;
-    //    set
-    //    {
-    //        if (_selected == value) return;
-    //        _selected = value;
-    //        OnCommand();
-    //        OnPropertyChanged(nameof(Selected));
-    //    }
-    //}
+    public PrivilegeLevel CurrentLevel => _privileges.CurrentLevel;
 
     public class SideMenuItem
     {
@@ -77,14 +73,16 @@ public class SideMenuViewModel : ModelBase
             // Quick logoff and go to ShelfView
             if (value?.IsLogoff == true)
             {
-                _privileges.SignIn(PrivilegeLevel.Guest, null);
+                _privileges.SignOut();
                 var shelf = SideMenuItems.FirstOrDefault(i => i.Title == "Reoler") ?? SideMenuItems.FirstOrDefault();
                 if (shelf != null)
                 {
                     _selectedMenuItem = shelf;
                     OnPropertyChanged(nameof(SelectedMenuItem));
                 }
+                RefreshMenuVisibilityAndSelection();
             }
+
             OnCommand();
             if (MenuItemCommand is RelayCommand rc) rc.RaiseCanExecuteChanged();
         }
@@ -102,7 +100,6 @@ public class SideMenuViewModel : ModelBase
         if (SelectedMenuItem is null || SelectedMenuItem.View == null) return;
         MainWindow? mainWindow = App.Current.MainWindow as MainWindow;
         if (mainWindow == null) return;
-        //mainWindow.MainContent.Content = SelectedMenuItem.View;
         if (App.Current.MainWindow is MainWindow mw && SelectedMenuItem?.View != null)
         {
             if (mw.MainContent != null)
@@ -114,5 +111,36 @@ public class SideMenuViewModel : ModelBase
                         mw.MainContent.Content = SelectedMenuItem.View;
                 }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
+
+        // If the selected item was 'Log på', selection may become hidden after login.
+        // CurrentLevelChanged will handle reselection; nothing else needed here.
+    }
+
+    private void RefreshMenuVisibilityAndSelection()
+    {
+        // Force the ItemsControl to re-evaluate item containers
+        CollectionViewSource.GetDefaultView(SideMenuItems)?.Refresh();
+
+        // Ensure selection is visible and accessible; otherwise select a sensible default
+        if (_selectedMenuItem is null || !IsItemVisibleForCurrentLevel(_selectedMenuItem))
+        {
+            var next = SideMenuItems.FirstOrDefault(IsItemVisibleForCurrentLevel)
+                       ?? SideMenuItems.FirstOrDefault();
+            if (next != null && !ReferenceEquals(next, _selectedMenuItem))
+            {
+                _selectedMenuItem = next;
+                OnPropertyChanged(nameof(SelectedMenuItem));
+            }
+        }
+    }
+
+    private bool IsItemVisibleForCurrentLevel(SideMenuItem item)
+    {
+        if (!_privileges.CanAccess(item.Privilege)) return false;
+        // Hide 'Log på' when logged in
+        if (!item.IsLogoff && item.Title == "Log på" && _privileges.CurrentLevel != PrivilegeLevel.Guest) return false;
+        // Hide 'Log af' when guest
+        if (item.IsLogoff && _privileges.CurrentLevel == PrivilegeLevel.Guest) return false;
+        return true;
     }
 }

@@ -7,6 +7,8 @@ public sealed class PrivilegeService : IPrivilegeService
 {
     public PrivilegeLevel CurrentLevel { get; private set; } = PrivilegeLevel.Guest;
 
+    public event EventHandler? CurrentLevelChanged;
+
     public bool SignIn(PrivilegeLevel level, string? password)
     {
         bool ok = level switch
@@ -17,11 +19,22 @@ public sealed class PrivilegeService : IPrivilegeService
             _ => false
         };
 
-        if (ok) CurrentLevel = level;
+        if (ok && CurrentLevel != level)
+        {
+            CurrentLevel = level;
+            CurrentLevelChanged?.Invoke(this, EventArgs.Empty);
+        }
         return ok;
     }
 
-    public void SignOut() => CurrentLevel = PrivilegeLevel.Guest;
+    public void SignOut()
+    {
+        if (CurrentLevel != PrivilegeLevel.Guest)
+        {
+            CurrentLevel = PrivilegeLevel.Guest;
+            CurrentLevelChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 
     public bool CanAccess(PrivilegeLevel required)
     {

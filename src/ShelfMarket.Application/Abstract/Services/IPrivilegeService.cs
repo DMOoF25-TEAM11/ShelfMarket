@@ -8,4 +8,6 @@ public interface IPrivilegeService
     bool SignIn(PrivilegeLevel level, string? password);
     void SignOut();
     bool CanAccess(PrivilegeLevel required);
+
+    event EventHandler? CurrentLevelChanged;
 }
