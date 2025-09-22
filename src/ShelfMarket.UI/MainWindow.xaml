@@ -27,8 +27,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <!-- Venstre rail -->
-            <uc:SideMenu x:Name="SideMenuControl" Grid.Column="0"
-                     SelectedItem="{Binding SelectedMenu, Mode=TwoWay}"/>
+            <uc:SideMenuView x:Name="SideMenuControl" Grid.Column="0"/>
             <!-- Indhold -->
             <Grid Grid.Column="1" Margin="16">
                 <Grid.RowDefinitions>
@@ -42,14 +41,13 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="PageTitle" Text="{Binding ElementName=SideMenuControl, Path=SelectedItem}" Style="{StaticResource Text.H1}"/>
+                    <TextBlock x:Name="PageTitle" Style="{StaticResource Text.H1}"/>
                     <Border Grid.Column="1" Background="{StaticResource Brush.Border}" Height="1"
                 Margin="16,18,0,0" VerticalAlignment="Top"/>
                 </Grid>
-
                 <!-- Views -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <ContentControl x:Name="MainContentControl" Content="{Binding CurrentViewModel}"/>
+                    <uc:ShelfView x:Name="CurrentView" />
                 </ScrollViewer>
             </Grid>
         </Grid>

@@ -3,11 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ShelfMarket.UI.Views.UserControls"
+             xmlns:local="clr-namespace:ShelfMarket.UI.Views.UserControls" 
+             xmlns:viewmodels="clr-namespace:ShelfMarket.UI.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:StatusBarViewModel}"
              mc:Ignorable="d" >
     <Border Style="{StaticResource StatusBar.Container}">
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -21,8 +24,15 @@
                            Tag="{Binding IsInternetAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
             </StackPanel>
 
+            <!-- Active user role (center) -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Margin="0,0,4,0" Style="{StaticResource Text.Body}" Text="User:"/>
+                <TextBlock Style="{StaticResource Text.BodyStrong}"
+                           Text="{Binding CurrentUserRole, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+            </StackPanel>
+
             <!-- Database status (right) -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <Ellipse Style="{StaticResource Status.Indicator}"
                          Tag="{Binding IsDatabaseConnected, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                 <TextBlock Margin="8,0,4,0" Style="{StaticResource Text.Body}" Text="Database:"/>

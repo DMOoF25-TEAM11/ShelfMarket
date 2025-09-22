@@ -1,4 +1,4 @@
-﻿namespace ShelfMarket.Domain.ValueObjects;
+﻿namespace ShelfMarket.Domain.Enums;
 
 public enum PaymentMethod
 {

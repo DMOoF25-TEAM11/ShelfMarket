@@ -28,7 +28,8 @@ public partial class MainMenu : UserControl
         var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
         if (mainWindow != null)
         {
-            mainWindow.MainContentControl.Content = new EanLabelGeneratorView();
+            // Use ContentControl to host different views
+            mainWindow.Content = new EanLabelGeneratorView();
             mainWindow.Title = "Reolmarkedet - EAN Label Generator";
             mainWindow.PageTitle.Text = "EAN Label Generator";
         }

@@ -253,6 +253,10 @@
         <Setter Property="Background" Value="Transparent"/>
     </Style>
 
+    <Style x:Key="Text.BodyStrong" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
     <!-- TextBox - Tekst input felter -->
     <Style TargetType="TextBox">
         <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>

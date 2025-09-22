@@ -1,9 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Extensions.DependencyInjection;
 using System.Windows.Media;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract.Services;
 
 namespace ShelfMarket.UI.Views.Windows;
@@ -73,7 +71,7 @@ public partial class ShelfInfoWindow : UserControl
             // Opdater UI knap-stil nu
             if (System.Windows.Application.Current.MainWindow is MainWindow mw)
             {
-                var view = VisualTreeHelpers.FindChildren<ShelfMarket.UI.Views.ShelfView>(mw).FirstOrDefault();
+                var view = VisualTreeHelpers.FindChildren<ShelfMarket.UI.Views.UserControls.ShelfView>(mw).FirstOrDefault();
                 if (view != null)
                 {
                     var btn = view.FindName($"Shelf{_shelfNumber}") as Button
@@ -106,7 +104,7 @@ public partial class ShelfInfoWindow : UserControl
         try
         {
             using var scope = App.HostInstance.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<ShelfMarket.Infrastructure.Persistence.ShelfMarketDbContext>();
+            var db = scope.ServiceProvider.GetRequiredService<Infrastructure.Persistence.ShelfMarketDbContext>();
             var shelf = db.Shelves.FirstOrDefault(s => s.Number == _shelfNumber);
             if (shelf != null)
             {
@@ -120,7 +118,7 @@ public partial class ShelfInfoWindow : UserControl
             // Fjern knappen fra UI med det samme og refresh layout senere
             if (System.Windows.Application.Current.MainWindow is MainWindow mw)
             {
-                var view = VisualTreeHelpers.FindChildren<ShelfMarket.UI.Views.ShelfView>(mw).FirstOrDefault();
+                var view = VisualTreeHelpers.FindChildren<Views.UserControls.ShelfView>(mw).FirstOrDefault();
                 if (view != null)
                 {
                     Button? btn = view.FindName($"Shelf{_shelfNumber}") as Button;
