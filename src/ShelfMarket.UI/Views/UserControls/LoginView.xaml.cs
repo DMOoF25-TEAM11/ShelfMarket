@@ -8,12 +8,12 @@ public partial class LoginView : UserControl
     public LoginView()
     {
         InitializeComponent();
-        DataContext ??= new ChangeUserViewModel();
+        DataContext ??= new LoginRoleViewModel();
     }
 
     private void PasswordBox_OnPasswordChanged(object sender, System.Windows.RoutedEventArgs e)
     {
-        if (DataContext is ChangeUserViewModel vm && sender is PasswordBox pb)
+        if (DataContext is LoginRoleViewModel vm && sender is PasswordBox pb)
         {
             vm.Password = pb.Password;
         }

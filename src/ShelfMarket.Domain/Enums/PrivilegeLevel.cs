@@ -2,7 +2,7 @@
 
 public enum PrivilegeLevel
 {
-    Admin,
-    User,
-    Guest
+    Guest = 0,
+    User = 1,
+    Admin = 2
 }

@@ -10,10 +10,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddShelfMarketApplication(this IServiceCollection services)
     {
-        // Register application services here
         services.AddScoped<IShelfLayoutService, ShelfLayoutService>();
         services.AddScoped<IEan13Generator, Ean13BarcodeGenerator>();
-        services.AddScoped<IPrivilegeService, PrivilegeService>();
+        services.AddSingleton<IPrivilegeService, PrivilegeService>();
         return services;
     }
 }

@@ -32,6 +32,46 @@
                      DisplayMemberPath="Title"
                      Style="{StaticResource Nav.ListBox}"
                      SelectedItem="{Binding SelectedMenuItem, Mode=TwoWay}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource Nav.ListBoxItem}">
+                        <!-- Re-evaluate on role changes -->
+                        <Setter Property="Visibility">
+                            <Setter.Value>
+                                <MultiBinding Converter="{StaticResource PrivilegeToVis}">
+                                    <Binding Path="Privilege"/>
+                                    <Binding RelativeSource="{RelativeSource AncestorType=UserControl}" Path="DataContext.CurrentLevel"/>
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+
+                        <!-- Only hide 'Log på' when logged in (User/Admin) -->
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Title}" Value="Log på"/>
+                                    <Condition Binding="{Binding DataContext.CurrentLevel, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="User"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Title}" Value="Log på"/>
+                                    <Condition Binding="{Binding DataContext.CurrentLevel, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="Admin"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </MultiDataTrigger>
+
+                            <!-- Hide 'Log af' when Guest -->
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsLogoff}" Value="True"/>
+                                    <Condition Binding="{Binding DataContext.CurrentLevel, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="Guest"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
             </ListBox>
         </DockPanel>
     </Border>

@@ -8,17 +8,19 @@ using ShelfMarket.Infrastructure.Persistence;
 
 namespace ShelfMarket.UI.Views.UserControls
 {
-    /// <summary>
-    /// Interaction logic for StatusBar.xaml
-    /// </summary>
     public partial class StatusBar : UserControl
     {
         private readonly DispatcherTimer _pollTimer;
         private bool _isChecking;
+        private readonly IPrivilegeService _privileges;
 
         public StatusBar()
         {
             InitializeComponent();
+
+            _privileges = App.HostInstance.Services.GetRequiredService<IPrivilegeService>();
+            _privileges.CurrentLevelChanged += OnCurrentLevelChanged;
+            CurrentUserRole = _privileges.CurrentLevel.ToString();
 
             _pollTimer = new DispatcherTimer
             {
@@ -34,6 +36,7 @@ namespace ShelfMarket.UI.Views.UserControls
             Unloaded += (_, __) =>
             {
                 _pollTimer.Stop();
+                _privileges.CurrentLevelChanged -= OnCurrentLevelChanged;
             };
         }
 
@@ -55,7 +58,6 @@ namespace ShelfMarket.UI.Views.UserControls
             set => SetValue(IsDatabaseConnectedProperty, value);
         }
 
-        // Active user role text
         public static readonly DependencyProperty CurrentUserRoleProperty = DependencyProperty.Register(
             nameof(CurrentUserRole), typeof(string), typeof(StatusBar), new PropertyMetadata("Guest"));
 
@@ -71,10 +73,8 @@ namespace ShelfMarket.UI.Views.UserControls
             _isChecking = true;
             try
             {
-                // Internet
                 IsInternetAvailable = NetworkInterface.GetIsNetworkAvailable();
 
-                // Database
                 bool dbOk = false;
                 try
                 {
@@ -88,8 +88,8 @@ namespace ShelfMarket.UI.Views.UserControls
                 }
                 IsDatabaseConnected = dbOk;
 
-                // Active user role (reads from privilege service if available)
-                CurrentUserRole = GetCurrentRoleString();
+                // Keep role in sync with the service
+                CurrentUserRole = _privileges.CurrentLevel.ToString();
             }
             finally
             {
@@ -97,18 +97,12 @@ namespace ShelfMarket.UI.Views.UserControls
             }
         }
 
-        private static string GetCurrentRoleString()
+        private void OnCurrentLevelChanged(object? sender, EventArgs e)
         {
-            try
+            Dispatcher.Invoke(() =>
             {
-                using var scope = App.HostInstance.Services.CreateScope();
-                var svc = scope.ServiceProvider.GetService<IPrivilegeService>();
-                return svc?.CurrentLevel.ToString() ?? "Guest";
-            }
-            catch
-            {
-                return "Guest";
-            }
+                CurrentUserRole = _privileges.CurrentLevel.ToString();
+            });
         }
     }
 }

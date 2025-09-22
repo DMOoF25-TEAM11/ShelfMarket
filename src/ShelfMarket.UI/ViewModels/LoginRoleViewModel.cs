@@ -9,7 +9,7 @@ using ShelfMarket.UI.ViewModels.Abstracts;
 
 namespace ShelfMarket.UI.ViewModels;
 
-public sealed class ChangeUserViewModel : ModelBase
+public sealed class LoginRoleViewModel : ModelBase
 {
     private readonly IPrivilegeService _privileges;
 
@@ -45,7 +45,7 @@ public sealed class ChangeUserViewModel : ModelBase
     public ICommand ConfirmCommand { get; }
     public ICommand CancelCommand { get; }
 
-    public ChangeUserViewModel()
+    public LoginRoleViewModel()
     {
         _privileges = App.HostInstance.Services.GetRequiredService<IPrivilegeService>();
         ConfirmCommand = new RelayCommand(OnConfirm, CanConfirm);
@@ -79,6 +79,7 @@ public sealed class ChangeUserViewModel : ModelBase
         if (Equals(field, value)) return false;
         field = value;
         OnPropertyChanged(name);
+
         return true;
     }
 
