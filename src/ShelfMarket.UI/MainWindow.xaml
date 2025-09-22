@@ -32,7 +32,7 @@
             <Grid Grid.Column="1" Margin="16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <!-- Header -->
@@ -47,7 +47,8 @@
                 </Grid>
                 <!-- Views -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <uc:ShelfView x:Name="CurrentView" />
+                    <Frame x:Name="MainContent" Content="{Binding CurrentView}" NavigationUIVisibility="Hidden"/>
+                    <!--<Frame x:Name="MainContent" Source="Binding uc:ShelfView" NavigationUIVisibility="Hidden"/>-->
                 </ScrollViewer>
             </Grid>
         </Grid>

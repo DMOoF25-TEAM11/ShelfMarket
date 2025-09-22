@@ -14,7 +14,7 @@ public sealed class PrivilegeToVisConverter : IValueConverter
         if (value is PrivilegeLevel privilege)
         {
             var svc = App.HostInstance.Services.GetRequiredService<IPrivilegeService>();
-            return Visibility.Visible;
+            //return Visibility.Visible;
             return svc.CanAccess(privilege) ? Visibility.Visible : Visibility.Collapsed;
         }
         return Visibility.Collapsed;

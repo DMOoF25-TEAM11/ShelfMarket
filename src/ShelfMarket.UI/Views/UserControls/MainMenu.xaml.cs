@@ -29,7 +29,7 @@ public partial class MainMenu : UserControl
         if (mainWindow != null)
         {
             // Use ContentControl to host different views
-            mainWindow.Content = new EanLabelGeneratorView();
+            mainWindow.MainContent.Content = new EanLabelGeneratorView();
             mainWindow.Title = "Reolmarkedet - EAN Label Generator";
             mainWindow.PageTitle.Text = "EAN Label Generator";
         }

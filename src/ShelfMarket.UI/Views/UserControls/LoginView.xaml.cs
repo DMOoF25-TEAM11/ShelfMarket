@@ -3,9 +3,9 @@ using ShelfMarket.UI.ViewModels;
 
 namespace ShelfMarket.UI.Views.UserControls;
 
-public partial class ChangeUserView : UserControl
+public partial class LoginView : UserControl
 {
-    public ChangeUserView()
+    public LoginView()
     {
         InitializeComponent();
         DataContext ??= new ChangeUserViewModel();
