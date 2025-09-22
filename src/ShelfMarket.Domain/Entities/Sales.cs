@@ -1,4 +1,4 @@
-﻿using ShelfMarket.Domain.ValueObjects;
+﻿using ShelfMarket.Domain.Enums;
 
 namespace ShelfMarket.Domain.Entities;
 

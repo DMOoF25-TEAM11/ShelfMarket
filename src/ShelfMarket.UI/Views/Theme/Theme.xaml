@@ -172,13 +172,58 @@
   -->
 
     <!-- Navigation ListBox - Venstre menu/navigation -->
+    <Style x:Key="Nav.ListBoxItem" TargetType="ListBoxItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="SelBar" Grid.Column="0" Background="{StaticResource Brush.Transparent}" CornerRadius="2"/>
+                        <Border Grid.Column="1" Background="{StaticResource Brush.Transparent}" CornerRadius="8" Padding="12,10">
+                            <ContentPresenter/>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="SelBar" Property="Background" Value="{StaticResource Brush.Border}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="SelBar" Property="Background" Value="{StaticResource Brush.Primary}"/>
+                            <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
     <Style x:Key="Nav.ListBox" TargetType="ListBox">
         <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="8"/>
         <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
         <Setter Property="FontSize" Value="20"/>
-        <!-- Menu tekststørrelse -->
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource Nav.ListBoxItem}"/>
+    </Style>
+
+    <!--<Style x:Key="Nav.ListBox" TargetType="ListBox">
+        <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="FontSize" Value="20"/>
+        --><!-- Menu tekststørrelse --><!--
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
@@ -193,11 +238,11 @@
                                         <ColumnDefinition Width="4"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <!-- Valgbar - viser aktiv side -->
+                                    --><!-- Valgbar - viser aktiv side --><!--
 
                                     <Border x:Name="SelBar" Grid.Column="0" Background="{StaticResource Brush.Transparent}" CornerRadius="2"/>
 
-                                    <!-- Menu element -->
+                                    --><!-- Menu element --><!--
                                     <Border Grid.Column="1"
                           Background="{StaticResource Brush.Transparent}"
                           CornerRadius="8"
@@ -207,19 +252,19 @@
                                 </Grid>
                                 <ControlTemplate.Triggers>
 
-                                    <!-- Hover effekt - grå valgbar -->
+                                    --><!-- Hover effekt - grå valgbar --><!--
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter TargetName="SelBar" Property="Background" Value="{StaticResource Brush.Border}"/>
                                     </Trigger>
 
-                                    <!-- Valgt element - orange valgbar og fed tekst -->
+                                    --><!-- Valgt element - orange valgbar og fed tekst --><!--
                                     <Trigger Property="IsSelected" Value="True">
                                         <Setter TargetName="SelBar" Property="Background" Value="{StaticResource Brush.Primary}"/>
                                         <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
                                         <Setter Property="FontWeight" Value="SemiBold"/>
                                     </Trigger>
 
-                                    <!-- Deaktiveret element -->
+                                    --><!-- Deaktiveret element --><!--
                                     <Trigger Property="IsEnabled" Value="False">
                                         <Setter Property="Opacity" Value="0.6"/>
                                     </Trigger>
@@ -230,7 +275,7 @@
                 </Style>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
     <!-- ===== KORT OG PANELER ===== -->
     <!-- Stilarter til kort, paneler og containere der holder indhold.  -->
@@ -251,6 +296,10 @@
     <Style TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
         <Setter Property="Background" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="Text.BodyStrong" TargetType="TextBlock" BasedOn="{StaticResource Text.Body}">
+        <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
 
     <!-- TextBox - Tekst input felter -->

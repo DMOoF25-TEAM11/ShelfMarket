@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.UI.ViewModels;
 using ShelfMarket.UI.ViewModels.List;
 
-namespace ShelfMarket.UI.Views;
+namespace ShelfMarket.UI.Views.UserControls;
 
 /// <summary>
 /// Interaction logic for EditShelfType.xaml

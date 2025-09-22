@@ -13,6 +13,7 @@ public static class DependencyInjection
         // Register application services here
         services.AddScoped<IShelfLayoutService, ShelfLayoutService>();
         services.AddScoped<IEan13Generator, Ean13BarcodeGenerator>();
+        services.AddScoped<IPrivilegeService, PrivilegeService>();
         return services;
     }
 }

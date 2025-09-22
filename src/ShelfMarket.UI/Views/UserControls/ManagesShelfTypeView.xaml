@@ -23,7 +23,7 @@
     - This Page hosts a user control `ManagesShelfTypeListView` to show existing shelf types.
 -->
 
-<UserControl x:Class="ShelfMarket.UI.Views.ManagesShelfTypeView"
+<UserControl x:Class="ShelfMarket.UI.Views.UserControls.ManagesShelfTypeView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

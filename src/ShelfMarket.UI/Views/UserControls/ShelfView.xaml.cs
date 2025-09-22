@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract.Services;
 using ShelfMarket.UI.Views.Windows;
 
-namespace ShelfMarket.UI.Views;
+namespace ShelfMarket.UI.Views.UserControls;
 
 /// <summary>
 /// UI for visualizing and manually placing shelves in a fixed-size grid.
