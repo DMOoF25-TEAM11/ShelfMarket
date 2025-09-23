@@ -1,77 +1,92 @@
 ﻿classDiagram
-    class SideMenuView {
-        + "DataContext: SideMenuViewModel"
-        + "LeftMenu: ListBox"
+
+    namespace ShelfMarket.UI.Views {
+        class SideMenuView {
+            +DataContext: SideMenuViewModel
+            +LeftMenu: ListBox
+        }
     }
 
-    class SideMenuViewModel {
-        + "CurrentLevel: PrivilegeLevel"
-        + "SideMenuItems: ObservableCollection<SideMenuItem>"
-        + "SelectedMenuItem: SideMenuItem"
-        + "MenuItemCommand: ICommand"
-        + "CanCommand(): bool"
-        + "OnCommand(): void"
-        + "RefreshMenuVisibilityAndSelection(): void"
-        + "IsItemVisibleForCurrentLevel(item: SideMenuItem): bool"
+    namespace ShelfMarket.UI.ViewModels {
+
+        class SideMenuViewModel {
+            +CurrentLevel: PrivilegeLevel
+            +SideMenuItems: ObservableCollection~SideMenuItem~
+            +SelectedMenuItem: SideMenuItem
+            +MenuItemCommand: ICommand
+            +CanCommand(): bool
+            +OnCommand(): void
+            +RefreshMenuVisibilityAndSelection(): void
+            +IsItemVisibleForCurrentLevel(item: SideMenuItem): bool
+        }
+    }
+        class SideMenuItem {
+            +Title: string
+            +View: UserControl
+            +Privilege: PrivilegeLevel
+            +IsLogoff: bool
+        }
+
+
+
+
+    namespace ShelfMarket.Application.Interfaces {
+        class IPrivilegeService {
+            <<interface>>
+            +CurrentLevel: PrivilegeLevel
+            +CanAccess(required: PrivilegeLevel): bool
+            +SignOut(): void
+            +CurrentLevelChanged: event
+        }
     }
 
-    class SideMenuItem {
-        + "Title: string"
-        + "View: UserControl"
-        + "Privilege: PrivilegeLevel"
-        + "IsLogoff: bool"
+    namespace ShelfMarket.Domain.Enums {
+        class PrivilegeLevel {
+            <<enumeration>>
+            "Guest"
+            "User"
+            "Admin"
+        }
     }
 
-    class IPrivilegeService {
-        <<interface>>
-        + "CurrentLevel: PrivilegeLevel"
-        + "CanAccess(required: PrivilegeLevel): bool"
-        + "SignOut(): void"
-        + "CurrentLevelChanged: event"
+    namespace System.Windows.Controls {
+        class UserControl {
+            <<framework>>
+        }
     }
 
-    class PrivilegeLevel {
-        <<enumeration>>
-        "Guest"
-        "User"
-        "Admin"
-    }
+    namespace ShelfMarket.UI.ViewModels.UserControls {
+        class LoginView {
+            <<UserControl>>
+        }
 
-    class UserControl {
-        <<framework>>
-    }
+        class ShelfView {
+            <<UserControl>>
+        }
 
-    class LoginView {
-        <<UserControl>>
-    }
+        class SalesView {
+            <<UserControl>>
+        }
 
-    class ShelfView {
-        <<UserControl>>
-    }
+        class FinanceView {
+            <<UserControl>>
+        }
 
-    class SalesView {
-        <<UserControl>>
-    }
+        class EventsView {
+            <<UserControl>>
+        }
 
-    class FinanceView {
-        <<UserControl>>
-    }
+        class TenantView {
+            <<UserControl>>
+        }
 
-    class EventsView {
-        <<UserControl>>
+        class MaintenanceView {
+            <<UserControl>>
+        }
     }
-
-    class TenantView {
-        <<UserControl>>
-    }
-
-    class MaintenanceView {
-        <<UserControl>>
-    }
-
     SideMenuView --> SideMenuViewModel : "DataContext"
     SideMenuViewModel --> IPrivilegeService : "uses"
-    SideMenuViewModel *-- SideMenuItem : "SideMenuItems 0..*"
+    SideMenuViewModel *-- SideMenuItem : "SideMenuItems"
     SideMenuItem --> PrivilegeLevel : "requires"
     SideMenuItem --> UserControl : "View"
 
