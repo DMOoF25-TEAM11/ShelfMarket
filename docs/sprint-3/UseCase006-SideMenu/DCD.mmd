@@ -1,0 +1,84 @@
+﻿classDiagram
+    class SideMenuView {
+        + "DataContext: SideMenuViewModel"
+        + "LeftMenu: ListBox"
+    }
+
+    class SideMenuViewModel {
+        + "CurrentLevel: PrivilegeLevel"
+        + "SideMenuItems: ObservableCollection<SideMenuItem>"
+        + "SelectedMenuItem: SideMenuItem"
+        + "MenuItemCommand: ICommand"
+        + "CanCommand(): bool"
+        + "OnCommand(): void"
+        + "RefreshMenuVisibilityAndSelection(): void"
+        + "IsItemVisibleForCurrentLevel(item: SideMenuItem): bool"
+    }
+
+    class SideMenuItem {
+        + "Title: string"
+        + "View: UserControl"
+        + "Privilege: PrivilegeLevel"
+        + "IsLogoff: bool"
+    }
+
+    class IPrivilegeService {
+        <<interface>>
+        + "CurrentLevel: PrivilegeLevel"
+        + "CanAccess(required: PrivilegeLevel): bool"
+        + "SignOut(): void"
+        + "CurrentLevelChanged: event"
+    }
+
+    class PrivilegeLevel {
+        <<enumeration>>
+        "Guest"
+        "User"
+        "Admin"
+    }
+
+    class UserControl {
+        <<framework>>
+    }
+
+    class LoginView {
+        <<UserControl>>
+    }
+
+    class ShelfView {
+        <<UserControl>>
+    }
+
+    class SalesView {
+        <<UserControl>>
+    }
+
+    class FinanceView {
+        <<UserControl>>
+    }
+
+    class EventsView {
+        <<UserControl>>
+    }
+
+    class TenantView {
+        <<UserControl>>
+    }
+
+    class MaintenanceView {
+        <<UserControl>>
+    }
+
+    SideMenuView --> SideMenuViewModel : "DataContext"
+    SideMenuViewModel --> IPrivilegeService : "uses"
+    SideMenuViewModel *-- SideMenuItem : "SideMenuItems 0..*"
+    SideMenuItem --> PrivilegeLevel : "requires"
+    SideMenuItem --> UserControl : "View"
+
+    LoginView --|> UserControl
+    ShelfView --|> UserControl
+    SalesView --|> UserControl
+    FinanceView --|> UserControl
+    EventsView --|> UserControl
+    TenantView --|> UserControl
+    MaintenanceView --|> UserControl
