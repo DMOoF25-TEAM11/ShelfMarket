@@ -30,6 +30,8 @@ At vise forskellige menupunkter baseret på brugerens rolle, så hver aktør kun
 2. Systemet validerer kode og rolle.
 3. Systemet genererer menuen baseret på brugerens rolle.
 1. Bruger får vist de menupunkter, der matcher rollen.
+1. Bruger vælger et menupunkt og navigerer til den ønskede funktion.
+1. Systemet udfører den valgte funktion.
 
 **Extensions (Alternative Scenarios):**
 - 2a. Hvis kode er ugyldig:
