@@ -1,38 +1,38 @@
 ﻿sequenceDiagram
-    title SideMenuView – before login and after login
+    title SD for SideMenuView – before login and after login
     participant UI as SideMenuView
     participant VM as SideMenuViewModel
     participant Priv as IPrivilegeService
     participant Login as LoginView
 
-    UI->>+VM: SideMenuViewModel()
-    VM->>+Priv: PrivilegeLevel()
-    Priv-->>-VM: PrivilegeLevel
-    VM->>VM: OnPropertyChanged("CurrentLevel")
-    VM->>VM: RefreshMenuVisibilityAndSelection()
-    VM-->>-UI: DataContext()
+    UI->>+VM: createSideMenuViewModel()
+    VM->>+Priv: getPrivilegeLevel()
+    Priv-->>-VM: returnPrivilegeLevel(level)
+    VM->>VM: onPropertyChanged("CurrentLevel")
+    VM->>VM: refreshMenuVisibilityAndSelection()
+    VM-->>-UI: setDataContext(vm)
 
-    alt Login initiated
-        UI->>+VM: MenuItemCommand.Execute()
-        VM->>VM: OnCommand()
-        VM->>+Login: loginview()
-        Login->>-Priv: SignIn(level, password)
-        alt SignIn success
-            Priv-->>VM: CurrentLevelChanged
-            VM->>VM: OnPropertyChanged("CurrentLevel")
-            VM->>VM: RefreshMenuVisibilityAndSelection()
-        else SignIn failed
-            Priv-->>VM: SignInFailed
-            VM->>VM: OnSignInFailed()
+    alt loginInitiated
+        UI->>+VM: executeMenuItemCommand("login")
+        VM->>VM: onCommand("login")
+        VM->>+Login: showLoginView()
+        Login->>-Priv: signIn(level, password)
+        alt signInSuccess
+            Priv-->>VM: currentLevelChanged(newLevel)
+            VM->>VM: onPropertyChanged("CurrentLevel")
+            VM->>VM: refreshMenuVisibilityAndSelection()
+        else signInFailed
+            Priv-->>VM: signInFailed()
+            VM->>VM: onSignInFailed()
         end
-        VM->>-UI: DataContext()
+        VM->>-UI: updateDataContext(vm)
     end
 
-    alt Logout initiated
-        UI->>+VM: MenuItemCommand.Execute()
-        VM->>+Priv: SignOut()
-        Priv-->>-VM: CurrentLevelChanged
-        VM->>VM: OnPropertyChanged("CurrentLevel")
-        VM->>VM: RefreshMenuVisibilityAndSelection()
-        VM->>-UI: DataContext()
+    alt logoutInitiated
+        UI->>+VM: executeMenuItemCommand("logout")
+        VM->>+Priv: signOut()
+        Priv-->>-VM: currentLevelChanged("guest")
+        VM->>VM: onPropertyChanged("CurrentLevel")
+        VM->>VM: refreshMenuVisibilityAndSelection()
+        VM->>-UI: updateDataContext(vm)
     end
