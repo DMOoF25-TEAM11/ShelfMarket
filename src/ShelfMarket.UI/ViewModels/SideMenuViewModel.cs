@@ -7,6 +7,7 @@ using ShelfMarket.Application.Abstract.Services;
 using ShelfMarket.Domain.Enums;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
+using ShelfMarket.UI.Views;
 using ShelfMarket.UI.Views.UserControls;
 
 namespace ShelfMarket.UI.ViewModels;
@@ -36,7 +37,7 @@ public class SideMenuViewModel : ModelBase
             new SideMenuItem("Økonomi", new FinanceView(), PrivilegeLevel.Admin),
             new SideMenuItem("Arrangementer", new EventsView(), PrivilegeLevel.User),
             new SideMenuItem("Lejere", new TenantView(), PrivilegeLevel.User),
-            new SideMenuItem("Vedligeholdelse", new ManagesShelfTypeView(), PrivilegeLevel.User)
+            new SideMenuItem("Vedligeholdelse", new MaintenanceView(), PrivilegeLevel.User)
         };
 
         SelectedMenuItem ??= SideMenuItems[2];
