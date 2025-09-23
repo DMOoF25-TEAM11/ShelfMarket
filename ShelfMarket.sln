@@ -89,6 +89,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase006-SideMenu", "UseCase006-SideMenu", "{C0916665-D648-425B-BFCE-113B9A4675E2}"
 	ProjectSection(SolutionItems) = preProject
 		docs\sprint-3\UseCase006-SideMenu\UseCase-Brief.md = docs\sprint-3\UseCase006-SideMenu\UseCase-Brief.md
+		docs\sprint-3\UseCase006-SideMenu\UseCase-Casual.md = docs\sprint-3\UseCase006-SideMenu\UseCase-Casual.md
 		docs\sprint-3\UseCase006-SideMenu\UserStory.md = docs\sprint-3\UseCase006-SideMenu\UserStory.md
 	EndProjectSection
 EndProject
