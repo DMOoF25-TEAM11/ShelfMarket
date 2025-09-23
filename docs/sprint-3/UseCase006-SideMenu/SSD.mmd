@@ -1,0 +1,20 @@
+﻿sequenceDiagram
+    title Rollebaseret menuvisning – SSD (Main Success + alternativer)
+    actor Bruger
+    participant System
+
+    Bruger->>+System: åbnMenu()
+    alt Bruger er ikke logget ind
+        System-->>-Bruger: visMenu(gæst)
+    else Bruger logger ind
+        Bruger->>+System: login(rolle, pinkode)
+        alt loginGyldigt
+            System-->>Bruger: visMenu(rolle)
+        else loginUgyldigt
+            System-->>-Bruger: fejlbesked("ugyldigt login")
+        end
+    end
+
+    Bruger->>+System: vælgMenupunkt(menupunktId)
+
+    System-->>-Bruger: udførFunktion(menupunktId)
