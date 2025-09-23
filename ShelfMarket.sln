@@ -84,6 +84,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase004-AdministrateSale
 		docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd = docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-3", "sprint-3", "{641EEC39-0EEA-4ED7-9D08-1D2BD751860F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase006-SideMenu", "UseCase006-SideMenu", "{C0916665-D648-425B-BFCE-113B9A4675E2}"
+	ProjectSection(SolutionItems) = preProject
+		docs\sprint-3\UseCase006-SideMenu\UserStory.md = docs\sprint-3\UseCase006-SideMenu\UserStory.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -132,6 +139,8 @@ Global
 		{4829EA2D-97BF-4555-BE22-ADF0BD3765D7} = {93399C27-1127-489C-9E8F-7C803315DE2A}
 		{6DBF37D4-22DE-4248-BC08-D0471CB4A8CF} = {4829EA2D-97BF-4555-BE22-ADF0BD3765D7}
 		{D8E58712-C94F-4480-B88E-BD3A18BBA471} = {4829EA2D-97BF-4555-BE22-ADF0BD3765D7}
+		{641EEC39-0EEA-4ED7-9D08-1D2BD751860F} = {93399C27-1127-489C-9E8F-7C803315DE2A}
+		{C0916665-D648-425B-BFCE-113B9A4675E2} = {641EEC39-0EEA-4ED7-9D08-1D2BD751860F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E3670BE-F107-4641-8608-598441D3E901}
