@@ -34,7 +34,7 @@ namespace ShelfMarket.UI.ViewModels.Abstracts {
         %% Constants (protected)
         #const string _entityName
         #const string _errorPrefix
-        #const string _errorEntityNotFound
+        #const string _erroTENANTityNotFound
         #const string _infoPrefix
         #const string _infoDeleted
         #const string _infoSaved
@@ -42,7 +42,7 @@ namespace ShelfMarket.UI.ViewModels.Abstracts {
         #const string _confirmDelete
 
         %% Fields (protected)
-        #TEntity _currentEntity
+        #TEntity _curTENANTEntity
         #TRepos _repository
         #string _error
         #string _infoMessage
@@ -58,7 +58,7 @@ namespace ShelfMarket.UI.ViewModels.Abstracts {
         +ICommand DeleteCommand
         +ICommand ResetCommand
         +ICommand CancelCommand
-        +TEntity CurrentEntity
+        +TEntity CurTENANTEntity
         +string Error
         +bool HasError
         +string InfoMessage

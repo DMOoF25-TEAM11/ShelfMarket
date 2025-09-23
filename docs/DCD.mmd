@@ -15,7 +15,7 @@
             +bool OrientationHorizontal
         }
 
-        class ShelfRentContract {
+        class ShelfTenantContract {
             +Guid Id
             +Guid ShelfTenantId
             +uint ContractNumber
@@ -24,9 +24,9 @@
             +nullable~DateTime~ CancelledAt
         }
 
-        class ShelfRentContractLine {
+        class ShelfTenantContractLine {
             +Guid Id
-            +Guid ShelfRentContractId
+            +Guid ShelfTenantContractId
             +Guid ShelfId
             +uint LineNumber
             +decimal PricePerMonth
@@ -61,21 +61,21 @@
             +DeleteAsync(Guid id) Task
         }
 
-        class IShelfRentContractRepository {
+        class IShelfTenantContractRepository {
             <<interface>>
-            +GetByIdAsync(Guid id) Task~ShelfRentContract~
-            +GetAllAsync() Task~List__ShelfRentContract~
-            +AddAsync(ShelfRentContract shelfRentContract) Task
-            +UpdateAsync(ShelfRentContract shelfRentContract) Task
+            +GetByIdAsync(Guid id) Task~ShelfTenantContract~
+            +GetAllAsync() Task~List__ShelfTenantContract~
+            +AddAsync(ShelfTenantContract shelfTenantContract) Task
+            +UpdateAsync(ShelfTenantContract shelfTenantContract) Task
             +DeleteAsync(Guid id) Task
         }
 
-        class IShelfRentContractLineRepository {
+        class IShelfTenantContractLineRepository {
             <<interface>>
-            +GetByIdAsync(Guid id) Task~ShelfRentContractLine~
-            +GetAllAsync() Task~List__ShelfRentContractLine~
-            +AddAsync(ShelfRentContractLine shelfRentContractLine) Task
-            +UpdateAsync(ShelfRentContractLine shelfRentContractLine) Task
+            +GetByIdAsync(Guid id) Task~ShelfTenantContractLine~
+            +GetAllAsync() Task~List__ShelfTenantContractLine~
+            +AddAsync(ShelfTenantContractLine shelfTenantContractLine) Task
+            +UpdateAsync(ShelfTenantContractLine shelfTenantContractLine) Task
             +DeleteAsync(Guid id) Task
         }
     }
@@ -110,12 +110,12 @@
     %% Associations
     Shelf --* ShelfRepository : manages
     ShelfType --* ShelfTypeRepository : manages
-    ShelfRentContract --* ShelfRentContractRepository : manages
-    ShelfRentContractLine --* IShelfRentContractLineRepository : manages
+    ShelfTenantContract --* ShelfTenantContractRepository : manages
+    ShelfTenantContractLine --* IShelfTenantContractLineRepository : manages
 
     %% Composition
     Shelf --* ShelfType : has a
-    ShelfRentContract *-- ShelfRentContractLine : "has"
+    ShelfTenantContract *-- ShelfTenantContractLine : "has"
     
     Repository o-- ShelfMarketDbContext : uses
 
@@ -123,14 +123,14 @@
     %% Inheritance and Implementation
     ShelfRepository --|> IShelfRepository : implements
     ShelfTypeRepository --|> IShelfTypeRepository : implements
-    ShelfRentContractRepository --|> IShelfRentContractRepository : implements
+    ShelfTenantContractRepository --|> IShelfTenantContractRepository : implements
     Repository --|> IRepository : implements
 
     IShelfRepository --|> IRepository : implements
     IShelfTypeRepository --|> IRepository : implements
-    IShelfRentContractRepository --|> IRepository : implements
+    IShelfTenantContractRepository --|> IRepository : implements
 
     ShelfRepository ..|> Repository : inheritance
     ShelfTypeRepository ..|> Repository : inheritance
-    ShelfRentContractRepository ..|> Repository : inheritance
+    ShelfTenantContractRepository ..|> Repository : inheritance
 

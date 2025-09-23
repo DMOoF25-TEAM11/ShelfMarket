@@ -16,7 +16,7 @@
         Guid ShelfTypeId FK
     }
 
-    SHELFRENTCONTRACT {
+    SHELFTENANTCONTRACT {
         Guid Id PK
         Guid ShelfTenantId FK
         uint ContractNumber "UNIQUE"
@@ -25,9 +25,9 @@
         Date Cancelled
     }
 
-    SHELFRENTCONTRACTLINE {
+    SHELFTENANTCONTRACTLINE {
         Guid Id PK
-        Guid ShelfRentContractId FK
+        Guid ShelfTenantContractId FK
         Guid ShelfId FK
         uint LineNumber "UNIQUE"
         Decimal MonthlyAgreementPrice
@@ -35,4 +35,4 @@
     }
 
     SHELFTYPE ||--o{ SHELF : has
-    SHELFRENTCONTRACT ||--o{ SHELFRENTCONTRACTLINE : has
+    SHELFTENANTCONTRACT ||--o{ SHELFTENANTCONTRACTLINE : has

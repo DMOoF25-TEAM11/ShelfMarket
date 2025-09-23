@@ -7,4 +7,18 @@
         beskrivelse
     }
 
+    class ReolLejeKontrakt {
+        KontraktNummer
+        StartMåned
+        SlutMåned
+        Anulleret
+    }
+
+    class ReolLejeKontraktLinje {
+        LinjeNummer
+        MånedligPris
+        MånedligAftalePris
+    }
+
     reol "0..*" -- "1" ReolType : har
+    ReolLejeKontrakt "0..*" -- "1" ReolLejeKontraktLinje : har
