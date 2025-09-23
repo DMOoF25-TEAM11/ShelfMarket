@@ -1,0 +1,38 @@
+﻿sequenceDiagram
+    title SideMenuView – before login and after login
+    participant UI as SideMenuView
+    participant VM as SideMenuViewModel
+    participant Priv as IPrivilegeService
+    participant Login as LoginView
+
+    UI->>+VM: SideMenuViewModel()
+    VM->>+Priv: PrivilegeLevel()
+    Priv-->>-VM: PrivilegeLevel
+    VM->>VM: OnPropertyChanged("CurrentLevel")
+    VM->>VM: RefreshMenuVisibilityAndSelection()
+    VM-->>-UI: DataContext()
+
+    alt Login initiated
+        UI->>+VM: MenuItemCommand.Execute()
+        VM->>VM: OnCommand()
+        VM->>+Login: loginview()
+        Login->>-Priv: SignIn(level, password)
+        alt SignIn success
+            Priv-->>VM: CurrentLevelChanged
+            VM->>VM: OnPropertyChanged("CurrentLevel")
+            VM->>VM: RefreshMenuVisibilityAndSelection()
+        else SignIn failed
+            Priv-->>VM: SignInFailed
+            VM->>VM: OnSignInFailed()
+        end
+        VM->>-UI: DataContext()
+    end
+
+    alt Logout initiated
+        UI->>+VM: MenuItemCommand.Execute()
+        VM->>+Priv: SignOut()
+        Priv-->>-VM: CurrentLevelChanged
+        VM->>VM: OnPropertyChanged("CurrentLevel")
+        VM->>VM: RefreshMenuVisibilityAndSelection()
+        VM->>-UI: DataContext()
+    end
