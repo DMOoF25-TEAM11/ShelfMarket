@@ -12,14 +12,19 @@ namespace ShelfMarket.UI.ViewModels;
 public sealed class ManagesShelfTypeViewModel : ViewModelBase<IShelfTypeRepository, ShelfType>
 {
     /// <summary>
-    /// The display name for the entity, used in UI messages.
+    /// Initializes a new instance of the <see cref="ManagesShelfTypeViewModel"/> class.
     /// </summary>
-    //private new const string _entityName = "Reol Type";
+    /// <param name="selected">Optional repository instance to use. If null, resolves from DI container.</param>
+    public ManagesShelfTypeViewModel(IShelfTypeRepository? selected = null) : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfTypeRepository>())
+    {
+        // Initialize commands and other properties here
+    }
+
+
 
     #region Form Fields
 
     private string _name = string.Empty;
-
     /// <summary>
     /// Gets or sets the name of the shelf type.
     /// </summary>
@@ -38,7 +43,6 @@ public sealed class ManagesShelfTypeViewModel : ViewModelBase<IShelfTypeReposito
     }
 
     private string _description = string.Empty;
-
     /// <summary>
     /// Gets or sets the description of the shelf type.
     /// </summary>
@@ -56,15 +60,6 @@ public sealed class ManagesShelfTypeViewModel : ViewModelBase<IShelfTypeReposito
         }
     }
     #endregion
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ManagesShelfTypeViewModel"/> class.
-    /// </summary>
-    /// <param name="selected">Optional repository instance to use. If null, resolves from DI container.</param>
-    public ManagesShelfTypeViewModel(IShelfTypeRepository? selected = null) : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfTypeRepository>())
-    {
-        // Initialize commands and other properties here
-    }
 
     #region Load handler
     #endregion

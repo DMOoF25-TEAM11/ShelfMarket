@@ -36,7 +36,7 @@ public class SideMenuViewModel : ModelBase
             new SideMenuItem("Salg", new SalesView(), PrivilegeLevel.User),
             new SideMenuItem("Økonomi", new FinanceView(), PrivilegeLevel.Admin),
             new SideMenuItem("Arrangementer", new EventsView(), PrivilegeLevel.User),
-            new SideMenuItem("Lejere", new TenantView(), PrivilegeLevel.User),
+            new SideMenuItem("Lejere", new ManagesShelfTenantView(), PrivilegeLevel.User),
             new SideMenuItem("Vedligeholdelse", new MaintenanceView(), PrivilegeLevel.User)
         };
 

@@ -7,6 +7,9 @@ namespace ShelfMarket.UI.Views.UserControls;
 /// </summary>
 public partial class MainMenu : UserControl
 {
+
+    private MainWindow? _mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
+
     public MainMenu()
     {
         InitializeComponent();
@@ -25,13 +28,47 @@ public partial class MainMenu : UserControl
 
     private void MenuEan_Click(object sender, System.Windows.RoutedEventArgs e)
     {
-        var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
-        if (mainWindow != null)
+        if (_mainWindow != null)
         {
             // Use ContentControl to host different views
-            mainWindow.MainContent.Content = new EanLabelGeneratorView();
-            mainWindow.Title = "Reolmarkedet - EAN Label Generator";
-            mainWindow.PageTitle.Text = "EAN Label Generator";
+            _mainWindow.MainContent.Content = new EanLabelGeneratorView();
+        }
+    }
+
+    /* TODO : Delete below before final commit */
+    // Added: placeholders for not-yet-implemented views
+    private void MenuShelfTypes_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (_mainWindow != null)
+        {
+            // Use ContentControl to host different views
+            _mainWindow.MainContent.Content = new ManagesShelfTypeView();
+        }
+    }
+
+    private void MenuShelves_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (_mainWindow != null)
+        {
+            // Use ContentControl to host different views
+            //_mainWindow.MainContent.Content = new ManagesShelfView();
+        }
+    }
+
+    private void MenuTenants_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (_mainWindow != null)
+        {
+            // Use ContentControl to host different views
+            _mainWindow.MainContent.Content = new ManagesShelfTenantView();
+        }
+    }
+    private void MenuShelfTenants_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (_mainWindow != null)
+        {
+            // Use ContentControl to host different views
+            _mainWindow.MainContent.Content = new ManagesShelfTenantView();
         }
     }
 }
