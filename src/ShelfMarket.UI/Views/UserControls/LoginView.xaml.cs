@@ -8,7 +8,6 @@ public partial class LoginView : UserControl
     public LoginView()
     {
         InitializeComponent();
-        DataContext ??= new LoginRoleViewModel();
     }
 
     private void PasswordBox_OnPasswordChanged(object sender, System.Windows.RoutedEventArgs e)

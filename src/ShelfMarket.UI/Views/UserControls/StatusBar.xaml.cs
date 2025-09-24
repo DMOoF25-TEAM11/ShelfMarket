@@ -6,103 +6,102 @@ using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract.Services;
 using ShelfMarket.Infrastructure.Persistence;
 
-namespace ShelfMarket.UI.Views.UserControls
+namespace ShelfMarket.UI.Views.UserControls;
+
+public partial class StatusBar : UserControl
 {
-    public partial class StatusBar : UserControl
+    private readonly DispatcherTimer _pollTimer;
+    private bool _isChecking;
+    private readonly IPrivilegeService _privileges;
+
+    public StatusBar()
     {
-        private readonly DispatcherTimer _pollTimer;
-        private bool _isChecking;
-        private readonly IPrivilegeService _privileges;
+        InitializeComponent();
 
-        public StatusBar()
+        _privileges = App.HostInstance.Services.GetRequiredService<IPrivilegeService>();
+        _privileges.CurrentLevelChanged += OnCurrentLevelChanged;
+        CurrentUserRole = _privileges.CurrentLevel.ToString();
+
+        _pollTimer = new DispatcherTimer
         {
-            InitializeComponent();
+            Interval = TimeSpan.FromSeconds(10)
+        };
+        _pollTimer.Tick += async (_, __) => await CheckStatusesAsync();
 
-            _privileges = App.HostInstance.Services.GetRequiredService<IPrivilegeService>();
-            _privileges.CurrentLevelChanged += OnCurrentLevelChanged;
-            CurrentUserRole = _privileges.CurrentLevel.ToString();
-
-            _pollTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(10)
-            };
-            _pollTimer.Tick += async (_, __) => await CheckStatusesAsync();
-
-            Loaded += async (_, __) =>
-            {
-                await CheckStatusesAsync();
-                _pollTimer.Start();
-            };
-            Unloaded += (_, __) =>
-            {
-                _pollTimer.Stop();
-                _privileges.CurrentLevelChanged -= OnCurrentLevelChanged;
-            };
-        }
-
-        public static readonly DependencyProperty IsInternetAvailableProperty = DependencyProperty.Register(
-            nameof(IsInternetAvailable), typeof(bool), typeof(StatusBar), new PropertyMetadata(false));
-
-        public bool IsInternetAvailable
+        Loaded += async (_, __) =>
         {
-            get => (bool)GetValue(IsInternetAvailableProperty);
-            set => SetValue(IsInternetAvailableProperty, value);
-        }
-
-        public static readonly DependencyProperty IsDatabaseConnectedProperty = DependencyProperty.Register(
-            nameof(IsDatabaseConnected), typeof(bool), typeof(StatusBar), new PropertyMetadata(false));
-
-        public bool IsDatabaseConnected
+            await CheckStatusesAsync();
+            _pollTimer.Start();
+        };
+        Unloaded += (_, __) =>
         {
-            get => (bool)GetValue(IsDatabaseConnectedProperty);
-            set => SetValue(IsDatabaseConnectedProperty, value);
-        }
+            _pollTimer.Stop();
+            _privileges.CurrentLevelChanged -= OnCurrentLevelChanged;
+        };
+    }
 
-        public static readonly DependencyProperty CurrentUserRoleProperty = DependencyProperty.Register(
-            nameof(CurrentUserRole), typeof(string), typeof(StatusBar), new PropertyMetadata("Guest"));
+    public static readonly DependencyProperty IsInternetAvailableProperty = DependencyProperty.Register(
+        nameof(IsInternetAvailable), typeof(bool), typeof(StatusBar), new PropertyMetadata(false));
 
-        public string CurrentUserRole
+    public bool IsInternetAvailable
+    {
+        get => (bool)GetValue(IsInternetAvailableProperty);
+        set => SetValue(IsInternetAvailableProperty, value);
+    }
+
+    public static readonly DependencyProperty IsDatabaseConnectedProperty = DependencyProperty.Register(
+        nameof(IsDatabaseConnected), typeof(bool), typeof(StatusBar), new PropertyMetadata(false));
+
+    public bool IsDatabaseConnected
+    {
+        get => (bool)GetValue(IsDatabaseConnectedProperty);
+        set => SetValue(IsDatabaseConnectedProperty, value);
+    }
+
+    public static readonly DependencyProperty CurrentUserRoleProperty = DependencyProperty.Register(
+        nameof(CurrentUserRole), typeof(string), typeof(StatusBar), new PropertyMetadata("Guest"));
+
+    public string CurrentUserRole
+    {
+        get => (string)GetValue(CurrentUserRoleProperty);
+        set => SetValue(CurrentUserRoleProperty, value);
+    }
+
+    private async Task CheckStatusesAsync()
+    {
+        if (_isChecking) return;
+        _isChecking = true;
+        try
         {
-            get => (string)GetValue(CurrentUserRoleProperty);
-            set => SetValue(CurrentUserRoleProperty, value);
-        }
+            IsInternetAvailable = NetworkInterface.GetIsNetworkAvailable();
 
-        private async Task CheckStatusesAsync()
-        {
-            if (_isChecking) return;
-            _isChecking = true;
+            bool dbOk = false;
             try
             {
-                IsInternetAvailable = NetworkInterface.GetIsNetworkAvailable();
-
-                bool dbOk = false;
-                try
-                {
-                    using var scope = App.HostInstance.Services.CreateScope();
-                    var db = scope.ServiceProvider.GetRequiredService<ShelfMarketDbContext>();
-                    dbOk = await db.Database.CanConnectAsync();
-                }
-                catch
-                {
-                    dbOk = false;
-                }
-                IsDatabaseConnected = dbOk;
-
-                // Keep role in sync with the service
-                CurrentUserRole = _privileges.CurrentLevel.ToString();
+                using var scope = App.HostInstance.Services.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<ShelfMarketDbContext>();
+                dbOk = await db.Database.CanConnectAsync();
             }
-            finally
+            catch
             {
-                _isChecking = false;
+                dbOk = false;
             }
-        }
+            IsDatabaseConnected = dbOk;
 
-        private void OnCurrentLevelChanged(object? sender, EventArgs e)
+            // Keep role in sync with the service
+            CurrentUserRole = _privileges.CurrentLevel.ToString();
+        }
+        finally
         {
-            Dispatcher.Invoke(() =>
-            {
-                CurrentUserRole = _privileges.CurrentLevel.ToString();
-            });
+            _isChecking = false;
         }
+    }
+
+    private void OnCurrentLevelChanged(object? sender, EventArgs e)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            CurrentUserRole = _privileges.CurrentLevel.ToString();
+        });
     }
 }
