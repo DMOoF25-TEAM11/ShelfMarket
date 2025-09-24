@@ -47,6 +47,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <!-- Contract number -->
@@ -75,34 +76,33 @@
                                             SelectedDate="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             MaxHeight="25" MinWidth="200" VerticalAlignment="Center"/>
 
+                        <Grid Grid.Row="2" Margin="10">
+                            <!-- Informational message (auto-clears), visible when HasInfoMessage -->
+                            <TextBlock Text="{Binding InfoMessage}"
+                           Foreground="#2e7d32"
+                           Margin="0,0,0,4"
+                           Visibility="{Binding HasInfoMessage, Converter={StaticResource BoolToVis}}"/>
+
+                            <!-- Error message (wraps) -->
+                            <TextBlock Text="{Binding Error}"
+                           Foreground="Tomato"
+                           TextWrapping="Wrap"/>
+
+                            <!-- CRUD buttons: prefer ViewModel="{Binding}" for the reusable control -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="8">
+                                <!-- If CRUDFormControl template expects ViewModel DP: -->
+                                <!-- <components:CRUDFormControl ViewModel="{Binding}" /> -->
+                                <!-- If CRUDFormControl reads DataContext for commands (alternate template): -->
+                                <components:CRUDFormControl DataContext="{Binding}" />
+                                <!-- Optional: Navigation to tenant contracts (uncomment and bind when implemented)
+                    <Button Content="Gå til lejekontrakter"
+                            Command="{Binding MoveToTenantContractsCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                            Width="110"/> -->
+                        </StackPanel>
+                    </Grid>
+
                 </Grid>
-            </Grid>
-
-
-            <Grid Grid.Row="2" Margin="10">
-                <!-- Informational message (auto-clears), visible when HasInfoMessage -->
-                <TextBlock Text="{Binding InfoMessage}"
-                       Foreground="#2e7d32"
-                       Margin="0,0,0,4"
-                       Visibility="{Binding HasInfoMessage, Converter={StaticResource BoolToVis}}"/>
-
-                <!-- Error message (wraps) -->
-                <TextBlock Text="{Binding Error}"
-                       Foreground="Tomato"
-                       TextWrapping="Wrap"/>
-
-                <!-- CRUD buttons: prefer ViewModel="{Binding}" for the reusable control -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="8">
-                    <!-- If CRUDFormControl template expects ViewModel DP: -->
-                    <!-- <components:CRUDFormControl ViewModel="{Binding}" /> -->
-                    <!-- If CRUDFormControl reads DataContext for commands (alternate template): -->
-                    <components:CRUDFormControl DataContext="{Binding}" />
-                    <!-- Optional: Navigation to tenant contracts (uncomment and bind when implemented)
-                <Button Content="Gå til lejekontrakter"
-                        Command="{Binding MoveToTenantContractsCommand}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                        Width="110"/> -->
-                </StackPanel>
             </Grid>
         </Grid>
     </Grid>
