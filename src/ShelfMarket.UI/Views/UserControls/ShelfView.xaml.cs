@@ -317,7 +317,7 @@ public partial class ShelfView : UserControl
                 }
                 catch { _adornerLayer = null; _originGhost = null; }
 
-                _draggedButton.Opacity = 0.7;
+                _draggedButton!.Opacity = 0.7;
                 Panel.SetZIndex(_draggedButton, 9999);
                 Mouse.OverrideCursor = Cursors.SizeAll;
                 _draggedButton.CaptureMouse();

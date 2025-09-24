@@ -27,15 +27,4 @@ public partial class ManagesShelfTenantView : UserControl
             }
         }
     }
-
-    //private async void ListVm_OnPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    //{
-    //    if (e.PropertyName == nameof(ManagesTenantListViewModel.SelectedItem)
-    //        && _listVm?.SelectedItem is { } item
-    //        && _vm is not null
-    //        && item.Id.HasValue)
-    //    {
-    //        await _vm.LoadAsync(item.Id.Value);
-    //    }
-    //}
 }
