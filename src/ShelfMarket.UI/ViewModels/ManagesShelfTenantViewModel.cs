@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
-using System.Windows.Controls;
+﻿using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract;
@@ -16,22 +14,13 @@ public class ManagesShelfTenantViewModel : ManagesListViewModelBase<IShelfTenant
     public ManagesShelfTenantViewModel(IShelfTenantRepository? selected = null)
         : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfTenantRepository>())
     {
-        MoveToTenantContractsCommand = new RelayCommand(async () => await OpenTenantContractsAsync());
+        OnNavigateToTenantContractsCommand = new RelayCommand(OnNavigateToTenantContractsExecute, CanNavigateToTenantContracts);
 
         // Refresh list after add/save/delete
         EntitySaved += async (_, __) => await RefreshAsync();
 
         // Initial load
         _ = RefreshAsync();
-    }
-
-    // Expose list wrappers to keep existing XAML bindings working
-    public ObservableCollection<ShelfTenant> Tenants => Items;
-
-    public ShelfTenant? SelectedTenant
-    {
-        get => SelectedItem;
-        set => SelectedItem = value;
     }
 
     #region Form Fields
@@ -93,7 +82,7 @@ public class ManagesShelfTenantViewModel : ManagesListViewModelBase<IShelfTenant
     #endregion
 
     #region Commands
-    public ICommand MoveToTenantContractsCommand { get; }
+    public ICommand OnNavigateToTenantContractsCommand { get; }
     #endregion
 
     #region List Load
@@ -135,9 +124,13 @@ public class ManagesShelfTenantViewModel : ManagesListViewModelBase<IShelfTenant
         );
 
     protected override bool CanDelete() => base.CanDelete() && CurrentEntity != null;
+
+    protected bool CanNavigateToTenantContracts() => CurrentEntity != null;
     #endregion
 
     #region Command Handlers
+    private void OnNavigateToTenantContractsExecute() => _ = OnNavigateToShelfTenantContractsAsync();
+
     protected override async Task OnResetFormAsync()
     {
         Error = string.Empty;
@@ -168,17 +161,18 @@ public class ManagesShelfTenantViewModel : ManagesListViewModelBase<IShelfTenant
         return Task.FromResult(entity);
     }
 
-    protected override Task OnSaveFormAsync()
+    protected override async Task OnSaveFormAsync()
     {
         if (CurrentEntity == null)
         {
             Error = _errorEntityNotFound;
-            return Task.CompletedTask;
+            await Task.CompletedTask;
+            return; // Add return to prevent dereferencing null
         }
 
         CurrentEntity.UpdateContact(FirstName, LastName, Email, PhoneNumber);
         CurrentEntity.UpdateAddress(Address, PostalCode, City);
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 
     protected override Task OnLoadFormAsync(ShelfTenant entity)
@@ -194,20 +188,22 @@ public class ManagesShelfTenantViewModel : ManagesListViewModelBase<IShelfTenant
         return Task.CompletedTask;
     }
 
-    private async Task OpenTenantContractsAsync()
+    private async Task OnNavigateToShelfTenantContractsAsync()
     {
-        if (System.Windows.Application.Current.MainWindow is MainWindow mw)
+        if (System.Windows.Application.Current.MainWindow is MainWindow mw && CurrentEntity != null)
         {
-            mw.MainContent.Content = new ManagesShelfTanentContractView();
-
-            if (mw.FindName("HeaderTitle") is TextBlock h1)
-                h1.Text = "Lejekontrakter";
-            else if (mw.FindName("PageTitle") is TextBlock h2)
-                h2.Text = "Lejekontrakter";
+            mw.MainContent.Content = new ManagesShelfTenantContractView(CurrentEntity);
         }
         await Task.CompletedTask;
     }
     #endregion
+
+    protected override void RefreshCommandStates()
+    {
+        base.RefreshCommandStates();
+        if (OnNavigateToTenantContractsCommand is RelayCommand rc)
+            rc.RaiseCanExecuteChanged();
+    }
 
     #region Validation (regex helpers)
     private static readonly Regex NameRegex = new(

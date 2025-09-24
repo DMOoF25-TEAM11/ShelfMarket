@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:viewmodels="clr-namespace:ShelfMarket.UI.ViewModels" 
              xmlns:components="clr-namespace:ShelfMarket.UI.Views.UserControls.Components"
-                 d:DataContext="{d:DesignInstance Type=viewmodels:ManagesShelfTenantViewModel}"
+             d:DataContext="{d:DesignInstance Type=viewmodels:ManagesShelfTenantViewModel}"
              mc:Ignorable="d">
 
     <!-- Root grid: two columns (left = list, right = form) -->
@@ -125,7 +125,7 @@
 
                 <!-- Navigation button to contracts (active alternative) -->
                 <Button Content="Gå til lejekontrakter"
-                    Command="{Binding MoveToTenantContractsCommand}"
+                    Command="{Binding OnNavigateToTenantContractsCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                     Width="110"/>
             </StackPanel>

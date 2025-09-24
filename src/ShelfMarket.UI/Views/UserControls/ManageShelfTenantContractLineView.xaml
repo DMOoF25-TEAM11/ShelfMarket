@@ -1,4 +1,4 @@
-﻿<Page x:Class="ShelfMarket.UI.Views.ManagesShelfTanentContractLineView"
+﻿<Page x:Class="ShelfMarket.UI.Views.ManageShelfTenantContractLineView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -42,8 +42,6 @@
                     Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVis}}"/>
             <Button Content="Annuller" Width="80" Command="{Binding CancelCommand}"/>
         </StackPanel>
-        <!-- ListView/UserControl -->
-        <controls:ManagesShelfTanentContractLineListView Grid.Row="3" x:Name="ManagesShelfTanentContractLineListViewControl" Margin="0,10,0,0"/>
 
         <!-- Error and status messages -->
         <StackPanel Grid.Row="4" Margin="0,10,0,0">
