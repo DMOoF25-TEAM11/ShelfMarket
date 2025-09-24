@@ -18,12 +18,16 @@
             <MenuItem Header="_Visninger">
                 <MenuItem Header="Ean" Click="MenuEan_Click"/>
             </MenuItem>
-            <MenuItem Header="_Rapporter">
+            <MenuItem Header="_Administration">
+                <MenuItem Header="Reol typer" Click="MenuShelfTypes_Click"/>
+                <MenuItem Header="Reoler" Click="MenuShelves_Click"/>
+                <MenuItem Header="Reol lejere" Click="MenuShelfTenants_Click"/>
+            </MenuItem>
+            <MenuItem Header="Rapporter">
                 <MenuItem IsEnabled="False" Header="Dagligt"/>
                 <MenuItem Header="Omsætning"/>
                 <Separator/>
-                <MenuItem IsEnabled="False"  Header="Månedligt"/>
-                <MenuItem Header="Månedlig opgørelse for reol lejere"/>
+                <MenuItem IsEnabled="False" Header="Månedligt"/>
             </MenuItem>
             <MenuItem Header="_Hjælp">
                 <MenuItem Header="Om" />

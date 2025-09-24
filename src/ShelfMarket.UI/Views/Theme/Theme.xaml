@@ -185,7 +185,10 @@
                         </Grid.ColumnDefinitions>
                         <Border x:Name="SelBar" Grid.Column="0" Background="{StaticResource Brush.Transparent}" CornerRadius="2"/>
                         <Border Grid.Column="1" Background="{StaticResource Brush.Transparent}" CornerRadius="8" Padding="12,10">
-                            <ContentPresenter/>
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"/>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -288,6 +291,31 @@
         <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
         <Setter Property="BorderThickness" Value="1"/>
     </Style>
+
+    <!-- Border style for list containers -->
+    <Style x:Key="ListBorder" TargetType="Border" BasedOn="{StaticResource Card}">
+        <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="Margin" Value="0,0,12,0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                <Setter Property="BorderBrush" Value="{StaticResource Brush.Primary}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--<Style TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Brush.SurfaceAlt}"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border}"/>
+    </Style>-->
 
     <!-- ===== INPUT FELTER ===== -->
     <!-- Stilarter til input felter og formular elementer.  -->
@@ -468,7 +496,6 @@
         <Setter Property="Foreground" Value="#FF6B6B"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Margin" Value="0,4,0,0"/>
-        <Setter Property="Visibility" Value="Collapsed"/>
     </Style>
 
     <!-- Label-tekst til formularfelter -->
@@ -709,6 +736,60 @@
         </Setter>
     </Style>
     
+    <!-- Dark ListBox Style -->
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>
+        <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Foreground" Value="{StaticResource Brush.Text}"/>
+                    <Setter Property="Background" Value="{StaticResource Brush.Card}"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="8,6"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border x:Name="Bd"
+                                        Background="{TemplateBinding Background}"
+                                        CornerRadius="6"
+                                        BorderBrush="{StaticResource Brush.Transparent}"
+                                        BorderThickness="1"
+                                        SnapsToDevicePixels="True">
+                                    <ContentPresenter
+                                        Content="{TemplateBinding Content}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                        ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                        Margin="{TemplateBinding Padding}"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <!-- Hover -->
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="{StaticResource Brush.Border}"/>
+                                    </Trigger>
+                                    <!-- Selected -->
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="{StaticResource Brush.Primary}"/>
+                                        <Setter Property="Foreground" Value="{StaticResource Brush.OnPrimary}"/>
+                                    </Trigger>
+                                    <!-- Disabled -->
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.6"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Dark ListView style -->
     <Style TargetType="ListView">
         <Setter Property="Background" Value="{StaticResource Brush.Surface}"/>

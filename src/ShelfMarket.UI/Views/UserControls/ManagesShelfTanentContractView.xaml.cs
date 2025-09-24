@@ -1,5 +1,4 @@
 ﻿using System.Windows.Controls;
-using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.UI.ViewModels;
 using ShelfMarket.UI.ViewModels.List;
 
@@ -21,13 +20,6 @@ public partial class ManagesShelfTanentContractView : Page
         DataContext = vm;
         _vm = vm;
 
-        /* Do we need these line. Should be done in ListViewModel */
-        _listVm = App.HostInstance.Services.GetRequiredService<ManagesShelfTanentContractListViewModel>();
-        ManagesShelfTanentContractListViewControl.DataContext = _listVm;
-
-
-        if (_listVm is not null)
-            _listVm.PropertyChanged += ListVm_OnPropertyChanged;
 
         // Refresh the list when an entity is saved
         vm.EntitySaved += (_, __) =>
