@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="ShelfMarket.UI.Views.UserControls.Components.MonthYearPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:conv="clr-namespace:ShelfMarket.UI.Converters"
+             x:Name="root"
+             MinWidth="220">
+    <UserControl.Resources>
+        <conv:MonthEnabledConverter x:Key="MonthEnabledConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <!-- Month dropdown (Danish names from domain.enum.DanishMonth) -->
+        <ComboBox Width="120"
+                  Margin="0,0,8,0"
+                  ItemsSource="{Binding ElementName=root, Path=Months}"
+                  DisplayMemberPath="Name"
+                  SelectedValuePath="Number"
+                  SelectedValue="{Binding ElementName=root, Path=SelectedMonth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="IsEnabled">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource MonthEnabledConverter}">
+                                <Binding ElementName="root" Path="SelectedYear"/>
+                                <Binding Path="Number"/>
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+               </Style>
+            </ComboBox.ItemContainerStyle>
+        </ComboBox>
+
+        <!-- Year input with - and + buttons -->
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Button x:Name="DecrementYearButton" Content="-" Width="24" Height="24" Click="DecrementYear_Click"/>
+            <TextBox Width="70"
+                     HorizontalContentAlignment="Center"
+                     Margin="4,0"
+                     Text="{Binding ElementName=root, Path=SelectedYear, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     PreviewTextInput="YearTextBox_PreviewTextInput"
+                     DataObject.Pasting="YearTextBox_OnPasting"/>
+            <Button Content="+" Width="24" Height="24" Click="IncrementYear_Click"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
