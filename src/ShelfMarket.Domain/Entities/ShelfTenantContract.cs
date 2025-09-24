@@ -2,7 +2,7 @@
 
 public class ShelfTenantContract
 {
-    public Guid Id { get; set; }
+    public Guid? Id { get; set; }
     public Guid ShelfTenantId { get; set; } = Guid.Empty;
     public uint ContractNumber { get; set; }
     public DateTime StartDate { get; set; } /* Year and month only */
@@ -16,7 +16,6 @@ public class ShelfTenantContract
 
     public ShelfTenantContract(Guid shelfTenantId, uint contractNumber, DateTime startDate, DateTime endDate, DateTime? cancelledAt = null)
     {
-        Id = Guid.NewGuid();
         ShelfTenantId = shelfTenantId;
         ContractNumber = contractNumber;
         StartDate = startDate;

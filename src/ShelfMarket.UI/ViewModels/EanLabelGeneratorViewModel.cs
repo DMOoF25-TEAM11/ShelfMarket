@@ -8,7 +8,6 @@ using System.Windows.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract;
 using ShelfMarket.Application.Abstract.Services.Barcodes;
-using ShelfMarket.Application.Interfaces;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
@@ -52,7 +51,10 @@ public sealed class EanLabelGeneratorViewModel : ModelBase
                 // For now, clear and keep current selection consistent.
                 Shelfs.Clear();
                 SelectedShelfNumber = null;
-                GetShelfsForTenantAsync(Guid.Parse(value ?? Guid.Empty.ToString())).GetAwaiter();
+
+                if (Guid.TryParse(value, out var tenantId))
+                    GetShelfsForTenantAsync(tenantId).GetAwaiter();
+
                 OnPropertyChanged(nameof(CanGenerate));
             }
         }

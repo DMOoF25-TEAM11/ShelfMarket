@@ -1,4 +1,4 @@
-﻿using ShelfMarket.Application.Interfaces;
+﻿using ShelfMarket.Application.Abstract;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
 using ShelfMarket.UI.ViewModels.List.Item;
