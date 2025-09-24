@@ -13,8 +13,7 @@ public sealed class LoginRoleViewModel : ModelBase
 {
     private readonly IPrivilegeService _privileges;
 
-    public ObservableCollection<PrivilegeLevel> Levels { get; } =
-        new(new[] { PrivilegeLevel.Guest, PrivilegeLevel.User, PrivilegeLevel.Admin });
+    public ObservableCollection<PrivilegeLevel> Levels { get; } = new();
 
     private PrivilegeLevel _selectedLevel = PrivilegeLevel.Guest;
     public PrivilegeLevel SelectedLevel
@@ -50,6 +49,15 @@ public sealed class LoginRoleViewModel : ModelBase
         _privileges = App.HostInstance.Services.GetRequiredService<IPrivilegeService>();
         ConfirmCommand = new RelayCommand(OnConfirm, CanConfirm);
         CancelCommand = new RelayCommand(OnCancel);
+
+        // Populate Levels from the enum
+        Levels.Clear();
+        foreach (var lvl in Enum.GetValues<PrivilegeLevel>())
+            if (lvl != PrivilegeLevel.Guest)
+                Levels.Add(lvl);
+
+        // Optional: start with current level from the service
+        //SelectedLevel = _privileges.CurrentLevel;
     }
 
     private bool CanConfirm()

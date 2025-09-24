@@ -71,17 +71,25 @@ public class SideMenuViewModel : ModelBase
             _selectedMenuItem = value;
             OnPropertyChanged(nameof(SelectedMenuItem));
 
-            // Quick logoff and go to ShelfView
+            // Logoff: sign out, select "Log på", and navigate immediately
             if (value?.IsLogoff == true)
             {
                 _privileges.SignOut();
-                var shelf = SideMenuItems.FirstOrDefault(i => i.Title == "Reoler") ?? SideMenuItems.FirstOrDefault();
-                if (shelf != null)
+
+                var login =
+                    SideMenuItems.FirstOrDefault(i => i.Title == "Log på" && IsItemVisibleForCurrentLevel(i))
+                    ?? SideMenuItems.FirstOrDefault(i => !i.IsLogoff && IsItemVisibleForCurrentLevel(i))
+                    ?? SideMenuItems.FirstOrDefault();
+
+                if (login != null)
                 {
-                    _selectedMenuItem = shelf;
+                    _selectedMenuItem = login;
                     OnPropertyChanged(nameof(SelectedMenuItem));
+                    OnCommand(); // navigate to LoginView
                 }
-                RefreshMenuVisibilityAndSelection();
+
+                if (MenuItemCommand is RelayCommand rcl) rcl.RaiseCanExecuteChanged();
+                return; // avoid double navigation
             }
 
             OnCommand();
@@ -125,12 +133,23 @@ public class SideMenuViewModel : ModelBase
         // Ensure selection is visible and accessible; otherwise select a sensible default
         if (_selectedMenuItem is null || !IsItemVisibleForCurrentLevel(_selectedMenuItem))
         {
-            var next = SideMenuItems.FirstOrDefault(IsItemVisibleForCurrentLevel)
-                       ?? SideMenuItems.FirstOrDefault();
+            // Prefer "Log på" when guest; otherwise a non-logoff item (e.g., "Reoler")
+            var next =
+                (_privileges.CurrentLevel == PrivilegeLevel.Guest
+                    ? SideMenuItems.FirstOrDefault(i => i.Title == "Log på" && IsItemVisibleForCurrentLevel(i))
+                    : null)
+                ?? SideMenuItems.FirstOrDefault(i => !i.IsLogoff && IsItemVisibleForCurrentLevel(i))
+                ?? SideMenuItems.FirstOrDefault(IsItemVisibleForCurrentLevel)
+                ?? SideMenuItems.FirstOrDefault();
+
             if (next != null && !ReferenceEquals(next, _selectedMenuItem))
             {
                 _selectedMenuItem = next;
                 OnPropertyChanged(nameof(SelectedMenuItem));
+
+                // Navigate to the newly selected view
+                OnCommand();
+                if (MenuItemCommand is RelayCommand rc) rc.RaiseCanExecuteChanged();
             }
         }
     }

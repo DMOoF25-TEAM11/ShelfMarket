@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
-using ShelfMarket.Application.Interfaces;
+using ShelfMarket.Application.Abstract;
 using ShelfMarket.UI.Commands;
 
 namespace ShelfMarket.UI.ViewModels.Abstracts;

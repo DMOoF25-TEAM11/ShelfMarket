@@ -1,4 +1,4 @@
-﻿namespace ShelfMarket.Application.Interfaces;
+﻿namespace ShelfMarket.Application.Abstract;
 
 /// <summary>
 /// Defines a generic asynchronous CRUD repository abstraction.

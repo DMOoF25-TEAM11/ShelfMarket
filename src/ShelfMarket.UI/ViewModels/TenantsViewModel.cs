@@ -1,18 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
+using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
-using ShelfMarket.UI.Views;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Navigation;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ShelfMarket.UI.ViewModels;
 
@@ -231,9 +224,9 @@ public class TenantsViewModel : ViewModelBase<IShelfTenantRepository, ShelfTenan
         && !string.IsNullOrWhiteSpace(FirstName) && Regex.IsMatch(FirstName, @"^[\p{L}\p{M}'\- ]{2,100}$")
         && !string.IsNullOrWhiteSpace(LastName) && Regex.IsMatch(LastName, @"^[\p{L}\p{M}'\- ]{2,100}$")
         && !string.IsNullOrWhiteSpace(Address) && Regex.IsMatch(Address, @"^[\p{L}\p{M}\p{N}\s\.,'\-/#]{5,200}$")
-        && !string.IsNullOrWhiteSpace(PostalCode) && Regex.IsMatch(PostalCode ?? string.Empty, @"^\d{4}$")   
+        && !string.IsNullOrWhiteSpace(PostalCode) && Regex.IsMatch(PostalCode ?? string.Empty, @"^\d{4}$")
         && !string.IsNullOrWhiteSpace(City) && Regex.IsMatch(City, @"^[\p{L}\p{M}'\- ]{2,100}$")
-        && !string.IsNullOrWhiteSpace(Email) && Regex.IsMatch(Email ?? string.Empty, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") 
+        && !string.IsNullOrWhiteSpace(Email) && Regex.IsMatch(Email ?? string.Empty, @"^[^@\s]+@[^@\s]+\.[^@\s]+$")
         && !string.IsNullOrWhiteSpace(PhoneNumber) && Regex.IsMatch(PhoneNumber ?? string.Empty, @"^[+\d][\d\s\-]{7,14}$");
 
     protected override bool CanSave() =>
@@ -298,7 +291,7 @@ public class TenantsViewModel : ViewModelBase<IShelfTenantRepository, ShelfTenan
             phoneNumber: PhoneNumber
         );
 
-        TenantId = entity.Id;
+        TenantId = entity.Id ?? Guid.Empty;
         return Task.FromResult(entity);
     }
 
@@ -333,7 +326,7 @@ public class TenantsViewModel : ViewModelBase<IShelfTenantRepository, ShelfTenan
     {
         CurrentEntity = entity;
 
-        TenantId = entity.Id;
+        TenantId = entity.Id ?? Guid.Empty;
         FirstName = entity.FirstName;
         LastName = entity.LastName;
         Address = entity.Address;

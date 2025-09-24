@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Microsoft.Extensions.DependencyInjection;
-using ShelfMarket.Application.Interfaces;
+using ShelfMarket.Application.Abstract;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.ViewModels.Abstracts;
 

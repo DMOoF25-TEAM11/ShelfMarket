@@ -1,4 +1,4 @@
-﻿using ShelfMarket.Application.Interfaces;
+﻿using ShelfMarket.Application.Abstract;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.Infrastructure.Persistence;
 

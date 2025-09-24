@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ShelfMarket.Application.Interfaces;
+using ShelfMarket.Application.Abstract;
 using ShelfMarket.Infrastructure.Persistence;
 using ShelfMarket.Infrastructure.Repositories;
 
@@ -27,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IShelfTypeRepository, ShelfTypeRepository>();
         services.AddScoped<ISalesRepository, SalesRepository>();
         services.AddScoped<IShelfTenantContractRepository, ShelfTenantContractRepository>();
+        services.AddScoped<IShelfTenantRepository, TenantRepository>();
         return services;
     }
 }
