@@ -28,7 +28,6 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- LIST: bind to Items and SelectedItem -->
                 <Border Grid.Column="0" Style="{StaticResource ListBorder}">
                     <ListBox ItemsSource="{Binding Items}"
                              SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
@@ -54,7 +53,6 @@
                     </ListBox>
                 </Border>
 
-                <!-- Form fields -->
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
@@ -69,13 +67,11 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Contract number (read-only, DB-generated) -->
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Contract number" VerticalAlignment="Center" Margin="0,0,6,0"/>
                     <TextBlock Grid.Row="0" Grid.Column="1"
                                Text="{Binding SelectedItem.ContractNumber}"
                                VerticalAlignment="Center" />
 
-                    <!-- Cancelled at: show date if set, otherwise show cancel button -->
                     <TextBlock Grid.Row="0"
                                Grid.Column="3"
                                Text="Cancelled at"
@@ -84,18 +80,14 @@
                                Visibility="{Binding IsContractCancelled, Converter={StaticResource BoolToVis}}"/>
 
                     <Grid Grid.Row="0" Grid.Column="4" VerticalAlignment="Center">
-                        <!-- Shown when a date exists -->
                         <TextBlock Text="{Binding SelectedItem.CancelledAt, StringFormat={}{0:yyyy-MM-dd}}"/>
-
                     </Grid>
 
-                    <!-- Start month/year -->
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Start" VerticalAlignment="Center" Margin="0,0,6,0"/>
                     <components:MonthYearPicker Grid.Row="1" Grid.Column="1"
                                                 SelectedDate="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 MaxHeight="25" MinWidth="200" VerticalAlignment="Center"/>
 
-                    <!-- End month/year -->
                     <TextBlock Grid.Row="1" Grid.Column="3" Text="End" VerticalAlignment="Center" Margin="0,0,6,0"/>
                     <components:MonthYearPicker Grid.Row="1" Grid.Column="4"
                                                 SelectedDate="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -112,6 +104,30 @@
                     </Grid>
                 </Grid>
             </Grid>
+
+            <!-- Bottom: Contract lines of selected contract -->
+            <Border Grid.Row="2"
+                    Margin="0,12,0,0"
+                    Padding="8"
+                    Style="{StaticResource ListBorder}"
+                    Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <TextBlock Text="Kontrakt linjer" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <DataGrid ItemsSource="{Binding ContractLinesVM.Items}"
+                              SelectedItem="{Binding ContractLinesVM.SelectedItem, Mode=TwoWay}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Line #" Binding="{Binding LineNumber}" Width="SizeToHeader"/>
+                            <DataGridTextColumn Header="Shelf" Binding="{Binding ShelfId}" Width="*" />
+                            <DataGridTextColumn Header="Price/month" Binding="{Binding PricePerMonth, StringFormat={}{0:C}}" Width="Auto"/>
+                            <DataGridTextColumn Header="Special" Binding="{Binding PricePerMonthSpecial, StringFormat={}{0:C}}" Width="Auto"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>

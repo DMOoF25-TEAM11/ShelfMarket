@@ -1,7 +1,0 @@
-﻿<Window x:Class="ShelfMarket.UI.Views.ManageShelfTenantContractLineWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Add shelf to contract" Width="700" Height="450" WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize">
-    <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden"/>
-</Window>

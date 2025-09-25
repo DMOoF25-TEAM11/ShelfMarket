@@ -4,6 +4,7 @@ using ShelfMarket.Application.Abstract;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.ViewModels.Abstracts;
+using ShelfMarket.UI.Views.UserControls;
 
 namespace ShelfMarket.UI.ViewModels;
 
@@ -12,7 +13,6 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
     public ManagesShelfTenantContractViewModel(IShelfTenantContractRepository? selected = null)
         : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfTenantContractRepository>())
     {
-        // Refresh list after add/save/delete and notify when a new contract was created
         EntitySaved += async (_, entity) =>
         {
             await RefreshAsync();
@@ -20,35 +20,38 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
             if (_lastOperationWasAdd && entity is ShelfTenantContract c)
             {
                 _lastOperationWasAdd = false;
-                OnContractCreated(c.ContractNumber);
+                await OnContractCreatedAsync(c);
             }
         };
 
         CancelContractCommand = new RelayCommand(async () => await CancelContractAsync(), CanCancelContract);
 
-        // Initial load
+        // Set initial form values
+        StartDate = FirstOfMonth(DateTime.Now);
+        EndDate = StartDate.AddMonths(1);
+
         _ = RefreshAsync();
     }
 
     public ManagesShelfTenantContractViewModel(ShelfTenant shelfTenant, IShelfTenantContractRepository? selected = null)
         : this(selected)
     {
-        // Pre-select the given entity
         ShelfTenant = shelfTenant;
         ShelfTenantDisplayName = $"{shelfTenant.FirstName} {shelfTenant.LastName}";
     }
-
-    public event EventHandler<ContractCreatedEventArgs>? ContractCreated;
-
-    // Call this right after persisting a new contract to the DB
-    private void OnContractCreated(int contractId)
-        => ContractCreated?.Invoke(this, new ContractCreatedEventArgs(contractId));
 
     private ShelfTenant _shelfTenant = null!;
     public ShelfTenant ShelfTenant
     {
         get => _shelfTenant;
-        set { if (_shelfTenant == value) return; _shelfTenant = value; OnPropertyChanged(); }
+        set
+        {
+            if (_shelfTenant == value) return;
+            _shelfTenant = value;
+            OnPropertyChanged();
+            ShelfTenantId = _shelfTenant?.Id ?? Guid.Empty;
+            _ = RefreshAsync();
+        }
     }
 
     private string _shelfTenantDisplayName = string.Empty;
@@ -61,8 +64,10 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
     public bool IsContractCancelled => SelectedItem?.CancelledAt != null;
     public bool IsContractActive => SelectedItem?.CancelledAt == null;
 
-    // Track whether the last operation was an Add (not Save)
     private bool _lastOperationWasAdd;
+
+    public ICommand CancelContractCommand { get; }
+
 
     #region Form Fields
     private DateTime _startDate;
@@ -75,7 +80,6 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
             if (_startDate == first) return;
             _startDate = first;
             OnPropertyChanged();
-            // Ensure EndDate is always after StartDate
             if (EndDate <= _startDate)
                 EndDate = _startDate.AddMonths(1);
             RefreshCommandStates();
@@ -100,7 +104,14 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
     public Guid ShelfTenantId
     {
         get => _shelfTenantId;
-        set { if (_shelfTenantId == value) return; _shelfTenantId = value; OnPropertyChanged(); RefreshCommandStates(); }
+        set
+        {
+            if (_shelfTenantId == value) return;
+            _shelfTenantId = value;
+            OnPropertyChanged();
+            RefreshCommandStates();
+            _ = RefreshAsync();
+        }
     }
 
     private DateTime? _cancelledAt;
@@ -111,38 +122,49 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
     }
     #endregion
 
-    // Cancel contract command
-    public ICommand CancelContractCommand { get; }
-
-    private bool CanCancelContract()
-        => SelectedItem is { CancelledAt: null };
-
     protected override async Task<IEnumerable<ShelfTenantContract>> LoadItemsAsync()
     {
         var all = await _repository.GetAllAsync();
-        return all.OrderBy(i => i.ContractNumber).Where(i => i.ShelfTenantId == ShelfTenant.Id);
+        var tenantId = ShelfTenant?.Id ?? ShelfTenantId;
+        if (tenantId != Guid.Empty)
+            return all.Where(i => i.ShelfTenantId == tenantId)
+                      .OrderBy(i => i.StartDate);
+
+        return [];
     }
 
-    // Ensure command re-evaluates on selection change
+    #region CanXXX Command States
+    private bool CanCancelContract() => SelectedItem is { CancelledAt: null };
+
+    protected override bool CanAdd() =>
+        base.CanAdd()
+        && (ShelfTenant?.Id ?? ShelfTenantId) != Guid.Empty
+        && StartDate >= FirstOfMonth(DateTime.Now)
+        && EndDate > StartDate;
+
+    protected override bool CanSave() =>
+        base.CanSave()
+        && StartDate >= FirstOfMonth(DateTime.Now)
+        && EndDate > StartDate;
+    #endregion
+
+    #region OnXXX Command
     protected override async Task OnSelectedItemChangedAsync(ShelfTenantContract? item)
     {
         await base.OnSelectedItemChangedAsync(item);
 
-        // Sync form state when selection changes
         CurrentEntity = item;
         IsEditMode = item != null;
         if (item != null)
             await OnLoadFormAsync(item);
         else
             await OnResetFormAsync();
-
         OnPropertyChanged(nameof(IsContractCancelled));
         OnPropertyChanged(nameof(IsContractActive));
         RefreshCommandStates();
         (CancelContractCommand as RelayCommand)?.RaiseCanExecuteChanged();
     }
 
-    #region Onxxx command methods
     protected override Task<ShelfTenantContract> OnAddFormAsync()
     {
         _lastOperationWasAdd = true;
@@ -154,7 +176,6 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
         if (tenantId == Guid.Empty)
             throw new InvalidOperationException("A valid tenant must be selected before creating a contract.");
 
-        // Normalize dates: Start = first of month, End = last day of month (and after Start)
         var start = FirstOfMonth(StartDate);
         var endMonth = EndDate <= start ? start.AddMonths(1) : EndDate;
         var end = EndOfMonth(endMonth);
@@ -165,7 +186,6 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
             endDate: end,
             cancelledAt: CancelledAt
         );
-        // reflect normalized StartDate in UI
         StartDate = start;
         EndDate = end;
         return Task.FromResult(entity);
@@ -173,15 +193,11 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
 
     protected override Task OnLoadFormAsync(ShelfTenantContract entity)
     {
-        // Sync form fields when selecting an item
         CancelledAt = entity.CancelledAt;
         StartDate = FirstOfMonth(entity.StartDate);
-
-        // Keep UI end date consistent with entity; entity already stores EOM
         EndDate = entity.EndDate <= entity.StartDate
             ? FirstOfMonth(entity.StartDate).AddMonths(1)
             : entity.EndDate;
-
         ShelfTenantId = entity.ShelfTenantId;
         return Task.CompletedTask;
     }
@@ -192,19 +208,17 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
         CurrentEntity = null;
         SelectedItem = null;
         StartDate = FirstOfMonth(DateTime.Now);
-        EndDate = StartDate.AddMonths(1); // keep EndDate after StartDate
-        ShelfTenantId = ShelfTenant.Id ?? Guid.Empty;
+        EndDate = StartDate.AddMonths(1);
+        ShelfTenantId = ShelfTenant?.Id ?? Guid.Empty;
         CancelledAt = null;
         await Task.CompletedTask;
     }
 
     protected override Task OnSaveFormAsync()
     {
-        // Map form fields back to the entity before calling repository.UpdateAsync
         if (CurrentEntity is null)
             return Task.CompletedTask;
 
-        // Normalize Start = first of month, End = last day of its month (and after Start)
         var start = FirstOfMonth(StartDate);
         var endMonth = EndDate <= start ? start.AddMonths(1) : EndDate;
         var end = EndOfMonth(endMonth);
@@ -214,13 +228,11 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
         CurrentEntity.CancelledAt = CancelledAt;
         CurrentEntity.ShelfTenantId = ShelfTenantId;
 
-        // Reflect normalized dates back to the form
         StartDate = start;
         EndDate = end;
 
         return Task.CompletedTask;
     }
-    #endregion
 
     private async Task CancelContractAsync()
     {
@@ -229,14 +241,9 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
         try
         {
             Error = string.Empty;
-
-            // Set cancellation date to today
             SelectedItem.CancelledAt = DateTime.Today;
-
-            // Mirror into form field (if bound elsewhere)
             CancelledAt = SelectedItem.CancelledAt;
 
-            // Persist and refresh (ContractNumber is identity; not updated)
             await _repository.UpdateAsync(SelectedItem);
             OnPropertyChanged(nameof(IsContractCancelled));
             OnPropertyChanged(nameof(IsContractActive));
@@ -249,8 +256,24 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
         }
     }
 
-    // Helper: first/last day of the month for a given date
+    private async Task OnContractCreatedAsync(ShelfTenantContract shelfTenantContract)
+    {
+        if (App.Current?.MainWindow is not MainWindow mw)
+        {
+            return;
+        }
+        var host = mw.MainContent;
+        if (host == null) return;
+        host.Content = new ManageShelfTenantContractLineView(shelfTenantContract);
+
+        await Task.CompletedTask;
+        return;
+    }
+    #endregion
+
+    #region Helpers
     private static DateTime FirstOfMonth(DateTime dt) => new DateTime(dt.Year, dt.Month, 1);
     private static DateTime EndOfMonth(DateTime dt) =>
         new DateTime(dt.Year, dt.Month, DateTime.DaysInMonth(dt.Year, dt.Month));
+    #endregion
 }

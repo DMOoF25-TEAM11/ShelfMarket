@@ -101,15 +101,7 @@
 
                 <!-- CRUD buttons: prefer ViewModel="{Binding}" for the reusable control -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,8">
-                    <!-- If CRUDFormControl template expects ViewModel DP: -->
-                    <!-- <components:CRUDFormControl ViewModel="{Binding}" /> -->
-                    <!-- If CRUDFormControl reads DataContext for commands (alternate template): -->
                     <components:CRUDFormControl DataContext="{Binding}" />
-                    <!-- Optional: Navigation to tenant contracts (uncomment and bind when implemented)
-                <Button Content="Gå til lejekontrakter"
-                        Command="{Binding MoveToTenantContractsCommand}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                        Width="110"/> -->
                 </StackPanel>
 
                 <!-- Informational message (auto-clears), visible when HasInfoMessage -->

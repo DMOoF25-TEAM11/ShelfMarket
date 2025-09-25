@@ -1,4 +1,5 @@
-﻿using ShelfMarket.Domain.Entities;
+﻿using ShelfMarket.Application.DTOs;
+using ShelfMarket.Domain.Entities;
 
 namespace ShelfMarket.Application.Abstract;
 
@@ -10,4 +11,6 @@ public interface IShelfRepository : IRepository<Shelf>
     /// UI and services rely on this check to decide if a move is valid before persisting.
     /// </summary>
     Task<bool> IsLocationFree(int locationX, int locationY, CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<AvailableShelf>> GetAvailableShelves(DateTime startDate, DateTime endDate, CancellationToken cancellationToken = default);
 }

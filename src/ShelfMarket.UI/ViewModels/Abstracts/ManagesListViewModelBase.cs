@@ -2,7 +2,6 @@
 using System.Windows.Input;
 using ShelfMarket.Application.Abstract;
 using ShelfMarket.UI.Commands;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ShelfMarket.UI.ViewModels.Abstracts;
 
@@ -30,6 +29,8 @@ public abstract class ManagesListViewModelBase<TRepos, TEntity> : CrudViewModelB
 
     public ICommand RefreshCommand { get; }
 
+    private readonly SemaphoreSlim _refreshLock = new(1, 1);
+
     protected ManagesListViewModelBase(TRepos repository) : base(repository)
     {
         RefreshCommand = new RelayCommand(async () => await RefreshAsync(), () => !IsLoading);
@@ -53,10 +54,11 @@ public abstract class ManagesListViewModelBase<TRepos, TEntity> : CrudViewModelB
 
     public async Task RefreshAsync()
     {
-        Error = null;
+        await _refreshLock.WaitAsync();
         IsLoading = true;
         try
         {
+            Error = null;
             var data = await LoadItemsAsync();
             Items.Clear();
             foreach (var it in data)
@@ -70,6 +72,7 @@ public abstract class ManagesListViewModelBase<TRepos, TEntity> : CrudViewModelB
         finally
         {
             IsLoading = false;
+            _refreshLock.Release();
             (RefreshCommand as RelayCommand)?.RaiseCanExecuteChanged();
             RefreshCommandStates();
         }

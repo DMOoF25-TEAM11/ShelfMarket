@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Collections.ObjectModel;
+using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract;
+using ShelfMarket.Application.DTOs;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.ViewModels.Abstracts;
 
@@ -7,14 +9,20 @@ namespace ShelfMarket.UI.ViewModels;
 
 public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<IShelfTenantContractLineRepository, ShelfTenantContractLine>
 {
+    private readonly IShelfRepository _shelfRepository;
+
     public ManagesShelfTenantContractLineViewModel(IShelfTenantContractLineRepository? selected = null)
         : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfTenantContractLineRepository>())
     {
+        _shelfRepository = App.HostInstance.Services.GetRequiredService<IShelfRepository>();
+
         // Refresh list after add/save/delete
         EntitySaved += async (_, __) => await RefreshAsync();
 
-        // Initial load
+        // Initial loads
         _ = RefreshAsync();
+        if (ParentContract != null) // avoid loading shelves before ParentContract is set
+            _ = LoadShelfOptionsAsync();
     }
 
     public ManagesShelfTenantContractLineViewModel(ShelfTenantContract contract, IShelfTenantContractLineRepository? selected = null)
@@ -22,7 +30,15 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
     {
         ParentContract = contract;
         ShelfTenantContractId = contract.Id ?? Guid.Empty;
+
+
+        // Now that ParentContract is set, load shelves for its date range
+        _ = LoadShelfOptionsAsync();
     }
+
+    // Options for dropdowns
+    public ObservableCollection<AvailableShelf> Shelves { get; } = new();
+
 
     private ShelfTenantContract? _parentContract;
     public ShelfTenantContract? ParentContract
@@ -46,8 +62,8 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         set { if (_shelfId == value) return; _shelfId = value; OnPropertyChanged(); RefreshCommandStates(); }
     }
 
-    private uint _lineNumber;
-    public uint LineNumber
+    private int _lineNumber;
+    public int LineNumber
     {
         get => _lineNumber;
         set { if (_lineNumber == value) return; _lineNumber = value; OnPropertyChanged(); RefreshCommandStates(); }
@@ -68,7 +84,7 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
     }
     #endregion
 
-    #region List Load
+    #region Load Handler
     protected override async Task<IEnumerable<ShelfTenantContractLine>> LoadItemsAsync()
     {
         var all = await _repository.GetAllAsync();
@@ -80,6 +96,44 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
 
         return all.OrderBy(l => l.ShelfTenantContractId).ThenBy(l => l.LineNumber);
     }
+
+    private async Task LoadShelfOptionsAsync()
+    {
+        try
+        {
+            if (ParentContract == null)
+            {
+                Error = "Parent contract is not set.";
+                return;
+            }
+
+            // Guard against SQL datetime overflow before calling repository
+            var sqlMin = System.Data.SqlTypes.SqlDateTime.MinValue.Value.Date;
+            if (ParentContract.StartDate.Date < sqlMin || ParentContract.EndDate.Date < sqlMin)
+            {
+                Error = $"Kontraktdatoer skal være >= {sqlMin:yyyy-MM-dd}. Datoen var {ParentContract.StartDate:yyyy-MM-dd} - {ParentContract.EndDate:yyyy-MM-dd}.";
+                return;
+            }
+
+            Shelves.Clear();
+
+            var availableShelves = await _shelfRepository.GetAvailableShelves(ParentContract.StartDate, ParentContract.EndDate);
+            foreach (var shelf in availableShelves)
+            {
+                Shelves.Add(shelf);
+            }
+            OnPropertyChanged(nameof(Shelves));
+        }
+        catch (Exception ex)
+        {
+            Error = $"Kunne ikke indlæse reoler: {ex.Message}";
+        }
+        finally
+        {
+            RefreshCommandStates();
+        }
+        await Task.CompletedTask;
+    }
     #endregion
 
     #region CanXXX Command States
@@ -87,7 +141,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         base.CanAdd()
         && IsValidGuid(ShelfTenantContractId)
         && IsValidGuid(ShelfId)
-        && IsValidLineNumber(LineNumber)
         && IsValidPrice(PricePerMonth)
         && IsValidSpecialPrice(PricePerMonthSpecial);
 
@@ -96,13 +149,11 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         && CurrentEntity != null
         && IsValidGuid(ShelfTenantContractId)
         && IsValidGuid(ShelfId)
-        && IsValidLineNumber(LineNumber)
         && IsValidPrice(PricePerMonth)
         && IsValidSpecialPrice(PricePerMonthSpecial)
         && (
             ShelfTenantContractId != CurrentEntity.ShelfTenantContractId ||
             ShelfId != CurrentEntity.ShelfId ||
-            LineNumber != CurrentEntity.LineNumber ||
             PricePerMonth != CurrentEntity.PricePerMonth ||
             PricePerMonthSpecial != CurrentEntity.PricePerMonthSpecial
         );
@@ -128,13 +179,14 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
 
     protected override Task<ShelfTenantContractLine> OnAddFormAsync()
     {
-        var entity = new ShelfTenantContractLine(
-            shelfTenantContractId: ShelfTenantContractId,
-            shelfId: ShelfId,
-            lineNumber: LineNumber,
-            pricePerMonth: PricePerMonth,
-            pricePerMonthSpecial: PricePerMonthSpecial
-        );
+        // Do not set LineNumber; it is IDENTITY in DB
+        var entity = new ShelfTenantContractLine
+        {
+            ShelfTenantContractId = ShelfTenantContractId,
+            ShelfId = ShelfId,
+            PricePerMonth = PricePerMonth,
+            PricePerMonthSpecial = PricePerMonthSpecial ?? 0m
+        };
 
         return Task.FromResult(entity);
     }
@@ -150,9 +202,9 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
 
         CurrentEntity.ShelfTenantContractId = ShelfTenantContractId;
         CurrentEntity.ShelfId = ShelfId;
-        CurrentEntity.LineNumber = LineNumber;
+        // Do not update LineNumber; it is IDENTITY in DB
         CurrentEntity.PricePerMonth = PricePerMonth;
-        CurrentEntity.PricePerMonthSpecial = PricePerMonthSpecial;
+        CurrentEntity.PricePerMonthSpecial = PricePerMonthSpecial ?? 0m;
 
         await Task.CompletedTask;
     }
