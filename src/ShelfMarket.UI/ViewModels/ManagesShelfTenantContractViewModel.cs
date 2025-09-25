@@ -31,8 +31,6 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
             if (_lastOperationWasAdd && entity is ShelfTenantContract c)
             {
                 _lastOperationWasAdd = false;
-
-                OnContractCreated(c.ContractNumber);
                 
                 // Refresh the list in this VM
                 await RefreshAsync();
@@ -114,8 +112,6 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
     public bool IsContractActive => SelectedItem?.CancelledAt == null;
 
     private bool _lastOperationWasAdd;
-
-    public ICommand CancelContractCommand { get; }
 
 
     #region Form Fields
@@ -228,7 +224,7 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
     
     // Custom cancel command that closes the window
     public ICommand CustomCancelCommand { get; }
-
+    
     private bool CanCancelContract()
         => SelectedItem is { CancelledAt: null };
 
@@ -246,22 +242,9 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
             .OrderBy(i => i.ContractNumber);
     }
 
-    #region CanXXX Command States
-    private bool CanCancelContract() => SelectedItem is { CancelledAt: null };
+    
 
-    protected override bool CanAdd() =>
-        base.CanAdd()
-        && (ShelfTenant?.Id ?? ShelfTenantId) != Guid.Empty
-        && StartDate >= FirstOfMonth(DateTime.Now)
-        && EndDate > StartDate;
-
-    protected override bool CanSave() =>
-        base.CanSave()
-        && StartDate >= FirstOfMonth(DateTime.Now)
-        && EndDate > StartDate;
-    #endregion
-
-    #region OnXXX Command
+    
     protected override async Task OnSelectedItemChangedAsync(ShelfTenantContract? item)
     {
         await base.OnSelectedItemChangedAsync(item);
