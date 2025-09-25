@@ -24,6 +24,7 @@
                             <MultiBinding Converter="{StaticResource MonthEnabledConverter}">
                                 <Binding ElementName="root" Path="SelectedYear"/>
                                 <Binding Path="Number"/>
+                                <Binding ElementName="root" Path="IsFlexible"/>
                             </MultiBinding>
                         </Setter.Value>
                     </Setter>

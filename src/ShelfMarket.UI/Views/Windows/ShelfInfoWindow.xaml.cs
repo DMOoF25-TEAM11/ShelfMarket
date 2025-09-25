@@ -3,16 +3,24 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract.Services;
+using ShelfMarket.UI.ViewModels;
 
 namespace ShelfMarket.UI.Views.Windows;
 
 public partial class ShelfInfoWindow : UserControl
 {
     private int _shelfNumber;
+    private ShelfViewModel? _shelfViewModel;
 
     public ShelfInfoWindow()
     {
         InitializeComponent();
+    }
+
+    public void SetShelfViewModel(ShelfViewModel viewModel)
+    {
+        _shelfViewModel = viewModel;
+        DataContext = viewModel;
     }
 
     public void SetShelfNumber(int number)

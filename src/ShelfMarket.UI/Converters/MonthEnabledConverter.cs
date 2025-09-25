@@ -9,7 +9,6 @@ public sealed class MonthEnabledConverter : IMultiValueConverter
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         if (values is null || values.Length < 2) return true;
-
         if (values[0] is int year && values[1] is int month)
         {
             var now = DateTime.Now;
