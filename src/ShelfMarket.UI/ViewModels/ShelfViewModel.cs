@@ -43,6 +43,20 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
             }
         }
     }
+
+    private DateTime? _selectedDate;
+    public DateTime? SelectedDate
+    {
+        get => _selectedDate;
+        set
+        {
+            if (_selectedDate != value)
+            {
+                _selectedDate = value;
+                OnPropertyChanged();
+            }
+        }
+    }
     #endregion
 
     #region Dropdown Fields
@@ -53,6 +67,8 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
     public ShelfViewModel(IShelfRepository? selected = null) : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfRepository>())
     {
         _shelfTypeRepository = App.HostInstance.Services.GetRequiredService<IShelfTypeRepository>();
+        // Initialize with current month/year
+        _selectedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
         _ = LoadShelfTypeOptionAsync();
     }
 

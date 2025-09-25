@@ -6,6 +6,7 @@ using System.Windows.Media;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract.Services;
 using ShelfMarket.UI.Views.Windows;
+using ShelfMarket.UI.ViewModels;
 
 namespace ShelfMarket.UI.Views.UserControls;
 
@@ -408,6 +409,9 @@ public partial class ShelfView : UserControl
         var info = mainWindow?.FindName("ShelfInfoPopupContent") as ShelfMarket.UI.Views.Windows.ShelfInfoWindow;
         if (overlay != null && info != null)
         {
+            // Get the shared ShelfViewModel instance
+            var shelfViewModel = App.HostInstance.Services.GetRequiredService<ShelfViewModel>();
+            info.SetShelfViewModel(shelfViewModel);
             info.SetShelfNumber(number);
             overlay.Visibility = Visibility.Visible;
             info.Visibility = Visibility.Visible;
