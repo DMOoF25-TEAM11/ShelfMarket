@@ -82,6 +82,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase004-AdministrateSale
 	ProjectSection(SolutionItems) = preProject
 		docs\sprint-2\UseCase004-AdministrateSales\DCD.mmd = docs\sprint-2\UseCase004-AdministrateSales\DCD.mmd
 		docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd = docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd
+		C:\Users\HAJFA\Documents\UseCase004 - AdministrateSales - UserStory.md = C:\Users\HAJFA\Documents\UseCase004 - AdministrateSales - UserStory.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-3", "sprint-3", "{641EEC39-0EEA-4ED7-9D08-1D2BD751860F}"
@@ -93,12 +94,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCare002-AdministrateShelfTenant", "UseCare002-AdministrateShelfTenant", "{0714F7E3-4326-4494-B2EC-E10DDD5489A6}"
 	ProjectSection(SolutionItems) = preProject
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCBrief.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCBrief.md
-		Use Case002 - DCD.mmd = Use Case002 - DCD.mmd
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCCausal.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCCausal.md
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Operation Contract CRUDShelfTenant.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Operation Contract CRUDShelfTenant.md
+		Use Case002 - DCD.mmd = Use Case002 - DCD.mmd
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Domain Model.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Domain Model.mmd
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - SSD.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - SSD.mmd
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Operation Contract CRUDShelfTenant.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Operation Contract CRUDShelfTenant.md
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use case002 - sequenceDiagram.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use case002 - sequenceDiagram.mmd
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - SSD.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - SSD.mmd
 		Use Case002 - UserStory.md = Use Case002 - UserStory.md
 	EndProjectSection
 EndProject
