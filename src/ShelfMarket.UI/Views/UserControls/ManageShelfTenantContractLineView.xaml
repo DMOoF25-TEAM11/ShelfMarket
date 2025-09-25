@@ -63,17 +63,22 @@
 
                         <StackPanel>
                             <TextBlock Text="Linjenr." />
-                            <TextBox Text="{Binding LineNumber, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                     ToolTip="1, 2, 3, ..."/>
+                            <TextBlock Text="{Binding LineNumber, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                     ToolTip="Automatisk genereret"/>
                         </StackPanel>
                     </StackPanel>
 
                     <!-- Column 2 -->
                     <StackPanel Grid.Column="1">
                         <StackPanel>
-                            <TextBlock Text="Reol Id" />
-                            <TextBox Text="{Binding ShelfId, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                     ToolTip="GUID for reolen"/>
+                            <TextBlock Text="Reol" />
+                            <ComboBox
+                                ItemsSource="{Binding Shelves}"
+                                DisplayMemberPath="Number"
+                                SelectedValuePath="Id"
+                                SelectedValue="{Binding ShelfId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                ToolTip="Vælg reol efter nummer"
+                                IsSynchronizedWithCurrentItem="False"/>
                         </StackPanel>
 
                         <StackPanel>

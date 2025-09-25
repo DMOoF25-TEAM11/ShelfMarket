@@ -3,73 +3,73 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ShelfMarket.Domain.Enums;
 
-namespace ShelfMarket.UI.Views.UserControls.Components
+namespace ShelfMarket.UI.Views.UserControls.Components;
+
+public partial class MonthYearPicker : UserControl
 {
-    public partial class MonthYearPicker : UserControl
+    private bool _updating;
+
+    public MonthYearPicker()
     {
-        private bool _updating;
-
-        public MonthYearPicker()
+        // Build month items from DanishMonth enum (values 1..12)
+        var items = new List<MonthItem>(12);
+        foreach (var value in Enum.GetValues<DanishMonth>())
         {
-            // Build month items from DanishMonth enum (values 1..12)
-            var items = new List<MonthItem>(12);
-            foreach (var value in Enum.GetValues<DanishMonth>())
-            {
-                items.Add(new MonthItem((int)value, value.ToString()));
-            }
-            Months = items;
-
-            InitializeComponent();
-
-            // Default to now
-            _updating = true;
-            SelectedYear = DateTime.Now.Year;
-            SelectedMonth = DateTime.Now.Month; // 1-12
-            SelectedDate = new DateTime(SelectedYear, SelectedMonth, 1);
-            _updating = false;
-
-            UpdateYearControlsEnabledState();
+            items.Add(new MonthItem((int)value, value.ToString()));
         }
+        Months = items;
 
-        // Expose month list (Number = 1..12, Name = Danish month)
-        public IReadOnlyList<MonthItem> Months { get; }
+        InitializeComponent();
 
-        public static readonly DependencyProperty SelectedDateProperty =
-            DependencyProperty.Register(nameof(SelectedDate), typeof(DateTime?), typeof(MonthYearPicker),
-                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnSelectedDateChanged));
+        // Default to now
+        _updating = true;
+        SelectedYear = DateTime.Now.Year;
+        SelectedMonth = DateTime.Now.Month; // 1-12
+        SelectedDate = new DateTime(SelectedYear, SelectedMonth, 1);
+        _updating = false;
 
-        public DateTime? SelectedDate
-        {
-            get => (DateTime?)GetValue(SelectedDateProperty);
-            set => SetValue(SelectedDateProperty, value);
-        }
+        UpdateYearControlsEnabledState();
+    }
 
-        public static readonly DependencyProperty SelectedYearProperty =
-            DependencyProperty.Register(nameof(SelectedYear), typeof(int), typeof(MonthYearPicker),
-                new FrameworkPropertyMetadata(DateTime.Now.Year,
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    OnPartChanged,
-                    CoerceSelectedYear));
+    // Expose month list (Number = 1..12, Name = Danish month)
+    public IReadOnlyList<MonthItem> Months { get; }
 
-        public int SelectedYear
-        {
-            get => (int)GetValue(SelectedYearProperty);
-            set => SetValue(SelectedYearProperty, value);
-        }
+    public static readonly DependencyProperty SelectedDateProperty =
+        DependencyProperty.Register(nameof(SelectedDate), typeof(DateTime?), typeof(MonthYearPicker),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnSelectedDateChanged));
 
-        // 1..12
-        public static readonly DependencyProperty SelectedMonthProperty =
-            DependencyProperty.Register(nameof(SelectedMonth), typeof(int), typeof(MonthYearPicker),
-                new FrameworkPropertyMetadata(DateTime.Now.Month,
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    OnPartChanged,
-                    CoerceSelectedMonth));
+    public DateTime? SelectedDate
+    {
+        get => (DateTime?)GetValue(SelectedDateProperty);
+        set => SetValue(SelectedDateProperty, value);
+    }
 
-        public int SelectedMonth
-        {
-            get => (int)GetValue(SelectedMonthProperty);
-            set => SetValue(SelectedMonthProperty, value);
-        }
+    public static readonly DependencyProperty SelectedYearProperty =
+        DependencyProperty.Register(nameof(SelectedYear), typeof(int), typeof(MonthYearPicker),
+            new FrameworkPropertyMetadata(DateTime.Now.Year,
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                OnPartChanged,
+                CoerceSelectedYear));
+
+    public int SelectedYear
+    {
+        get => (int)GetValue(SelectedYearProperty);
+        set => SetValue(SelectedYearProperty, value);
+    }
+
+    // 1..12
+    public static readonly DependencyProperty SelectedMonthProperty =
+        DependencyProperty.Register(nameof(SelectedMonth), typeof(int), typeof(MonthYearPicker),
+            new FrameworkPropertyMetadata(DateTime.Now.Month,
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                OnPartChanged,
+                CoerceSelectedMonth));
+
+    public int SelectedMonth
+    {
+        get => (int)GetValue(SelectedMonthProperty);
+        set => SetValue(SelectedMonthProperty, value);
+    }
 
         public static readonly DependencyProperty IsFlexibleProperty =
             DependencyProperty.Register(nameof(IsFlexible), typeof(bool), typeof(MonthYearPicker),
@@ -100,11 +100,11 @@ namespace ShelfMarket.UI.Views.UserControls.Components
             return year < min ? min : year;
         }
 
-        private static object CoerceSelectedMonth(DependencyObject d, object baseValue)
-        {
-            var ctl = (MonthYearPicker)d;
-            int month = Math.Clamp((int)baseValue, 1, 12);
-            var now = DateTime.Now;
+    private static object CoerceSelectedMonth(DependencyObject d, object baseValue)
+    {
+        var ctl = (MonthYearPicker)d;
+        int month = Math.Clamp((int)baseValue, 1, 12);
+        var now = DateTime.Now;
 
             // If flexible, allow any month
             if (ctl.IsFlexible)
@@ -116,29 +116,29 @@ namespace ShelfMarket.UI.Views.UserControls.Components
             if (ctl.SelectedYear == now.Year && month < now.Month)
                 return now.Month;
 
-            return month;
-        }
+        return month;
+    }
 
-        private static void OnSelectedDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnSelectedDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var ctl = (MonthYearPicker)d;
+        if (ctl._updating) return;
+
+        if (e.NewValue is DateTime dt)
         {
-            var ctl = (MonthYearPicker)d;
-            if (ctl._updating) return;
-
-            if (e.NewValue is DateTime dt)
-            {
-                ctl._updating = true;
-                ctl.SelectedYear = dt.Year;
-                ctl.CoerceValue(SelectedMonthProperty);
-                ctl.SelectedMonth = dt.Month; // 1..12
-                ctl._updating = false;
-                ctl.UpdateYearControlsEnabledState();
-            }
+            ctl._updating = true;
+            ctl.SelectedYear = dt.Year;
+            ctl.CoerceValue(SelectedMonthProperty);
+            ctl.SelectedMonth = dt.Month; // 1..12
+            ctl._updating = false;
+            ctl.UpdateYearControlsEnabledState();
         }
+    }
 
-        private static void OnPartChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var ctl = (MonthYearPicker)d;
-            if (ctl._updating) return;
+    private static void OnPartChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var ctl = (MonthYearPicker)d;
+        if (ctl._updating) return;
 
             ctl._updating = true;
             try
@@ -181,7 +181,7 @@ namespace ShelfMarket.UI.Views.UserControls.Components
             }
         }
 
-        private void IncrementYear_Click(object sender, RoutedEventArgs e) => SelectedYear += 1;
+    private void IncrementYear_Click(object sender, RoutedEventArgs e) => SelectedYear += 1;
 
         private void DecrementYear_Click(object sender, RoutedEventArgs e)
         {
@@ -199,49 +199,48 @@ namespace ShelfMarket.UI.Views.UserControls.Components
             UpdateYearControlsEnabledState();
         }
 
-        private void YearTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+    private void YearTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+    {
+        foreach (var ch in e.Text)
         {
-            foreach (var ch in e.Text)
+            if (!char.IsDigit(ch))
+            {
+                e.Handled = true;
+                return;
+            }
+        }
+    }
+
+    private void YearTextBox_OnPasting(object sender, DataObjectPastingEventArgs e)
+    {
+        if (e.DataObject.GetDataPresent(DataFormats.Text))
+        {
+            var text = e.DataObject.GetData(DataFormats.Text) as string;
+            if (string.IsNullOrEmpty(text)) return;
+            foreach (var ch in text)
             {
                 if (!char.IsDigit(ch))
                 {
-                    e.Handled = true;
+                    e.CancelCommand();
                     return;
                 }
             }
         }
-
-        private void YearTextBox_OnPasting(object sender, DataObjectPastingEventArgs e)
+        else
         {
-            if (e.DataObject.GetDataPresent(DataFormats.Text))
-            {
-                var text = e.DataObject.GetData(DataFormats.Text) as string;
-                if (string.IsNullOrEmpty(text)) return;
-                foreach (var ch in text)
-                {
-                    if (!char.IsDigit(ch))
-                    {
-                        e.CancelCommand();
-                        return;
-                    }
-                }
-            }
-            else
-            {
-                e.CancelCommand();
-            }
+            e.CancelCommand();
+        }
+    }
+
+    public readonly struct MonthItem
+    {
+        public MonthItem(int number, string name)
+        {
+            Number = number;
+            Name = name;
         }
 
-        public readonly struct MonthItem
-        {
-            public MonthItem(int number, string name)
-            {
-                Number = number;
-                Name = name;
-            }
-
-            public int Number { get; }
-            public string Name { get; }
-        }
+        public int Number { get; }
+        public string Name { get; }
     }
 }

@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data;
+using Microsoft.Data.SqlClient; // added
+using Microsoft.EntityFrameworkCore;
 using ShelfMarket.Application.Abstract;
+using ShelfMarket.Application.DTOs;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.Infrastructure.Persistence;
 
@@ -157,4 +160,36 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
     /// </returns>
     private static bool IsLocationLocked(int locationX, int locationY) =>
         _lockedLocations.Any(loc => loc.X == locationX && loc.Y == locationY);
+
+    public async Task<IEnumerable<AvailableShelf>> GetAvailableShelves(DateTime startDate, DateTime endDate, CancellationToken cancellationToken = default)
+    {
+        var start = startDate.Date;
+        var end = endDate.Date;
+
+        var shelves = new List<AvailableShelf>();
+
+        // Use a dedicated connection to avoid sharing EF's active connection (no MARS required)
+        var connString = _context.Database.GetConnectionString();
+        await using var connection = new SqlConnection(connString);
+        await using var command = new SqlCommand("dbo.uspGetAvailableShelves", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+        command.Parameters.Add(new SqlParameter("@StartDate", SqlDbType.Date) { Value = start });
+        command.Parameters.Add(new SqlParameter("@EndDate", SqlDbType.Date) { Value = end });
+
+        await connection.OpenAsync(cancellationToken);
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        while (await reader.ReadAsync(cancellationToken))
+        {
+            shelves.Add(new AvailableShelf
+            {
+                Id = reader.GetGuid(0),
+                Number = reader.GetInt32(1)
+            });
+        }
+
+        return shelves.Count == 0 ? Array.Empty<AvailableShelf>() : shelves;
+    }
 }

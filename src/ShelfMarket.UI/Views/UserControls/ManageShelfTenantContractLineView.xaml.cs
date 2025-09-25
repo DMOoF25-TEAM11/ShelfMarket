@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.ViewModels;
 
 namespace ShelfMarket.UI.Views.UserControls;
@@ -9,14 +10,15 @@ namespace ShelfMarket.UI.Views.UserControls;
 /// </summary>
 public partial class ManageShelfTenantContractLineView : UserControl
 {
-    public ManageShelfTenantContractLineView()
+    public ManageShelfTenantContractLineView(ShelfTenantContract shelfTenantContract)
     {
         InitializeComponent();
 
-        DataContext ??= new ManageShelfTenantContractLineViewModel();
+        DataContext ??= new ManagesShelfTenantContractLineViewModel(shelfTenantContract);
 
         Loaded += ManageShelfTenantContractLineView_Loaded;
     }
+
 
     private void ManageShelfTenantContractLineView_Loaded(object sender, RoutedEventArgs e)
     {
