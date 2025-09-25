@@ -97,6 +97,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase006-SideMenu", "UseC
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{5A48367B-8066-4746-8BC2-76CEA83A5F4B}"
+	ProjectSection(SolutionItems) = preProject
+		docs\sql\DDL.v1.sql = docs\sql\DDL.v1.sql
+		docs\sql\DML.v1.sql = docs\sql\DML.v1.sql
+		docs\sql\USP.v1.sql = docs\sql\USP.v1.sql
+		docs\sql\View.v1.sql = docs\sql\View.v1.sql
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.UI.Tests", "tests\ShelfMarket.Domain.Tests\ShelfMarket.UI.Tests\ShelfMarket.UI.Tests.csproj", "{633E01EF-549F-40A5-834E-7E229C6B2AE4}"
 EndProject
