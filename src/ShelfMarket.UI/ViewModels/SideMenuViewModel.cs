@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract.Services;
 using ShelfMarket.Domain.Enums;
@@ -66,29 +67,26 @@ public sealed class SideMenuViewModel : ModelBase
         _menuItemCommand = new RelayCommand(ExecuteNavigation, CanNavigate);
         MenuItemCommand = _menuItemCommand;
 
-        // Initial selection & navigation
         _selectedMenuItem = _defaultItem;
         OnPropertyChanged(nameof(SelectedMenuItem));
+
+        // Immediate attempt (works if MainWindow already created)
         ExecuteNavigation();
+
+        // Deferred attempt (covers case where MainWindow not yet ready at construction time)
+        System.Windows.Application.Current?.Dispatcher.BeginInvoke(
+            new Action(() =>
+            {
+                if (ReferenceEquals(_selectedMenuItem, _defaultItem))
+                    ExecuteNavigation();
+            }),
+            DispatcherPriority.Loaded);
     }
 
-    /// <summary>
-    /// Gets the current privilege level exposed from the privilege service.
-    /// </summary>
     public PrivilegeLevel CurrentLevel => _privileges.CurrentLevel;
 
-    /// <summary>
-    /// Represents a single side menu entry: contains display metadata, privilege requirements, and associated view.
-    /// </summary>
     public sealed class SideMenuItem
     {
-        /// <summary>
-        /// Creates a new <see cref="SideMenuItem"/>.
-        /// </summary>
-        /// <param name="title">Display label.</param>
-        /// <param name="view">The <see cref="UserControl"/> to navigate to.</param>
-        /// <param name="privilege">Minimum required privilege to access.</param>
-        /// <param name="isLogoff">True if this item triggers a logout action instead of a normal navigation.</param>
         public SideMenuItem(string title, UserControl view, PrivilegeLevel privilege, bool isLogoff = false)
         {
             Title = title;
