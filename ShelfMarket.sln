@@ -27,6 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docs\DDL.sql = docs\DDL.sql
 		docs\DomainModel.mmd = docs\DomainModel.mmd
 		docs\ER.mmd = docs\ER.mmd
+		docs\v1.sql = docs\v1.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-1", "sprint-1", "{523051B1-BB5E-40F5-822A-1F3EB4921370}"
@@ -86,22 +87,19 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-3", "sprint-3", "{641EEC39-0EEA-4ED7-9D08-1D2BD751860F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase006-SideMenu", "UseCase006-SideMenu", "{C0916665-D648-425B-BFCE-113B9A4675E2}"
-	ProjectSection(SolutionItems) = preProject
-		docs\sprint-3\UseCase006-SideMenu\DCD.mmd = docs\sprint-3\UseCase006-SideMenu\DCD.mmd
-		docs\sprint-3\UseCase006-SideMenu\OC.md = docs\sprint-3\UseCase006-SideMenu\OC.md
-		docs\sprint-3\UseCase006-SideMenu\SD.mmd = docs\sprint-3\UseCase006-SideMenu\SD.mmd
-		docs\sprint-3\UseCase006-SideMenu\SSD.mmd = docs\sprint-3\UseCase006-SideMenu\SSD.mmd
-		docs\sprint-3\UseCase006-SideMenu\UseCase-Brief.md = docs\sprint-3\UseCase006-SideMenu\UseCase-Brief.md
-		docs\sprint-3\UseCase006-SideMenu\UseCase-Casual.md = docs\sprint-3\UseCase006-SideMenu\UseCase-Casual.md
-		docs\sprint-3\UseCase006-SideMenu\UserStory.md = docs\sprint-3\UseCase006-SideMenu\UserStory.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{5A48367B-8066-4746-8BC2-76CEA83A5F4B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCare002-AdministrateShelfTenant", "UseCare002-AdministrateShelfTenant", "{0714F7E3-4326-4494-B2EC-E10DDD5489A6}"
 	ProjectSection(SolutionItems) = preProject
-		docs\sql\DDL.v1.sql = docs\sql\DDL.v1.sql
-		docs\sql\DML.v1.sql = docs\sql\DML.v1.sql
-		docs\sql\USP.v1.sql = docs\sql\USP.v1.sql
-		docs\sql\View.v1.sql = docs\sql\View.v1.sql
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCBrief.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCBrief.md
+		Use Case002 - DCD.mmd = Use Case002 - DCD.mmd
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCCausal.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCCausal.md
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Operation Contract CRUDShelfTenant.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Operation Contract CRUDShelfTenant.md
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Domain Model.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Domain Model.mmd
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - SSD.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - SSD.mmd
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use case002 - sequenceDiagram.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use case002 - sequenceDiagram.mmd
+		Use Case002 - UserStory.md = Use Case002 - UserStory.md
 	EndProjectSection
 EndProject
 Global
@@ -155,6 +153,7 @@ Global
 		{641EEC39-0EEA-4ED7-9D08-1D2BD751860F} = {93399C27-1127-489C-9E8F-7C803315DE2A}
 		{C0916665-D648-425B-BFCE-113B9A4675E2} = {641EEC39-0EEA-4ED7-9D08-1D2BD751860F}
 		{5A48367B-8066-4746-8BC2-76CEA83A5F4B} = {93399C27-1127-489C-9E8F-7C803315DE2A}
+		{0714F7E3-4326-4494-B2EC-E10DDD5489A6} = {641EEC39-0EEA-4ED7-9D08-1D2BD751860F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E3670BE-F107-4641-8608-598441D3E901}

@@ -1,0 +1,47 @@
+sequenceDiagram
+    actor Ejer as Actor
+    participant UI
+    participant ViewModel
+    participant Infrastructure
+
+    Ejer->>UI: NavigateTo(ShelfTanent)
+
+    alt Create Tenant
+        Ejer->>UI: FillLineForm(firstName, lastName, address, postalCode, city, email, phoneNumber)
+        Ejer->>UI: Save()
+        UI->>ViewModel: SaveTenant()
+        ViewModel->>Infrastructure: PersistTenant(tenantData)
+        Infrastructure-->>ViewModel: SaveConfirmation
+        ViewModel-->>UI: ShowSaveConfirmation()
+    else View Tenant
+        Ejer->>UI: SelectTenant(tenantId)
+        UI->>ViewModel: GetTenantDetails(tenantId)
+        ViewModel->>Infrastructure: FetchTenantDetails(tenantId)
+        Infrastructure-->>ViewModel: TenantDetails(tenantData)
+        ViewModel-->>UI: DisplayTenantDetails(tenantData)
+    else Edit Tenant
+        Ejer->>UI: SelectTenant(tenantId)
+        UI->>ViewModel: GetTenantDetails(tenantId)
+        ViewModel->>Infrastructure: FetchTenantDetails(tenantId)
+        Infrastructure-->>ViewModel: TenantDetails(tenantData)
+        ViewModel-->>UI: DisplayTenantDetails(tenantData)
+        Ejer->>UI: UpdateLineForm(updatedData)
+        Ejer->>UI: Save()
+        UI->>ViewModel: UpdateTenant(updatedData)
+        ViewModel->>Infrastructure: PersistUpdatedTenant(updatedData)
+        Infrastructure-->>ViewModel: UpdateConfirmation
+        ViewModel-->>UI: ShowUpdateConfirmation()
+    else Delete Tenant
+        Ejer->>UI: SelectTenant(tenantId)
+        UI->>ViewModel: GetTenantDetails(tenantId)
+        ViewModel->>Infrastructure: FetchTenantDetails(tenantId)
+        Infrastructure-->>ViewModel: TenantDetails(tenantData)
+        ViewModel-->>UI: DisplayTenantDetails(tenantData)
+        Ejer->>UI: ClickDeleteButton()
+        UI->>Ejer: ShowDeleteConfirmationDialog()
+        Ejer->>UI: ConfirmDeletion()
+        UI->>ViewModel: DeleteTenant(tenantId)
+        ViewModel->>Infrastructure: RemoveTenant(tenantId)
+        Infrastructure-->>ViewModel: DeletionConfirmation
+        ViewModel-->>UI: ShowDeletionConfirmation()
+    end

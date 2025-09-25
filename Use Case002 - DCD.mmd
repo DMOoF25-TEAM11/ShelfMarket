@@ -1,0 +1,93 @@
+classDiagram
+    direction LR
+
+    class TenantsViewModel {
+        +Guid TenantId
+        +string FirstName
+        +string LastName
+        +string Address
+        +string PostalCode
+        +string City
+        +string Email
+        +string PhoneNumber
+        +ShelfTenant? SelectedTenant
+        +ObservableCollection<ShelfTenant> Tenants
+        +ICommand ResetFormCommand
+        +ICommand RefreshCommand
+        --
+        +TenantsViewModel()
+        +TenantsViewModel(ITenantRepository tenantRepository)
+        #bool CanAdd()
+        #bool CanSave()
+        #bool CanDelete()
+        -Task LoadTenantOptionAsync()
+        #Task<ShelfTenant> OnAddFormAsync()
+        #Task OnResetFormAsync()
+        #Task OnSaveFormAsync()
+        #Task OnLoadFormAsync(ShelfTenant entity)
+    }
+
+    class ViewModelBase~TRepo, TEntity~ {
+        <<abstract>>
+        #TEntity? CurrentEntity
+        #bool IsEditMode
+        #string? Error
+        +event EventHandler? EntitySaved
+        --
+        #bool CanAdd()
+        #bool CanSave()
+        #bool CanDelete()
+        #void RefreshCommandStates()
+        #void OnPropertyChanged(string? name)
+        #Task<TEntity> OnAddFormAsync()
+        #Task OnResetFormAsync()
+        #Task OnSaveFormAsync()
+        #Task OnLoadFormAsync(TEntity entity)
+    }
+
+    class ITenantRepository {
+        <<interface>>
+        +Task<IEnumerable<ShelfTenant>> GetAllAsync()
+        +Task<ShelfTenant?> GetByIdAsync(Guid id)
+        +Task AddAsync(ShelfTenant entity)
+        +Task UpdateAsync(ShelfTenant entity)
+        +Task DeleteAsync(Guid id)
+    }
+
+    class ShelfTenant {
+        +Guid Id
+        +string FirstName
+        +string LastName
+        +string Address
+        +string PostalCode
+        +string City
+        +string Email
+        +string PhoneNumber
+        --
+        +ShelfTenant(string firstName, string lastName, string address, string postalCode, string city, string email, string phoneNumber)
+        +void UpdateContact(string firstName, string lastName, string email, string phoneNumber)
+        +void UpdateAddress(string address, string postalCode, string city)
+    }
+
+    class ICommand {
+        <<interface>>
+        +bool CanExecute(object? parameter)
+        +void Execute(object? parameter)
+        +event EventHandler? CanExecuteChanged
+    }
+
+    class RelayCommand {
+        +RelayCommand(Func<Task> execute, Func<bool> canExecute)
+        +bool CanExecute(object? parameter)
+        +void Execute(object? parameter)
+        +event EventHandler? CanExecuteChanged
+    }
+
+    ViewModelBase <|-- TenantsViewModel : inherits
+    TenantsViewModel ..> ITenantRepository : uses (injected)
+    TenantsViewModel o--> ShelfTenant : SelectedTenant
+    TenantsViewModel o--> "0..*" ShelfTenant : Tenants
+    TenantsViewModel --> ICommand : ResetFormCommand
+    TenantsViewModel --> ICommand : RefreshCommand
+    RelayCommand ..|> ICommand
+    
