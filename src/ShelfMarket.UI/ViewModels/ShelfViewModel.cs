@@ -60,13 +60,11 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
     #endregion
 
     #region Dropdown Fields
-    private readonly IShelfTypeRepository _shelfTypeRepository;
     public ObservableCollection<ShelfType> ShelfTypes { get; private set; } = [];
     #endregion
 
     public ShelfViewModel(IShelfRepository? selected = null) : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfRepository>())
     {
-        _shelfTypeRepository = App.HostInstance.Services.GetRequiredService<IShelfTypeRepository>();
         // Initialize with current month/year
         _selectedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
         _ = LoadShelfTypeOptionAsync();
@@ -78,7 +76,9 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
     {
         try
         {
-            var shelfTypes = await _shelfTypeRepository.GetAllAsync();
+            using var scope = App.HostInstance.Services.CreateScope();
+            var shelfTypeRepository = scope.ServiceProvider.GetRequiredService<IShelfTypeRepository>();
+            var shelfTypes = await shelfTypeRepository.GetAllAsync();
             ShelfTypes.Clear();
             foreach (var i in shelfTypes.OrderBy(i => i.Name))
             {
@@ -147,5 +147,4 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
         return Task.CompletedTask;
     }
     #endregion
-
 }
