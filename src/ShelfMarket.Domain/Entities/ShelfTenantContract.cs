@@ -1,11 +1,13 @@
-﻿namespace ShelfMarket.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ShelfMarket.Domain.Entities;
 
 public class ShelfTenantContract
 {
     public Guid? Id { get; set; }
     public Guid ShelfTenantId { get; set; } = Guid.Empty;
 
-    // DB-generated INT IDENTITY
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ContractNumber { get; private set; }
 
     public DateTime StartDate { get; set; } /* Year and month only */
