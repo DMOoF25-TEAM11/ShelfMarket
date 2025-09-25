@@ -1,5 +1,7 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using ShelfMarket.Domain.Enums;
 
 namespace ShelfMarket.UI.Views.UserControls.Components;
 
@@ -69,16 +71,34 @@ public partial class MonthYearPicker : UserControl
         set => SetValue(SelectedMonthProperty, value);
     }
 
+        public static readonly DependencyProperty IsFlexibleProperty =
+            DependencyProperty.Register(nameof(IsFlexible), typeof(bool), typeof(MonthYearPicker),
+                new FrameworkPropertyMetadata(false, OnIsFlexibleChanged));
 
-    public static void SetIsMonthYear(DependencyObject element, bool value) =>
-        element.SetValue(IsMonthYearProperty, value);
+        /// <summary>
+        /// When true, allows selection of past months/years. When false (default), restricts to current month/year and forward.
+        /// </summary>
+        public bool IsFlexible
+        {
+            get => (bool)GetValue(IsFlexibleProperty);
+            set => SetValue(IsFlexibleProperty, value);
+        }
 
-    public static bool GetIsMonthYear(DependencyObject element) =>
-        (bool)element.GetValue(IsMonthYearProperty);
-
-    private static void OnIsMonthYearChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not DatePicker dp) return;
+        private static object CoerceSelectedYear(DependencyObject d, object baseValue)
+        {
+            var ctl = (MonthYearPicker)d;
+            int year = (int)baseValue;
+            
+            // If flexible, allow any year (with reasonable bounds)
+            if (ctl.IsFlexible)
+            {
+                return Math.Clamp(year, 1900, 2100);
+            }
+            
+            // If not flexible, restrict to current year and forward
+            int min = DateTime.Now.Year;
+            return year < min ? min : year;
+        }
 
     private static object CoerceSelectedMonth(DependencyObject d, object baseValue)
     {
@@ -134,30 +154,29 @@ public partial class MonthYearPicker : UserControl
             }
         }
 
-
-        if (dp.Template.FindName("PART_Calendar", dp) is Calendar cal)
+        private static void OnIsFlexibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            // Initialize calendar to Year mode to choose a month
-            cal.DisplayMode = CalendarMode.Year;
-            cal.SelectionMode = CalendarSelectionMode.SingleDate;
-            cal.DisplayDate = dp.SelectedDate ?? DateTime.Today;
+            var ctl = (MonthYearPicker)d;
+            ctl.UpdateYearControlsEnabledState();
+            // Re-coerce values when flexibility changes
+            ctl.CoerceValue(SelectedYearProperty);
+            ctl.CoerceValue(SelectedMonthProperty);
+        }
 
-            // Use a local handler tied to this datepicker
-            EventHandler<CalendarModeChangedEventArgs> Handler = (s, args) =>
+        private void UpdateYearControlsEnabledState()
+        {
+            if (DecrementYearButton != null)
             {
-                if (cal.DisplayMode == CalendarMode.Month)
+                if (IsFlexible)
                 {
-                    // A month was clicked. Set the first day of that month and close the popup.
-                    var dt = new DateTime(cal.DisplayDate.Year, cal.DisplayDate.Month, 1);
-                    dp.SelectedDate = dt;
-                    // Keep calendar in Year mode next time
-                    cal.DisplayMode = CalendarMode.Year;
-                    dp.IsDropDownOpen = false;
+                    // In flexible mode, allow going back to reasonable year (1900)
+                    DecrementYearButton.IsEnabled = SelectedYear > 1900;
                 }
-                // Prevent diving into day view by staying in Year->Month only
-                if (cal.DisplayMode == CalendarMode.Decade)
+                else
                 {
-                    cal.DisplayMode = CalendarMode.Year;
+                    // In non-flexible mode, only allow going back to current year
+                    int min = DateTime.Now.Year;
+                    DecrementYearButton.IsEnabled = SelectedYear > min;
                 }
             }
         }
@@ -219,7 +238,6 @@ public partial class MonthYearPicker : UserControl
         {
             Number = number;
             Name = name;
-
         }
 
         public int Number { get; }

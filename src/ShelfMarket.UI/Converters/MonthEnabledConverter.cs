@@ -9,6 +9,7 @@ public sealed class MonthEnabledConverter : IMultiValueConverter
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         if (values is null || values.Length < 2) return true;
+
         if (values[0] is int year && values[1] is int month)
         {
             // Check if IsFlexible is provided (values[2])
@@ -21,7 +22,6 @@ public sealed class MonthEnabledConverter : IMultiValueConverter
             }
 
             // Original non-flexible logic
-
             var now = DateTime.Now;
             if (year > now.Year) return true;
             if (year < now.Year) return false; // guarded by year coercion, but safe
