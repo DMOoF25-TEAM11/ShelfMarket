@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:components="clr-namespace:ShelfMarket.UI.Views.UserControls.Components"
              mc:Ignorable="d">
 
     <Border Style="{StaticResource Popup.Window}">
@@ -91,35 +92,32 @@
             </StackPanel>
 
             <!-- Lejeperiode -->
-            <!-- Måneder er placeholders til vi får rigtige kode, måske skal der også årstal inden ovre. -->
             <StackPanel Grid.Row="2" Margin="0,0,0,12">
                 <TextBlock Text="Lejeperiode" Style="{StaticResource Text.H2}"/>
                 <Grid Margin="0,8,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="40"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Start måned" HorizontalAlignment="Center" Style="{StaticResource Text.Label}"/>
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Startår" HorizontalAlignment="Center"  Style="{StaticResource Text.Label}"/>
-                    <TextBlock Grid.Row="0" Grid.Column="4" Text="Slut måned" HorizontalAlignment="Center" Style="{StaticResource Text.Label}"/>
-                    <TextBlock Grid.Row="0" Grid.Column="6" Text="Slut år" HorizontalAlignment="Center" Style="{StaticResource Text.Label}"/>
-                    <ComboBox Grid.Row="1" Grid.Column="0" SelectedIndex="0" Margin="0,4,0,0"
-                              ItemsSource="{StaticResource MonthsDa}"/>
-                    <ComboBox Grid.Row="1" Grid.Column="2" SelectedIndex="0" Margin="0,4,0,0"
-                              ItemsSource="{StaticResource YearDa}"/>
-                    <ComboBox Grid.Row="1" Grid.Column="4" SelectedIndex="2" Margin="0,4,0,0"
-                              ItemsSource="{StaticResource MonthsDa}"/>
-                    <ComboBox Grid.Row="1" Grid.Column="6" SelectedIndex="0" Margin="0,4,0,0"
-                              ItemsSource="{StaticResource YearDa}"/>
+                    
+                    <!-- Start periode -->
+                    <TextBlock Grid.Row="0" Text="Start periode" HorizontalAlignment="Left" Style="{StaticResource Text.Label}"/>
+                    <components:MonthYearPicker Grid.Row="1" 
+                                                Margin="0,4,0,12"
+                                                IsFlexible="False"
+                                                VerticalAlignment="Center"/>
+                    
+                    <!-- Slut periode -->
+                    <TextBlock Grid.Row="2" Text="Slut periode" HorizontalAlignment="Left" Style="{StaticResource Text.Label}"/>
+                    <components:MonthYearPicker Grid.Row="3" 
+                                                Margin="0,4,0,0"
+                                                IsFlexible="False"
+                                                VerticalAlignment="Center"/>
                 </Grid>                
             </StackPanel>
 

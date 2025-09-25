@@ -71,10 +71,32 @@ namespace ShelfMarket.UI.Views.UserControls.Components
             set => SetValue(SelectedMonthProperty, value);
         }
 
+        public static readonly DependencyProperty IsFlexibleProperty =
+            DependencyProperty.Register(nameof(IsFlexible), typeof(bool), typeof(MonthYearPicker),
+                new FrameworkPropertyMetadata(false, OnIsFlexibleChanged));
+
+        /// <summary>
+        /// When true, allows selection of past months/years. When false (default), restricts to current month/year and forward.
+        /// </summary>
+        public bool IsFlexible
+        {
+            get => (bool)GetValue(IsFlexibleProperty);
+            set => SetValue(IsFlexibleProperty, value);
+        }
+
         private static object CoerceSelectedYear(DependencyObject d, object baseValue)
         {
-            int min = DateTime.Now.Year;
+            var ctl = (MonthYearPicker)d;
             int year = (int)baseValue;
+            
+            // If flexible, allow any year (with reasonable bounds)
+            if (ctl.IsFlexible)
+            {
+                return Math.Clamp(year, 1900, 2100);
+            }
+            
+            // If not flexible, restrict to current year and forward
+            int min = DateTime.Now.Year;
             return year < min ? min : year;
         }
 
@@ -84,6 +106,13 @@ namespace ShelfMarket.UI.Views.UserControls.Components
             int month = Math.Clamp((int)baseValue, 1, 12);
             var now = DateTime.Now;
 
+            // If flexible, allow any month
+            if (ctl.IsFlexible)
+            {
+                return month;
+            }
+
+            // If not flexible, restrict to current month and forward in current year
             if (ctl.SelectedYear == now.Year && month < now.Month)
                 return now.Month;
 
@@ -125,20 +154,48 @@ namespace ShelfMarket.UI.Views.UserControls.Components
             }
         }
 
+        private static void OnIsFlexibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctl = (MonthYearPicker)d;
+            ctl.UpdateYearControlsEnabledState();
+            // Re-coerce values when flexibility changes
+            ctl.CoerceValue(SelectedYearProperty);
+            ctl.CoerceValue(SelectedMonthProperty);
+        }
+
         private void UpdateYearControlsEnabledState()
         {
-            int min = DateTime.Now.Year;
             if (DecrementYearButton != null)
-                DecrementYearButton.IsEnabled = SelectedYear > min;
+            {
+                if (IsFlexible)
+                {
+                    // In flexible mode, allow going back to reasonable year (1900)
+                    DecrementYearButton.IsEnabled = SelectedYear > 1900;
+                }
+                else
+                {
+                    // In non-flexible mode, only allow going back to current year
+                    int min = DateTime.Now.Year;
+                    DecrementYearButton.IsEnabled = SelectedYear > min;
+                }
+            }
         }
 
         private void IncrementYear_Click(object sender, RoutedEventArgs e) => SelectedYear += 1;
 
         private void DecrementYear_Click(object sender, RoutedEventArgs e)
         {
-            int min = DateTime.Now.Year;
-            if (SelectedYear > min)
-                SelectedYear -= 1;
+            if (IsFlexible)
+            {
+                if (SelectedYear > 1900)
+                    SelectedYear -= 1;
+            }
+            else
+            {
+                int min = DateTime.Now.Year;
+                if (SelectedYear > min)
+                    SelectedYear -= 1;
+            }
             UpdateYearControlsEnabledState();
         }
 

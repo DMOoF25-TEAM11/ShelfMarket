@@ -46,10 +46,19 @@ public sealed class SideMenuViewModel : ModelBase
         _privileges = App.HostInstance.Services.GetRequiredService<IPrivilegeService>();
         _privileges.CurrentLevelChanged += OnPrivilegeLevelChanged;
 
+        // Get shared ShelfViewModel instance
+        var shelfViewModel = App.HostInstance.Services.GetRequiredService<ShelfViewModel>();
+        
         // Pre-create views once (reuse instances instead of recreating per navigation)
         _loginItem = new SideMenuItem("Log på", new LoginView(), PrivilegeLevel.Guest);
-        _logoffItem = new SideMenuItem("Log af", new ShelfView(), PrivilegeLevel.Guest, isLogoff: true);
-        _defaultItem = new SideMenuItem("Reoler", new ShelfView(), PrivilegeLevel.Guest);
+        
+        var logoffShelfView = new ShelfView();
+        logoffShelfView.DataContext = shelfViewModel;
+        _logoffItem = new SideMenuItem("Log af", logoffShelfView, PrivilegeLevel.Guest, isLogoff: true);
+        
+        var defaultShelfView = new ShelfView();
+        defaultShelfView.DataContext = shelfViewModel;
+        _defaultItem = new SideMenuItem("Reoler", defaultShelfView, PrivilegeLevel.Guest);
 
         // Populate (order preserved – bindings may rely on it)
         SideMenuItems =
