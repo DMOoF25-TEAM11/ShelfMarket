@@ -38,7 +38,7 @@ public partial class App : System.Windows.Application
                 //services.AddTransient<ManagesShelfTenantContractListViewModel>();
 
                 // ShelfTenant
-                //services.AddSingleton<IShelfTenantRepository, TenantRepository>();
+                //services.AddSingleton<IShelfTenantRepository, ShelfTenantRepository>();
                 //services.AddTransient<TenantsViewModel>();
                 //services.AddTransient<MainWindowViewModel>();
 
