@@ -104,8 +104,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{5A48367B-806
 		docs\sql\View.v1.sql = docs\sql\View.v1.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelfMarket.UI.Tests", "tests\ShelfMarket.Domain.Tests\ShelfMarket.UI.Tests\ShelfMarket.UI.Tests.csproj", "{633E01EF-549F-40A5-834E-7E229C6B2AE4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,10 +138,6 @@ Global
 		{84C38453-AD57-4035-AC80-1CF160294FC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84C38453-AD57-4035-AC80-1CF160294FC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84C38453-AD57-4035-AC80-1CF160294FC9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{633E01EF-549F-40A5-834E-7E229C6B2AE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{633E01EF-549F-40A5-834E-7E229C6B2AE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{633E01EF-549F-40A5-834E-7E229C6B2AE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{633E01EF-549F-40A5-834E-7E229C6B2AE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -161,7 +155,6 @@ Global
 		{641EEC39-0EEA-4ED7-9D08-1D2BD751860F} = {93399C27-1127-489C-9E8F-7C803315DE2A}
 		{C0916665-D648-425B-BFCE-113B9A4675E2} = {641EEC39-0EEA-4ED7-9D08-1D2BD751860F}
 		{5A48367B-8066-4746-8BC2-76CEA83A5F4B} = {93399C27-1127-489C-9E8F-7C803315DE2A}
-		{633E01EF-549F-40A5-834E-7E229C6B2AE4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E3670BE-F107-4641-8608-598441D3E901}

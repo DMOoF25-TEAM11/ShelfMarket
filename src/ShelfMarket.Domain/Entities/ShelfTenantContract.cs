@@ -4,20 +4,19 @@ public class ShelfTenantContract
 {
     public Guid? Id { get; set; }
     public Guid ShelfTenantId { get; set; } = Guid.Empty;
-    public uint? ContractNumber { get; set; }
+
+    // DB-generated INT IDENTITY
+    public int ContractNumber { get; private set; }
+
     public DateTime StartDate { get; set; } /* Year and month only */
-    public DateTime EndDate { get; set; } /* Year and month only */
+    public DateTime EndDate { get; set; }   /* Year and month only */
     public DateTime? CancelledAt { get; set; }
 
-    public ShelfTenantContract()
-    {
+    public ShelfTenantContract() { }
 
-    }
-
-    public ShelfTenantContract(Guid shelfTenantId, uint? contractNumber, DateTime startDate, DateTime endDate, DateTime? cancelledAt = null)
+    public ShelfTenantContract(Guid shelfTenantId, DateTime startDate, DateTime endDate, DateTime? cancelledAt = null)
     {
         ShelfTenantId = shelfTenantId;
-        ContractNumber = contractNumber;
         StartDate = startDate;
         EndDate = endDate;
         CancelledAt = cancelledAt;

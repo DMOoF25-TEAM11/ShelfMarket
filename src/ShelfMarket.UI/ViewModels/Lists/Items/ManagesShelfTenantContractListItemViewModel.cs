@@ -6,7 +6,7 @@ public class ManagesShelfTenantContractListItemViewModel
 {
     public Guid? Id { get; }
     public string ShelfTenantIdDisplayName { get; }
-    public uint? ContractNumber { get; }
+    public int? ContractNumber { get; }
     public DateTime StartDate { get; }
     public DateTime EndDate { get; }
 

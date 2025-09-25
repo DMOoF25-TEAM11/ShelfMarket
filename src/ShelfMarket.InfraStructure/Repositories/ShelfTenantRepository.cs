@@ -4,8 +4,8 @@ using ShelfMarket.Infrastructure.Persistence;
 
 namespace ShelfMarket.Infrastructure.Repositories
 {
-    public class TenantRepository : Repository<ShelfTenant>, IShelfTenantRepository
+    public class ShelfTenantRepository : Repository<ShelfTenant>, IShelfTenantRepository
     {
-        public TenantRepository(ShelfMarketDbContext context) : base(context) { }
+        public ShelfTenantRepository(ShelfMarketDbContext context) : base(context) { }
     }
 }

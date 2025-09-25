@@ -26,8 +26,8 @@ public static class DependencyInjection
         services.AddScoped<IShelfRepository, ShelfRepository>();
         services.AddScoped<IShelfTypeRepository, ShelfTypeRepository>();
         services.AddScoped<ISalesRepository, SalesRepository>();
+        services.AddScoped<IShelfTenantRepository, ShelfTenantRepository>();
         services.AddScoped<IShelfTenantContractRepository, ShelfTenantContractRepository>();
-        services.AddScoped<IShelfTenantRepository, TenantRepository>();
         return services;
     }
 }
