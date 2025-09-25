@@ -35,8 +35,14 @@ public partial class App : System.Windows.Application
                 //services.AddTransient<ManagesShelfTypeViewModel>();
 
                 // ShelfTenantContract
+                // Scoped: each popup gets its own scoped VM/DbContext to avoid
+                // cross-thread DbContext reuse issues.
+                services.AddScoped<ManagesShelfTenantContractViewModel>();
                 //services.AddTransient<ManagesShelfTanentContractListViewModel>();
                 //services.AddTransient<ManagesShelfTenantContractListViewModel>();
+                
+                // ManagesShelfTenant
+                services.AddTransient<ManagesShelfTenantViewModel>();
 
                 // ShelfTenant
                 //services.AddSingleton<IShelfTenantRepository, ShelfTenantRepository>();
