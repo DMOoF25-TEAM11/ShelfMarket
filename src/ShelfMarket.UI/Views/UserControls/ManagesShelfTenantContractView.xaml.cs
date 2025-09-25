@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using ShelfMarket.Domain.Entities;
 using ShelfMarket.UI.ViewModels;
 
@@ -63,20 +62,20 @@ public partial class ManagesShelfTenantContractView : UserControl
         }
     }
 
-    private void ContractNumber_PreviewTextInput(object sender, TextCompositionEventArgs e)
-    {
-        if (e.Text.Any(ch => !char.IsDigit(ch)))
-            e.Handled = true;
-    }
+    //private void ContractNumber_PreviewTextInput(object sender, TextCompositionEventArgs e)
+    //{
+    //    if (e.Text.Any(ch => !char.IsDigit(ch)))
+    //        e.Handled = true;
+    //}
 
-    private void ManagesShelfTenantContractView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-    {
-        if (e.OldValue is ManagesShelfTenantContractViewModel oldVm)
-            oldVm.ContractCreated -= Vm_ContractCreated;
+    //private void ManagesShelfTenantContractView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    //{
+    //    if (e.OldValue is ManagesShelfTenantContractViewModel oldVm)
+    //        oldVm.ContractCreated -= Vm_ContractCreated;
 
-        if (e.NewValue is ManagesShelfTenantContractViewModel newVm)
-            newVm.ContractCreated += Vm_ContractCreated;
-    }
+    //    if (e.NewValue is ManagesShelfTenantContractViewModel newVm)
+    //        newVm.ContractCreated += Vm_ContractCreated;
+    //}
 
     private void Vm_ContractCreated(object? sender, ContractCreatedEventArgs e)
     {

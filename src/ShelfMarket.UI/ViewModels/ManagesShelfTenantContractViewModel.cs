@@ -120,7 +120,7 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
     protected override async Task<IEnumerable<ShelfTenantContract>> LoadItemsAsync()
     {
         var all = await _repository.GetAllAsync();
-        return all.OrderBy(i => i.StartDate);
+        return all.OrderBy(i => i.ContractNumber).Where(i => i.ShelfTenantId == ShelfTenant.Id);
     }
 
     // Ensure command re-evaluates on selection change
