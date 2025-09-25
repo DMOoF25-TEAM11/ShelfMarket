@@ -29,7 +29,7 @@
                 <Button Grid.Column="1" Content="✕" Width="32" Height="32"
                         Background="{StaticResource Brush.Transparent}" BorderThickness="0"
                         Foreground="{StaticResource Brush.Text}"
-                        Click="Close_Click"/>
+                        Command="{Binding CustomCancelCommand}"/>
             </Grid>
 
             <!-- Lejeoplysninger -->
@@ -47,8 +47,8 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Fornavn" Style="{StaticResource Text.Body}"/>
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="Efternavn" Style="{StaticResource Text.Body}"/>
-                    <TextBox Grid.Row="1" Grid.Column="0" Margin="0,4,0,0"/>
-                    <TextBox Grid.Row="1" Grid.Column="2" Margin="0,4,0,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" Margin="0,4,0,0" Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" Margin="0,4,0,0" Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
 
                 <Grid Margin="0,8,0,0">
@@ -67,9 +67,9 @@
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Adresse" Style="{StaticResource Text.Body}"/>
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="By" Style="{StaticResource Text.Body}"/>
                     <TextBlock Grid.Row="0" Grid.Column="4" Text="PostNr." Style="{StaticResource Text.Body}"/>
-                    <TextBox Grid.Row="1" Grid.Column="0" Margin="0,4,0,0"/>
-                    <TextBox Grid.Row="1" Grid.Column="2" Margin="0,4,0,0"/>
-                    <TextBox Grid.Row="1" Grid.Column="4" Margin="0,4,0,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" Margin="0,4,0,0" Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" Margin="0,4,0,0" Text="{Binding City, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Grid.Row="1" Grid.Column="4" Margin="0,4,0,0" Text="{Binding PostalCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
 
                 
@@ -86,8 +86,8 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Telefon" Style="{StaticResource Text.Body}"/>
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="Email" Style="{StaticResource Text.Body}"/>
-                    <TextBox Grid.Row="1" Grid.Column="0" Margin="0,4,0,0"/>
-                    <TextBox Grid.Row="1" Grid.Column="2" Margin="0,4,0,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="0" Margin="0,4,0,0" Text="{Binding PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" Margin="0,4,0,0" Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </StackPanel>
 
@@ -110,14 +110,16 @@
                     <components:MonthYearPicker Grid.Row="1" 
                                                 Margin="0,4,0,12"
                                                 IsFlexible="False"
-                                                VerticalAlignment="Center"/>
+                                                VerticalAlignment="Center"
+                                                SelectedDate="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     
                     <!-- Slut periode -->
                     <TextBlock Grid.Row="2" Text="Slut periode" HorizontalAlignment="Left" Style="{StaticResource Text.Label}"/>
                     <components:MonthYearPicker Grid.Row="3" 
                                                 Margin="0,4,0,0"
                                                 IsFlexible="False"
-                                                VerticalAlignment="Center"/>
+                                                VerticalAlignment="Center"
+                                                SelectedDate="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>                
             </StackPanel>
 
@@ -167,6 +169,13 @@
                 
             </StackPanel>
 
+            <!-- Error message -->
+            <TextBlock Grid.Row="6" Text="{Binding Error}" 
+                       Foreground="Red" 
+                       Margin="0,0,0,12"
+                       TextWrapping="Wrap"
+                       Visibility="{Binding HasError, Converter={StaticResource BoolToVis}}"/>
+
             <!-- Knapper -->
             <Grid Grid.Row="7">
                 <Grid.ColumnDefinitions>
@@ -174,8 +183,8 @@
                     <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Vælg reoler" Style="{StaticResource Button.Primary}" Height="38" Click="ChooseShelves_Click"/>
-                <Button Grid.Column="2" Content="Annuller" Style="{StaticResource Button.Secondary}" Height="38" Click="Close_Click"/>
+                <Button Grid.Column="0" Content="Opret kontrakt" Style="{StaticResource Button.Primary}" Height="38" Command="{Binding AddCommand}"/>
+                <Button Grid.Column="2" Content="Annuller" Style="{StaticResource Button.Secondary}" Height="38" Command="{Binding CancelCommand}"/>
             </Grid>
         </Grid>
     </Border>
