@@ -1,0 +1,45 @@
+sequenceDiagram
+    participant Ejer as "Ejer"
+    participant System as "System"
+
+    Ejer->>System: NavigerTil("Lejere")
+
+        
+    alt
+    Ejer->>System: Indtaster data om ny lejer
+
+    Ejer->>System: Klikker på "Tilføj" knap
+
+    System->>System: Validerer data
+
+    alt Data er gyldig
+       System->>System: Opretter ny lejer i databasen
+       System->>Ejer: Viser bekræftelse på oprettelse
+    else Data er ugyldig
+        System->>Ejer: Viser fejlmeddelelse
+    end
+
+    else
+    Ejer->>System: Klipper på "Lejer" i listen
+        System->>Ejer: Viser lejer detaljer
+
+    else
+    Ejer->>System: Klipper på "Lejer" i listen
+    Ejer->>System: Redigerer lejer oplysninger
+    Ejer->>System: Klikker på "Gem" knap
+        System->>System: Validerer data
+            alt Data er gyldig
+                System->>System: Opdaterer lejer i databasen
+                System->>Ejer: Viser bekræftelse på opdatering
+            else Data er ugyldig
+                System->>Ejer: Viser fejlmeddelelse
+            end
+    else
+    Ejer->>System: Klipper på "Lejer" i listen
+    Ejer->>System: Klikker på "Slet" knap
+        System->>Ejer: Viser bekræftelsesdialog
+    Ejer->>System: Bekræfter sletning
+        System->>System: Sletter lejer fra databasen
+        System->>Ejer: Viser bekræftelse på sletning
+    end
+
