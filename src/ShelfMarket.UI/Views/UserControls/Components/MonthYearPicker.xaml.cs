@@ -71,12 +71,34 @@ public partial class MonthYearPicker : UserControl
         set => SetValue(SelectedMonthProperty, value);
     }
 
-    private static object CoerceSelectedYear(DependencyObject d, object baseValue)
-    {
-        int min = DateTime.Now.Year;
-        int year = (int)baseValue;
-        return year < min ? min : year;
-    }
+        public static readonly DependencyProperty IsFlexibleProperty =
+            DependencyProperty.Register(nameof(IsFlexible), typeof(bool), typeof(MonthYearPicker),
+                new FrameworkPropertyMetadata(false, OnIsFlexibleChanged));
+
+        /// <summary>
+        /// When true, allows selection of past months/years. When false (default), restricts to current month/year and forward.
+        /// </summary>
+        public bool IsFlexible
+        {
+            get => (bool)GetValue(IsFlexibleProperty);
+            set => SetValue(IsFlexibleProperty, value);
+        }
+
+        private static object CoerceSelectedYear(DependencyObject d, object baseValue)
+        {
+            var ctl = (MonthYearPicker)d;
+            int year = (int)baseValue;
+            
+            // If flexible, allow any year (with reasonable bounds)
+            if (ctl.IsFlexible)
+            {
+                return Math.Clamp(year, 1900, 2100);
+            }
+            
+            // If not flexible, restrict to current year and forward
+            int min = DateTime.Now.Year;
+            return year < min ? min : year;
+        }
 
     private static object CoerceSelectedMonth(DependencyObject d, object baseValue)
     {
@@ -84,8 +106,15 @@ public partial class MonthYearPicker : UserControl
         int month = Math.Clamp((int)baseValue, 1, 12);
         var now = DateTime.Now;
 
-        if (ctl.SelectedYear == now.Year && month < now.Month)
-            return now.Month;
+            // If flexible, allow any month
+            if (ctl.IsFlexible)
+            {
+                return month;
+            }
+
+            // If not flexible, restrict to current month and forward in current year
+            if (ctl.SelectedYear == now.Year && month < now.Month)
+                return now.Month;
 
         return month;
     }
@@ -111,36 +140,64 @@ public partial class MonthYearPicker : UserControl
         var ctl = (MonthYearPicker)d;
         if (ctl._updating) return;
 
-        ctl._updating = true;
-        try
-        {
-            // If year changed, ensure month stays valid for current year
-            ctl.CoerceValue(SelectedMonthProperty);
-            ctl.SelectedDate = new DateTime(ctl.SelectedYear, ctl.SelectedMonth, 1);
+            ctl._updating = true;
+            try
+            {
+                // If year changed, ensure month stays valid for current year
+                ctl.CoerceValue(SelectedMonthProperty);
+                ctl.SelectedDate = new DateTime(ctl.SelectedYear, ctl.SelectedMonth, 1);
+            }
+            finally
+            {
+                ctl._updating = false;
+                ctl.UpdateYearControlsEnabledState();
+            }
         }
-        finally
-        {
-            ctl._updating = false;
-            ctl.UpdateYearControlsEnabledState();
-        }
-    }
 
-    private void UpdateYearControlsEnabledState()
-    {
-        int min = DateTime.Now.Year;
-        if (DecrementYearButton != null)
-            DecrementYearButton.IsEnabled = SelectedYear > min;
-    }
+        private static void OnIsFlexibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctl = (MonthYearPicker)d;
+            ctl.UpdateYearControlsEnabledState();
+            // Re-coerce values when flexibility changes
+            ctl.CoerceValue(SelectedYearProperty);
+            ctl.CoerceValue(SelectedMonthProperty);
+        }
+
+        private void UpdateYearControlsEnabledState()
+        {
+            if (DecrementYearButton != null)
+            {
+                if (IsFlexible)
+                {
+                    // In flexible mode, allow going back to reasonable year (1900)
+                    DecrementYearButton.IsEnabled = SelectedYear > 1900;
+                }
+                else
+                {
+                    // In non-flexible mode, only allow going back to current year
+                    int min = DateTime.Now.Year;
+                    DecrementYearButton.IsEnabled = SelectedYear > min;
+                }
+            }
+        }
 
     private void IncrementYear_Click(object sender, RoutedEventArgs e) => SelectedYear += 1;
 
-    private void DecrementYear_Click(object sender, RoutedEventArgs e)
-    {
-        int min = DateTime.Now.Year;
-        if (SelectedYear > min)
-            SelectedYear -= 1;
-        UpdateYearControlsEnabledState();
-    }
+        private void DecrementYear_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsFlexible)
+            {
+                if (SelectedYear > 1900)
+                    SelectedYear -= 1;
+            }
+            else
+            {
+                int min = DateTime.Now.Year;
+                if (SelectedYear > min)
+                    SelectedYear -= 1;
+            }
+            UpdateYearControlsEnabledState();
+        }
 
     private void YearTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
     {

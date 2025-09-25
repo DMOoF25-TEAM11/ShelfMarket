@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:ShelfMarket.UI.Views" 
              xmlns:viewmodels="clr-namespace:ShelfMarket.UI.ViewModels" 
+             xmlns:components="clr-namespace:ShelfMarket.UI.Views.UserControls.Components"
              d:DataContext="{d:DesignInstance Type=viewmodels:ShelfViewModel}"
              mc:Ignorable="d" Height="949" Width="1280">
     <Grid>
@@ -19,13 +20,9 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <!-- Spacer -->
-                    <ColumnDefinition Width="170"/>
-                    <!-- Måned dropdown -->
-                    <ColumnDefinition Width="20"/>
-                    <!-- Spacer -->
-                    <ColumnDefinition Width="100"/>
-                    <!-- År dropdown -->
-                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="280"/>
+                    <!-- MonthYearPicker - endnu mere plads for hele + knappen -->
+                    <ColumnDefinition Width="30"/>
                     <!-- Spacer -->
                     <ColumnDefinition Width="150"/>
                     <!-- Tilføj knap -->                    
@@ -40,33 +37,23 @@
                     <!-- Fyld resten -->
                 </Grid.ColumnDefinitions>
 
-                <!-- Måned valg dropdown -->
-                <ComboBox Grid.Column="1" SelectedIndex="0">
-                    <ComboBoxItem Content="Viser nuværende måned"/>
-                    <ComboBoxItem Content="Januar"/>
-                    <ComboBoxItem Content="Februar"/>
-                    <ComboBoxItem Content="Marts osv"/>
-                </ComboBox>
+                <!-- MonthYearPicker component - Flexible version allows going back in time -->
+                <components:MonthYearPicker Grid.Column="1" 
+                                            VerticalAlignment="Center"
+                                            IsFlexible="True"
+                                            SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <!-- År valg dropdown -->
-                <ComboBox Grid.Column="3" SelectedIndex="0">
-                    <ComboBoxItem Content="Årstal"/>
-                    <ComboBoxItem Content="2025"/>
-                    <ComboBoxItem Content="2026"/>
-                    <ComboBoxItem Content="2027 osv"/>
-                </ComboBox>
-
-                <!-- Spacer mellem dropdowns og knap -->
-                <Border Grid.Column="4"/>
+                <!-- Spacer mellem MonthYearPicker og knap -->
+                <Border Grid.Column="2"/>
 
                 <!-- Tilføj ny reol knap - Åbner popup vindue -->
-                <Button Grid.Column="5" 
+                <Button Grid.Column="3" 
                         Content="Tilføj ny reol" 
                         Style="{StaticResource Button.Primary}" 
                         Click="TilfoejNyReol_Click" />
 
                 <!-- Ny kontrakt - Åbner kontrakt popup -->
-                <Button Grid.Column="7" 
+                <Button Grid.Column="5" 
                         Content="Ny Kontrakt" 
                         Style="{StaticResource Button.Primary}"
                         Click="NyKontrakt_Click"/> 
