@@ -84,7 +84,7 @@ CREATE TABLE [dbo].[SHELFTENANTCONTRACTLINE] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
     [ShelfTenantContractId] UNIQUEIDENTIFIER NOT NULL,
     [ShelfId] UNIQUEIDENTIFIER NOT NULL,
-    [LineNumber] INT IDENTITY(1, 1) NOT NULL UNIQUE,
+    [LineNumber] INT NOT NULL,
     [PricePerMonth] DECIMAL(18, 2) NOT NULL,
     [PricePerMonthSpecial] DECIMAL(18, 2),
     CONSTRAINT [UQ_ShelfTenantContract_LineNumber] UNIQUE ([ShelfTenantContractId], [LineNumber]),

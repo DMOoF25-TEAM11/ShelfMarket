@@ -40,6 +40,11 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
         ShelfTenantDisplayName = $"{shelfTenant.FirstName} {shelfTenant.LastName}";
     }
 
+    #region Fields state
+    private bool _lastOperationWasAdd;
+    #endregion
+
+    #region Properties
     private ShelfTenant _shelfTenant = null!;
     public ShelfTenant ShelfTenant
     {
@@ -63,11 +68,11 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
 
     public bool IsContractCancelled => SelectedItem?.CancelledAt != null;
     public bool IsContractActive => SelectedItem?.CancelledAt == null;
+    #endregion
 
-    private bool _lastOperationWasAdd;
-
+    #region Command Properties
     public ICommand CancelContractCommand { get; }
-
+    #endregion
 
     #region Form Fields
     private DateTime _startDate;
@@ -122,6 +127,7 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
     }
     #endregion
 
+    #region Load handlers
     protected override async Task<IEnumerable<ShelfTenantContract>> LoadItemsAsync()
     {
         var all = await _repository.GetAllAsync();
@@ -132,6 +138,7 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
 
         return [];
     }
+    #endregion
 
     #region CanXXX Command States
     private bool CanCancelContract() => SelectedItem is { CancelledAt: null };
@@ -188,6 +195,7 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
         );
         StartDate = start;
         EndDate = end;
+
         return Task.FromResult(entity);
     }
 

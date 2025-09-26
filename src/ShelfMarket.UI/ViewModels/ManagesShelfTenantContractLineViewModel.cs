@@ -9,18 +9,16 @@ namespace ShelfMarket.UI.ViewModels;
 
 public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<IShelfTenantContractLineRepository, ShelfTenantContractLine>
 {
-    private readonly IShelfRepository _shelfRepository;
-
     public ManagesShelfTenantContractLineViewModel(IShelfTenantContractLineRepository? selected = null)
         : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfTenantContractLineRepository>())
     {
         _shelfRepository = App.HostInstance.Services.GetRequiredService<IShelfRepository>();
 
         // Refresh list after add/save/delete
-        EntitySaved += async (_, __) => await RefreshAsync();
+        EntitySaved += async (_, __) => await RefreshAndUpdateNextLineNumberAsync();
 
         // Initial loads
-        _ = RefreshAsync();
+        _ = RefreshAndUpdateNextLineNumberAsync();
         if (ParentContract != null) // avoid loading shelves before ParentContract is set
             _ = LoadShelfOptionsAsync();
     }
@@ -31,14 +29,15 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         ParentContract = contract;
         ShelfTenantContractId = contract.Id ?? Guid.Empty;
 
-
         // Now that ParentContract is set, load shelves for its date range
         _ = LoadShelfOptionsAsync();
     }
 
-    // Options for dropdowns
-    public ObservableCollection<AvailableShelf> Shelves { get; } = new();
+    #region Fields state
+    #endregion
 
+    #region Properties
+    private readonly IShelfRepository _shelfRepository;
 
     private ShelfTenantContract? _parentContract;
     public ShelfTenantContract? ParentContract
@@ -46,8 +45,12 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         get => _parentContract;
         private set { _parentContract = value; OnPropertyChanged(); }
     }
+    #endregion
 
     #region Form Fields
+    // Options for dropdowns
+    public ObservableCollection<AvailableShelf> Shelves { get; } = new();
+
     private Guid _shelfTenantContractId = Guid.Empty;
     public Guid ShelfTenantContractId
     {
@@ -62,7 +65,7 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         set { if (_shelfId == value) return; _shelfId = value; OnPropertyChanged(); RefreshCommandStates(); }
     }
 
-    private int _lineNumber;
+    private int _lineNumber = 1;
     public int LineNumber
     {
         get => _lineNumber;
@@ -141,6 +144,7 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         base.CanAdd()
         && IsValidGuid(ShelfTenantContractId)
         && IsValidGuid(ShelfId)
+        && IsValidLineNumber(LineNumber)
         && IsValidPrice(PricePerMonth)
         && IsValidSpecialPrice(PricePerMonthSpecial);
 
@@ -149,19 +153,21 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         && CurrentEntity != null
         && IsValidGuid(ShelfTenantContractId)
         && IsValidGuid(ShelfId)
+        && IsValidLineNumber(LineNumber)
         && IsValidPrice(PricePerMonth)
         && IsValidSpecialPrice(PricePerMonthSpecial)
         && (
             ShelfTenantContractId != CurrentEntity.ShelfTenantContractId ||
             ShelfId != CurrentEntity.ShelfId ||
             PricePerMonth != CurrentEntity.PricePerMonth ||
-            PricePerMonthSpecial != CurrentEntity.PricePerMonthSpecial
+            PricePerMonthSpecial != CurrentEntity.PricePerMonthSpecial ||
+            LineNumber != CurrentEntity.LineNumber
         );
 
     protected override bool CanDelete() => base.CanDelete() && CurrentEntity != null;
     #endregion
 
-    #region Command Handlers
+    #region OnXXX Command
     protected override async Task OnResetFormAsync()
     {
         Error = string.Empty;
@@ -170,7 +176,14 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
 
         ShelfTenantContractId = ParentContract?.Id ?? Guid.Empty;
         ShelfId = Guid.Empty;
-        LineNumber = 0;
+
+        // Highest LineNumber among current contract's items (defaults to 1 if none)
+        LineNumber = Items
+            .Where(l => l.ShelfTenantContractId == ShelfTenantContractId)
+            .Select(l => l.LineNumber)
+            .DefaultIfEmpty(0)
+            .Max() + 1;
+
         PricePerMonth = 0m;
         PricePerMonthSpecial = null;
 
@@ -179,14 +192,18 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
 
     protected override Task<ShelfTenantContractLine> OnAddFormAsync()
     {
-        // Do not set LineNumber; it is IDENTITY in DB
         var entity = new ShelfTenantContractLine
         {
             ShelfTenantContractId = ShelfTenantContractId,
             ShelfId = ShelfId,
+            LineNumber = LineNumber,
             PricePerMonth = PricePerMonth,
             PricePerMonthSpecial = PricePerMonthSpecial ?? 0m
         };
+
+        var shelfToRemove = Shelves.FirstOrDefault(s => s.Id == ShelfId);
+        if (shelfToRemove != null)
+            _ = Shelves.Remove(shelfToRemove); // remove selected shelf from options
 
         return Task.FromResult(entity);
     }
@@ -202,7 +219,7 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
 
         CurrentEntity.ShelfTenantContractId = ShelfTenantContractId;
         CurrentEntity.ShelfId = ShelfId;
-        // Do not update LineNumber; it is IDENTITY in DB
+        CurrentEntity.LineNumber = LineNumber;
         CurrentEntity.PricePerMonth = PricePerMonth;
         CurrentEntity.PricePerMonthSpecial = PricePerMonthSpecial ?? 0m;
 
@@ -223,14 +240,26 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
     }
     #endregion
 
-    protected override void RefreshCommandStates()
+    //protected override void RefreshCommandStates()
+    //{
+    //    base.RefreshCommandStates();
+    //}
+
+    #region Helpers
+    private async Task RefreshAndUpdateNextLineNumberAsync()
     {
-        base.RefreshCommandStates();
+        await RefreshAsync();
+        LineNumber = Items
+            .Where(l => l.ShelfTenantContractId == ShelfTenantContractId)
+            .Select(l => l.LineNumber)
+            .DefaultIfEmpty(0)
+            .Max() + 1;
     }
+    #endregion
 
     #region Validation
     private static bool IsValidGuid(Guid id) => id != Guid.Empty;
-    private static bool IsValidLineNumber(uint n) => n > 0;
+    private static bool IsValidLineNumber(int n) => n > 0;
     private static bool IsValidPrice(decimal p) => p > 0m;
     private static bool IsValidSpecialPrice(decimal? p) => !p.HasValue || p.Value >= 0m;
     #endregion

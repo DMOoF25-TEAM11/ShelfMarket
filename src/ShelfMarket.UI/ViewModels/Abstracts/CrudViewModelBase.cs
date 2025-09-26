@@ -39,12 +39,14 @@ public abstract class CrudViewModelBase<TRepos, TEntity> : ModelBase
         }
     }
 
+    #region Command properties
     // Commands
     public ICommand AddCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand DeleteCommand { get; }
     public ICommand ResetCommand { get; }
     public ICommand CancelCommand { get; }
+    #endregion
 
     #region Info / Error messages and state properties
     // Error / Info / State
