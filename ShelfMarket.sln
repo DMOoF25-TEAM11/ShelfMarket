@@ -82,7 +82,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase004-AdministrateSale
 		docs\sprint-2\UseCase004-AdministrateSales\DCD.mmd = docs\sprint-2\UseCase004-AdministrateSales\DCD.mmd
 		docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd = docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd
 		C:\Users\HAJFA\Documents\Use Case004 - Administrerer salg - UCBrief.md = C:\Users\HAJFA\Documents\Use Case004 - Administrerer salg - UCBrief.md
-		C:\Users\HAJFA\Documents\UseCase004 - AdministrateSales - UserStory.md = C:\Users\HAJFA\Documents\UseCase004 - AdministrateSales - UserStory.md
+		C:\Users\HAJFA\Documents\Use Case004 - AdministrateSales - UserStory.md = C:\Users\HAJFA\Documents\Use Case004 - AdministrateSales - UserStory.md
+		C:\Users\HAJFA\Documents\Use Case004 - Administrerer salg - UCCasual.md = C:\Users\HAJFA\Documents\Use Case004 - Administrerer salg - UCCasual.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-3", "sprint-3", "{641EEC39-0EEA-4ED7-9D08-1D2BD751860F}"
