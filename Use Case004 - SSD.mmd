@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant Ansatte as "Ansatte"
+    participant System as "System"
+
+    Ansatte->>System: NavigerTil("Salg")
+
+        
+    alt
+    Ansatte->>System: Scanner genstands stregkode
+
+    System->>System: Validerer data
+
+    System->>System: Prisen bliver vist og lægges til total
+
+    else Data er ugyldig
+        System->>Ansatte: Viser fejlmeddelelse
+    end
+
