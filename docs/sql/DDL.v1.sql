@@ -36,12 +36,19 @@ GO
     Create schema
 */
 
+CREATE TABLE [dbo].[VERSIONINFO] (
+    [Id] INT NOT NULL PRIMARY KEY,
+    [Version] NVARCHAR(50) NOT NULL,
+    [AppliedOn] DATETIME NOT NULL DEFAULT GETDATE()
+);
+GO
+
 CREATE TABLE [dbo].[SHELFTYPE] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
     [Name] NVARCHAR(255) NOT NULL UNIQUE,
     [Description] NVARCHAR(200) NULL
 );
-Go
+GO
 
 CREATE TABLE [dbo].[SHELF] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
@@ -90,4 +97,15 @@ CREATE TABLE [dbo].[SHELFTENANTCONTRACTLINE] (
     CONSTRAINT [UQ_ShelfTenantContract_LineNumber] UNIQUE ([ShelfTenantContractId], [LineNumber]),
     CONSTRAINT [FK_ShelfTenantContract] FOREIGN KEY ([ShelfTenantContractId]) REFERENCES [dbo].[SHELFTENANTCONTRACT]([Id]) ON DELETE CASCADE
 );
+GO
+
+CREATE TABLE [dbo].[SHELFPRICINGRULES] (
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+    [MinShelvesInclusive] INT NOT NULL,
+    [PricePerShelf] DECIMAL(5,2) NOT NULL,
+    CONSTRAINT [UQ_ShelfPricingRules_MinShelvesInclusive] UNIQUE ([MinShelvesInclusive])
+);
+GO
+
+INSERT [dbo].[VERSIONINFO] ([Id], [Version], [AppliedOn]) VALUES (1, 'Initial', CAST('2025-10-06' AS date));
 GO

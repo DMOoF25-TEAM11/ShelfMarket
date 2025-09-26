@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using ShelfMarket.Domain.Entities;
 
 namespace ShelfMarket.Infrastructure.Persistence;
@@ -13,6 +12,7 @@ public class ShelfMarketDbContext : DbContext
     public DbSet<ShelfTenantContractLine> ShelfTenantContractLines { get; set; }
     public DbSet<SalesLine> SalesLines { get; set; }
     public DbSet<Sales> Sales { get; set; }
+    public DbSet<ShelfPricingRule> ShelfPricingRules { get; set; } // add DbSet
 
     public ShelfMarketDbContext(DbContextOptions<ShelfMarketDbContext> options) : base(options) { }
 
@@ -28,16 +28,24 @@ public class ShelfMarketDbContext : DbContext
         modelBuilder.Entity<SalesLine>().ToTable("SALESLINE");
         modelBuilder.Entity<Sales>().ToTable("SALES");
 
-        modelBuilder.Entity<ShelfTenantContract>(b =>
-        {
-            b.HasKey(e => e.Id);
-            b.Property(e => e.Id).HasDefaultValueSql("NEWID()");
-            b.Property(e => e.ContractNumber)
-                .ValueGeneratedOnAdd();
-            // Ensure EF never tries to update the identity column
-            b.Property(e => e.ContractNumber).Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
-            b.Property(e => e.ContractNumber).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
-        });
+        //modelBuilder.Entity<ShelfTenantContract>(b =>
+        //{
+        //    b.HasKey(e => e.Id);
+        //    b.Property(e => e.Id).HasDefaultValueSql("NEWID()");
+        //    b.Property(e => e.ContractNumber)
+        //        .ValueGeneratedOnAdd();
+        //    // Ensure EF never tries to update the identity column
+        //    b.Property(e => e.ContractNumber).Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+        //    b.Property(e => e.ContractNumber).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+        //});
+
+        //modelBuilder.Entity<ShelfPricingRule>(b =>
+        //{
+        //    b.HasKey(x => x.Id);
+        //    b.Property(x => x.MinShelvesInclusive).IsRequired();
+        //    b.Property(x => x.PricePerShelf).HasColumnType("decimal(9,2)").IsRequired();
+        //    b.HasIndex(x => x.MinShelvesInclusive).IsUnique();
+        //});
 
         // Ensure EF treats LineNumber as IDENTITY (database generated) and never sends explicit values
         //modelBuilder.Entity<ShelfTenantContractLine>(b =>
