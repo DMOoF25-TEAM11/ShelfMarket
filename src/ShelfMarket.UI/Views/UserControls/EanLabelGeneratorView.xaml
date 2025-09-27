@@ -50,7 +50,7 @@
             <StackPanel>
                 <TextBlock Text="Reol" Margin="16,0,0,4"/>
                 <ComboBox Width="140"
-                          ItemsSource="{Binding Shelfs}"
+                          ItemsSource="{Binding ShelfNumbers}"
                           SelectedItem="{Binding SelectedShelf, Mode=TwoWay}"
                           IsEditable="False"/>
             </StackPanel>
