@@ -87,12 +87,31 @@ public sealed class Ean13BarcodeGenerator : IEan13Generator
 
         string modules = EncodeModules(ean13);
 
+        // Parse shelf / price (defaults: 6 + 6)
+        const int shelfDigits = 6;
+        const int priceDigits = 6;
+        string shelfPart = ean13.Substring(0, shelfDigits);
+        string pricePart = ean13.Substring(shelfDigits, priceDigits);
+        if (!long.TryParse(pricePart, out var priceCents))
+            throw new ArgumentException("Unable to parse price digits.", nameof(ean13));
+        decimal price = priceCents / 100m;
+
         // Quiet zones (10 modules on each side recommended)
         int quiet = 10;
         int totalModules = quiet + modules.Length + quiet;
 
         int width = totalModules * scale;
-        int numberArea = includeNumbers ? Math.Max(16, (int)Math.Round(12 * (scale / 2.0))) : 0;
+
+        // We will always add the extra lines (Reol / pris)
+        int logicalLines = (includeNumbers ? 1 : 0) + 2;
+        float fontSizePx = 12f;
+        using var tmpTypeface = ResolveTypeface(new[] { "Segoe UI", "Arial", "Liberation Sans", "DejaVu Sans", "Noto Sans", "Ubuntu" });
+        using SKFont tmpFont = new(tmpTypeface, fontSizePx);
+        tmpFont.GetFontMetrics(out var tmpMetrics);
+        float singleLineHeight = tmpMetrics.Descent - tmpMetrics.Ascent;
+        float lineSpacing = 2f;
+        float totalTextHeight = logicalLines * singleLineHeight + (logicalLines - 1) * lineSpacing;
+        int numberArea = (int)Math.Ceiling(totalTextHeight + 4);
         int height = barHeight + numberArea;
 
         var info = new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
@@ -120,28 +139,45 @@ public sealed class Ean13BarcodeGenerator : IEan13Generator
             }
         }
 
-        // Draw digits centered under the barcode
-        if (includeNumbers)
+        // Draw text block (digits + Reol + pris)
+        using var typeface = ResolveTypeface(new[] { "Segoe UI", "Arial", "Liberation Sans", "DejaVu Sans", "Noto Sans", "Ubuntu" });
+        using SKFont font = new(typeface, fontSizePx);
+        using var textPaint = new SKPaint
         {
-            float fontSizePx = 12f;
-            using var typeface = ResolveTypeface(new[] { "Segoe UI", "Arial", "Liberation Sans", "DejaVu Sans", "Noto Sans", "Ubuntu" });
-            using SKFont font = new(typeface, fontSizePx);
-            using var textPaint = new SKPaint
-            {
-                Color = SKColors.Black,
-                IsAntialias = true,
-                Style = SKPaintStyle.Fill,
-            };
+            Color = SKColors.Black,
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
+        };
+        font.GetFontMetrics(out var metrics);
+        float textHeight = metrics.Descent - metrics.Ascent;
 
-            // Measure text
-            font.GetFontMetrics(out var metrics);
-            float textHeight = metrics.Descent - metrics.Ascent;
-            float textWidth = font.MeasureText(ean13, textPaint);
+        var culture = new CultureInfo("da-DK");
 
-            float tx = (width - textWidth) / 2f;
-            float tyBaseline = barHeight + Math.Max(0, (numberArea - textHeight) / 2f) - metrics.Ascent;
+        // Remove leading zeros from shelf (keep at least one digit)
+        string shelfDisplayRaw = shelfPart.TrimStart('0');
+        string shelfDisplay = string.IsNullOrEmpty(shelfDisplayRaw) ? "0" : shelfDisplayRaw;
 
-            canvas.DrawText(ean13, tx, tyBaseline, SKTextAlign.Left, font, textPaint);
+        string priceDisplay = price.ToString("0.00", culture);
+
+        var lines = new List<(string text, bool center)>
+        {
+            // Only include the raw EAN digits line if requested
+        };
+        if (includeNumbers)
+            lines.Add((ean13, true));
+
+        // Add requested custom lines
+        lines.Add(($"Reol: {shelfDisplay}", false));
+        lines.Add(($"pris {priceDisplay} kr,", false));
+
+        float currentBaseline = barHeight + 2 - metrics.Ascent;
+
+        foreach (var (text, center) in lines)
+        {
+            float textWidth = font.MeasureText(text, textPaint);
+            float tx = center ? (width - textWidth) / 2f : 4f;
+            canvas.DrawText(text, tx, currentBaseline, SKTextAlign.Left, font, textPaint);
+            currentBaseline += textHeight + lineSpacing;
         }
 
         using var image = surface.Snapshot();
