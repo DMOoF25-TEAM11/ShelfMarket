@@ -114,7 +114,7 @@
                                                 IsFlexible="False"
                                                 VerticalAlignment="Center"
                                                 SelectedDate="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    
+
                     <!-- Slut periode -->
                     <TextBlock Grid.Row="2" Text="Slut periode" HorizontalAlignment="Left" Style="{StaticResource Text.Label}"/>
                     <components:MonthYearPicker Grid.Row="3" 
@@ -122,6 +122,7 @@
                                                 IsFlexible="False"
                                                 VerticalAlignment="Center"
                                                 SelectedDate="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    
                 </Grid>                
             </StackPanel>
 
@@ -191,4 +192,3 @@
         </Grid>
     </Border>
 </UserControl>
- 

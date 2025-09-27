@@ -5,8 +5,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract.Services;
-using ShelfMarket.UI.Views.Windows;
 using ShelfMarket.UI.ViewModels;
+using ShelfMarket.UI.Views.Windows;
 
 namespace ShelfMarket.UI.Views.UserControls;
 
@@ -405,25 +405,26 @@ public partial class ShelfView : UserControl
     {
         if (!int.TryParse(button.Content?.ToString(), out var number)) return;
         var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
-        var overlay = mainWindow?.FindName("PopupOverlay") as Grid;
-        var info = mainWindow?.FindName("ShelfInfoPopupContent") as ShelfMarket.UI.Views.Windows.ShelfInfoWindow;
+        if (mainWindow == null) return;
+        var overlay = mainWindow.FindName("PopupOverlay") as Grid;
+        var info = mainWindow.FindName("ShelfInfoPopupContent") as ShelfMarket.UI.Views.Windows.ShelfInfoWindow;
         if (overlay != null && info != null)
         {
             // Skjul alle andre popup vinduer
             var addShelf = mainWindow.FindName("AddShelfPopupContent") as AddShelfWindow;
             if (addShelf != null) addShelf.Visibility = Visibility.Collapsed;
-            
+
             var addContract = mainWindow.FindName("AddContractPopupContent") as AddContractWindow;
             if (addContract != null) addContract.Visibility = Visibility.Collapsed;
-            
+
             var chooseShelfType = mainWindow.FindName("ChooseShelfTypePopupContent") as ChooseShelfTypeWindow;
             if (chooseShelfType != null) chooseShelfType.Visibility = Visibility.Collapsed;
-            
+
             // Get the shared ShelfViewModel instance
             var shelfViewModel = App.HostInstance.Services.GetRequiredService<ShelfViewModel>();
             info.SetShelfViewModel(shelfViewModel);
             info.SetShelfNumber(number);
-            
+
             // Vis ShelfInfoWindow
             overlay.Visibility = Visibility.Visible;
             info.Visibility = Visibility.Visible;
@@ -968,10 +969,10 @@ public partial class ShelfView : UserControl
                 // Skjul alle andre popup vinduer
                 var addContract = mainWindow.FindName("AddContractPopupContent") as AddContractWindow;
                 if (addContract != null) addContract.Visibility = Visibility.Collapsed;
-                
+
                 var shelfInfo = mainWindow.FindName("ShelfInfoPopupContent") as ShelfInfoWindow;
                 if (shelfInfo != null) shelfInfo.Visibility = Visibility.Collapsed;
-                
+
                 var chooseShelfType = mainWindow.FindName("ChooseShelfTypePopupContent") as ChooseShelfTypeWindow;
                 if (chooseShelfType != null) chooseShelfType.Visibility = Visibility.Collapsed;
 
@@ -999,13 +1000,13 @@ public partial class ShelfView : UserControl
                 // Skjul alle andre popup vinduer
                 var addShelf = mainWindow.FindName("AddShelfPopupContent") as AddShelfWindow;
                 if (addShelf != null) addShelf.Visibility = Visibility.Collapsed;
-                
+
                 var shelfInfo = mainWindow.FindName("ShelfInfoPopupContent") as ShelfInfoWindow;
                 if (shelfInfo != null) shelfInfo.Visibility = Visibility.Collapsed;
-                
+
                 var chooseShelfType = mainWindow.FindName("ChooseShelfTypePopupContent") as ChooseShelfTypeWindow;
                 if (chooseShelfType != null) chooseShelfType.Visibility = Visibility.Collapsed;
-                
+
                 // Vis AddContractWindow
                 overlay.Visibility = Visibility.Visible;
                 addContract.Visibility = Visibility.Visible;

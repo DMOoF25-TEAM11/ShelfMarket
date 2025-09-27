@@ -52,7 +52,7 @@ public class Ean13BarcodeGeneratorTests
         char wrong = (char)(((valid[^1] - '0' + 1) % 10) + '0');
         string invalid = valid[..12] + wrong;
 
-        Assert.ThrowsException<ArgumentException>(() => gen.RenderPng(invalid));
+        Assert.ThrowsExactly<ArgumentException>(() => gen.RenderPng(invalid));
     }
 
     [TestMethod]
@@ -61,7 +61,7 @@ public class Ean13BarcodeGeneratorTests
         var cts = new CancellationTokenSource();
         cts.Cancel();
 
-        await Assert.ThrowsExceptionAsync<TaskCanceledException>(async () =>
+        await Assert.ThrowsExactlyAsync<TaskCanceledException>(async () =>
         {
             await gen.RenderPngAsync("0000000000000", cancellationToken: cts.Token);
         });
@@ -70,12 +70,12 @@ public class Ean13BarcodeGeneratorTests
     [TestMethod]
     public void ComposeData12_InvalidDigitConfig_Throws()
     {
-        Assert.ThrowsException<ArgumentException>(() => gen.ComposeData12("1", 0m, 5, 5));
+        Assert.ThrowsExactly<ArgumentException>(() => gen.ComposeData12("1", 0m, 5, 5));
     }
 
     [TestMethod]
     public void ComputeCheckDigit_InvalidData12_Throws()
     {
-        Assert.ThrowsException<ArgumentException>(() => gen.ComputeCheckDigit("123"));
+        Assert.ThrowsExactly<ArgumentException>(() => gen.ComputeCheckDigit("123"));
     }
 }
