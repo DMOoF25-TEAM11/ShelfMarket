@@ -6,7 +6,7 @@
       xmlns:controls="clr-namespace:ShelfMarket.UI.Views.UserControls"
       xmlns:viewmodels="clr-namespace:ShelfMarket.UI.ViewModels"
       xmlns:components="clr-namespace:ShelfMarket.UI.Views.UserControls.Components"
-      d:DataContext="{d:DesignInstance Type=viewmodels:ShelfTenantContractViewModel}"
+      d:DataContext="{d:DesignInstance Type=viewmodels:ManagesShelfTenantContractViewModel}"
       mc:Ignorable="d">
 
     <Grid>
@@ -83,12 +83,12 @@
                         <TextBlock Text="{Binding SelectedItem.CancelledAt, StringFormat={}{0:yyyy-MM-dd}}"/>
                     </Grid>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Start" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Start dato" VerticalAlignment="Center" Margin="0,0,6,0"/>
                     <components:MonthYearPicker Grid.Row="1" Grid.Column="1"
                                                 SelectedDate="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 MaxHeight="25" MinWidth="200" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="3" Text="End" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="slut dato" VerticalAlignment="Center" Margin="0,0,6,0"/>
                     <components:MonthYearPicker Grid.Row="1" Grid.Column="4"
                                                 SelectedDate="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 MaxHeight="25" MinWidth="200" VerticalAlignment="Center"/>
@@ -113,15 +113,15 @@
                     Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVis}}">
                 <StackPanel>
                     <TextBlock Text="Kontrakt linjer" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                    <DataGrid ItemsSource="{Binding ContractLinesVM.Items}"
-                              SelectedItem="{Binding ContractLinesVM.SelectedItem, Mode=TwoWay}"
+                    <DataGrid ItemsSource="{Binding ContractLinesVM.LineDtos}"
+                              SelectedItem="{Binding ContractLinesVM.SelectedLineDto, Mode=TwoWay}"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               CanUserAddRows="False"
                               HeadersVisibility="Column">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Line #" Binding="{Binding LineNumber}" Width="SizeToHeader"/>
-                            <DataGridTextColumn Header="Shelf" Binding="{Binding ShelfId}" Width="*" />
+                            <DataGridTextColumn Header="Line #" Binding="{Binding LineNumber}" Width="50"/>
+                            <DataGridTextColumn Header="Shelf" Binding="{Binding ShelfNumber}" Width="80"/>
                             <DataGridTextColumn Header="Price/month" Binding="{Binding PricePerMonth, StringFormat={}{0:C}}" Width="Auto"/>
                             <DataGridTextColumn Header="Special" Binding="{Binding PricePerMonthSpecial, StringFormat={}{0:C}}" Width="Auto"/>
                         </DataGrid.Columns>

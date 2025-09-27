@@ -15,13 +15,9 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         _shelfRepository = App.HostInstance.Services.GetRequiredService<IShelfRepository>();
         _pricingRuleRepository = App.HostInstance.Services.GetRequiredService<IShelfPricingRuleRepository>();
 
-        // Refresh list after add/save/delete
         EntitySaved += async (_, __) => await RefreshAndUpdateNextLineNumberAsync();
 
-        // Initial loads
         _ = RefreshAndUpdateNextLineNumberAsync();
-        if (ParentContract != null) // avoid loading shelves before ParentContract is set
-            _ = LoadShelfOptionsAsync();
     }
 
     public ManagesShelfTenantContractLineViewModel(ShelfTenantContract contract, IShelfTenantContractLineRepository? selected = null)
@@ -29,19 +25,38 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
     {
         ParentContract = contract;
         ShelfTenantContractId = contract.Id ?? Guid.Empty;
-
-        // Now that ParentContract is set, load shelves for its date range
         _ = LoadShelfOptionsAsync();
+        _ = RefreshAndUpdateNextLineNumberAsync();
     }
 
-    #region Fields state
-    #endregion
+    public async Task SetParentContractAsync(ShelfTenantContract? contract)
+    {
+        if (contract == null)
+        {
+            ParentContract = null;
+            ShelfTenantContractId = Guid.Empty;
+            Items.Clear();
+            LineDtos.Clear();
+            return;
+        }
 
-    #region Properties
+        var newId = contract.Id ?? Guid.Empty;
+        var currentId = ParentContract?.Id ?? Guid.Empty;
+        if (newId == currentId && newId != Guid.Empty)
+            return;
+
+        ParentContract = contract;
+        ShelfTenantContractId = newId;
+
+        await RefreshAndUpdateNextLineNumberAsync();
+        await LoadShelfOptionsAsync();
+    }
+
+    #region Properties / Fields
     private readonly IShelfRepository _shelfRepository;
     private readonly IShelfPricingRuleRepository _pricingRuleRepository;
 
-    private IReadOnlyList<ShelfPricingRule>? _pricingRules; // cached
+    private IReadOnlyList<ShelfPricingRule>? _pricingRules;
     private int _highestTierStart = 0;
     private decimal _highestTierPrice = 0m;
 
@@ -54,7 +69,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
     #endregion
 
     #region Form Fields
-    // Options for dropdowns
     public ObservableCollection<AvailableShelf> Shelves { get; } = new();
 
     private Guid _shelfTenantContractId = Guid.Empty;
@@ -93,6 +107,61 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
     }
     #endregion
 
+    #region DTO Projection (for DataGrid)
+    public ObservableCollection<ShelfTenantContractLineDto> LineDtos { get; } = new();
+
+    private ShelfTenantContractLineDto? _selectedLineDto;
+    public ShelfTenantContractLineDto? SelectedLineDto
+    {
+        get => _selectedLineDto;
+        set
+        {
+            if (_selectedLineDto == value) return;
+            _selectedLineDto = value;
+            OnPropertyChanged();
+            // Sync entity selection so existing commands continue to work
+            if (value?.Id != null)
+                SelectedItem = Items.FirstOrDefault(i => i.Id == value.Id);
+            else
+                SelectedItem = null;
+        }
+    }
+
+    private async Task RebuildDtosAsync()
+    {
+        LineDtos.Clear();
+        if (Items.Count == 0)
+            return;
+
+        var shelfIds = Items.Select(i => i.ShelfId).Distinct().ToHashSet();
+        var allShelves = await _shelfRepository.GetAllAsync();
+        var shelfLookup = allShelves
+            .Where(s => s.Id.HasValue && shelfIds.Contains(s.Id.Value))
+            .ToDictionary(s => s.Id!.Value, s => s.Number);
+
+        foreach (var line in Items.OrderBy(l => l.LineNumber))
+        {
+            shelfLookup.TryGetValue(line.ShelfId, out var number);
+            LineDtos.Add(new ShelfTenantContractLineDto
+            {
+                Id = line.Id,
+                ShelfTenantContractId = line.ShelfTenantContractId,
+                ShelfId = line.ShelfId,
+                ShelfNumber = number,
+                LineNumber = line.LineNumber,
+                PricePerMonth = line.PricePerMonth,
+                PricePerMonthSpecial = line.PricePerMonthSpecial
+            });
+        }
+
+        // Keep SelectedLineDto in sync if possible
+        if (SelectedItem != null)
+        {
+            SelectedLineDto = LineDtos.FirstOrDefault(d => d.Id == SelectedItem.Id);
+        }
+    }
+    #endregion
+
     #region Load Handler
     protected override async Task<IEnumerable<ShelfTenantContractLine>> LoadItemsAsync()
     {
@@ -128,9 +197,8 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
 
             var availableShelves = await _shelfRepository.GetAvailableShelves(ParentContract.StartDate, ParentContract.EndDate);
             foreach (var shelf in availableShelves)
-            {
                 Shelves.Add(shelf);
-            }
+
             OnPropertyChanged(nameof(Shelves));
         }
         catch (Exception ex)
@@ -179,6 +247,7 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         Error = string.Empty;
         CurrentEntity = null;
         SelectedItem = null;
+        SelectedLineDto = null;
 
         ShelfTenantContractId = ParentContract?.Id ?? Guid.Empty;
         ShelfId = Guid.Empty;
@@ -195,7 +264,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         // Determine next price (do NOT retroactively change existing here)
         var existingCount = Items.Count(l => l.ShelfTenantContractId == ShelfTenantContractId);
         PricePerMonth = GetPriceForCount(existingCount + 1);
-
         PricePerMonthSpecial = null;
 
         await Task.CompletedTask;
@@ -276,19 +344,18 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         PricePerMonth = entity.PricePerMonth;
         PricePerMonthSpecial = entity.PricePerMonthSpecial;
 
+        // Sync DTO selection
+        SelectedLineDto = LineDtos.FirstOrDefault(d => d.Id == entity.Id);
+
         return Task.CompletedTask;
     }
     #endregion
-
-    //protected override void RefreshCommandStates()
-    //{
-    //    base.RefreshCommandStates();
-    //}
 
     #region Helpers
     private async Task RefreshAndUpdateNextLineNumberAsync()
     {
         await RefreshAsync();
+        await RebuildDtosAsync();
         await EnsurePricingRulesAsync();
 
         // Recalculate current price suggestion but do NOT override existing Items if already beyond best tier

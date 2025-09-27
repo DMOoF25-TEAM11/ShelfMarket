@@ -99,6 +99,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{5A48367B-8066-4746-8BC2-76CEA83A5F4B}"
 	ProjectSection(SolutionItems) = preProject
 		docs\sql\DDL.v1.sql = docs\sql\DDL.v1.sql
+		docs\sql\DML.v1-Fiktiive.sql = docs\sql\DML.v1-Fiktiive.sql
 		docs\sql\DML.v1.sql = docs\sql\DML.v1.sql
 		docs\sql\USP.v1.sql = docs\sql\USP.v1.sql
 		docs\sql\View.v1.sql = docs\sql\View.v1.sql
