@@ -80,10 +80,12 @@ public class EanLabelGeneratorViewModel : ModelBase
             }
             OnPropertyChanged(nameof(HasTenant));
             OnPropertyChanged(nameof(TenantDisplayName));
+            _ = LoadShelvesAsync(); // Refresh shelves after tenant search
         }
         catch (Exception ex)
         {
             Error = ex.Message;
+            _ = LoadShelvesAsync(); // Ensure shelves cleared on error
         }
         finally
         {
@@ -98,11 +100,12 @@ public class EanLabelGeneratorViewModel : ModelBase
         OnPropertyChanged(nameof(HasTenant));
         OnPropertyChanged(nameof(TenantDisplayName));
         (GenerateCommand as RelayCommand)?.RaiseCanExecuteChanged();
+        _ = LoadShelvesAsync(); // Clear shelves when tenant cleared
     }
     #endregion
 
     #region Shelves / Price
-    public ObservableCollection<int> Shelfs { get; } = new();
+    public ObservableCollection<int> ShelfNumbers { get; } = new();
 
     private int? _selectedShelf;
     public int? SelectedShelf
@@ -118,7 +121,7 @@ public class EanLabelGeneratorViewModel : ModelBase
         }
     }
 
-    private DateTime _selectedDate;
+    private DateTime _selectedDate = DateTime.Now;
     public DateTime SelectedDate
     {
         get => _selectedDate;
@@ -127,6 +130,7 @@ public class EanLabelGeneratorViewModel : ModelBase
             if (_selectedDate == value) return;
             _selectedDate = value;
             OnPropertyChanged();
+            _ = LoadShelvesAsync(); // Refresh shelves when date changes
         }
     }
 
@@ -220,10 +224,15 @@ public class EanLabelGeneratorViewModel : ModelBase
     {
         try
         {
-            Shelfs.Clear();
-            var all = await _shelfRepo.GetAllAsync();
+            ShelfNumbers.Clear();
+            if (_tenant?.Id == null)
+            {
+                // No tenant selected, nothing to load
+                return;
+            }
+            var all = await _shelfRepo.GetAvailableShelvesForTenantAsync(_tenant.Id.Value, SelectedDate);
             foreach (var s in all.OrderBy(s => s.Number))
-                Shelfs.Add(s.Number);
+                ShelfNumbers.Add(s.Number);
         }
         catch (Exception ex)
         {
