@@ -1,5 +1,4 @@
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.UI.ViewModels;
 
@@ -18,10 +17,10 @@ public partial class AddContractWindow : UserControl
     public AddContractWindow()
     {
         InitializeComponent();
-        
+
         // Per-popup scope to isolate DbContext lifetime
         _scope = App.HostInstance.Services.CreateScope();
-        DataContext = _scope.ServiceProvider.GetRequiredService<ManagesShelfTenantContractViewModel>();
+        DataContext ??= new AddContractWindowViewModel();
 
         Unloaded += (_, __) => _scope?.Dispose();
     }

@@ -11,8 +11,14 @@ GO
 USE [ShelfMarket_Dev];
 GO
 
+INSERT [dbo].[SHELFPRICINGRULES] ([Id], [MinShelvesInclusive], [PricePerShelf]) VALUES (N'1e8f4c3e-2d6e-4f4b-9a4e-0c5f1b6e7a8b', 1, 850)
+INSERT [dbo].[SHELFPRICINGRULES] ([Id], [MinShelvesInclusive], [PricePerShelf]) VALUES (N'2b7e6d4f-3c7f-4e5a-8b9c-1d2e3f4a5b6c', 2, 825)
+INSERT [dbo].[SHELFPRICINGRULES] ([Id], [MinShelvesInclusive], [PricePerShelf]) VALUES (N'3c8f7e5a-4d8f-5f6b-9c0d-2e3f4a5b6c7d', 4, 800)
+GO
+
 INSERT [dbo].[SHELFTYPE] ([Id], [Name], [Description]) VALUES (N'4aebd9cf-9cd7-4f6e-bb38-c79bf279334b', N'3 hylder og en stang', N'Egnet til tøj')
 INSERT [dbo].[SHELFTYPE] ([Id], [Name], [Description]) VALUES (N'bcc9f172-052f-466d-b63c-e9901a6fee7d', N'6 hylder', N'Standard reol')
+GO
 
 INSERT [dbo].[SHELF] ([Id], [Number], [ShelfTypeId], [LocationX], [LocationY], [OrientationHorizontal]) VALUES (N'0859434c-dff5-4947-9084-029bc1956543', 60, N'4aebd9cf-9cd7-4f6e-bb38-c79bf279334b', 3, 16, 1)
 INSERT [dbo].[SHELF] ([Id], [Number], [ShelfTypeId], [LocationX], [LocationY], [OrientationHorizontal]) VALUES (N'c0c8c483-6cd9-45db-9e74-0625fed3cd26', 41, N'bcc9f172-052f-466d-b63c-e9901a6fee7d', 7, 11, 1)
@@ -94,6 +100,7 @@ INSERT [dbo].[SHELF] ([Id], [Number], [ShelfTypeId], [LocationX], [LocationY], [
 INSERT [dbo].[SHELF] ([Id], [Number], [ShelfTypeId], [LocationX], [LocationY], [OrientationHorizontal]) VALUES (N'bfb4c96d-26cf-4348-a4d5-f8b98063239f', 12, N'bcc9f172-052f-466d-b63c-e9901a6fee7d', 0, 4, 0)
 INSERT [dbo].[SHELF] ([Id], [Number], [ShelfTypeId], [LocationX], [LocationY], [OrientationHorizontal]) VALUES (N'0bb5433c-11a0-480c-af64-f98898cdd070', 30, N'bcc9f172-052f-466d-b63c-e9901a6fee7d', 13, 7, 1)
 INSERT [dbo].[SHELF] ([Id], [Number], [ShelfTypeId], [LocationX], [LocationY], [OrientationHorizontal]) VALUES (N'867af828-011f-4fcd-88b9-fea0d18f6b8e', 78, N'bcc9f172-052f-466d-b63c-e9901a6fee7d', 4, 24, 0)
+GO
 
 INSERT [dbo].[SHELFTENANT] ([Id], [FirstName], [LastName], [Address], [PostalCode], [City], [Email], [PhoneNumber], [Status]) VALUES (N'f1e2d3c4-b5a6-4b7c-8d9e-0f1a2b3c4d5e', N'Anton', N'Mikkelsen', N'Third Street 3', N'9101', N'Odense', N'Anton@gmail.com', N'30303030', N'Inactive')
 INSERT [dbo].[SHELFTENANT] ([Id], [FirstName], [LastName], [Address], [PostalCode], [City], [Email], [PhoneNumber], [Status]) VALUES (N'd4a5e8f1-6c2b-4c3a-9f4e-1a2b3c4d5e6f', N'Louise', N'Ebersbach', N'Some Street 1', N'1234', N'Copenhagen', N'Louise@gmail.com', N'10101010', N'Active')

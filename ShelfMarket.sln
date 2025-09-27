@@ -24,7 +24,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docs\DatabaseSchema.md = docs\DatabaseSchema.md
 		docs\DCD -mvvm.mmd = docs\DCD -mvvm.mmd
 		docs\DCD.mmd = docs\DCD.mmd
-		docs\DDL.sql = docs\DDL.sql
 		docs\DomainModel.mmd = docs\DomainModel.mmd
 		docs\ER.mmd = docs\ER.mmd
 	EndProjectSection
@@ -81,12 +80,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase004-AdministrateSale
 	ProjectSection(SolutionItems) = preProject
 		docs\sprint-2\UseCase004-AdministrateSales\DCD.mmd = docs\sprint-2\UseCase004-AdministrateSales\DCD.mmd
 		docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd = docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd
-		C:\Users\HAJFA\Documents\Use Case004 - Administrerer salg - UCBrief.md = C:\Users\HAJFA\Documents\Use Case004 - Administrerer salg - UCBrief.md
-		C:\Users\HAJFA\Documents\Use Case004 - AdministrateSales - UserStory.md = C:\Users\HAJFA\Documents\Use Case004 - AdministrateSales - UserStory.md
-		C:\Users\HAJFA\Documents\Use Case004 - Administrerer salg - UCCasual.md = C:\Users\HAJFA\Documents\Use Case004 - Administrerer salg - UCCasual.md
-		Use Case004 - SD.mmd = Use Case004 - SD.mmd
-		Use Case004 - SSD.mmd = Use Case004 - SSD.mmd
-		C:\Users\HAJFA\Documents\Use Case004 - Operation Contract Sales.md = C:\Users\HAJFA\Documents\Use Case004 - Operation Contract Sales.md
+		C:\Users\HAJFA\Documents\UseCase004 - AdministrateSales - UserStory.md = C:\Users\HAJFA\Documents\UseCase004 - AdministrateSales - UserStory.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-3", "sprint-3", "{641EEC39-0EEA-4ED7-9D08-1D2BD751860F}"
