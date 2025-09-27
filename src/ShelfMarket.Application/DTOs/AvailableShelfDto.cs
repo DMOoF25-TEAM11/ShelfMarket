@@ -1,6 +1,6 @@
 ﻿namespace ShelfMarket.Application.DTOs;
 
-public class AvailableShelf
+public class AvailableShelfDto
 {
     public Guid Id { get; set; }
     public int Number { get; set; }

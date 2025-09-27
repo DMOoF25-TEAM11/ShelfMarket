@@ -69,7 +69,7 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
     #endregion
 
     #region Form Fields
-    public ObservableCollection<AvailableShelf> Shelves { get; } = new();
+    public ObservableCollection<AvailableShelfDto> Shelves { get; } = new();
 
     private Guid _shelfTenantContractId = Guid.Empty;
     public Guid ShelfTenantContractId
@@ -167,7 +167,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
     {
         var all = await _repository.GetAllAsync();
 
-        // If a parent contract is set, show only its lines
         if (ParentContract?.Id is Guid cid && cid != Guid.Empty)
             return all.Where(l => l.ShelfTenantContractId == cid)
                       .OrderBy(l => l.LineNumber);
@@ -185,7 +184,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
                 return;
             }
 
-            // Guard against SQL datetime overflow before calling repository
             var sqlMin = System.Data.SqlTypes.SqlDateTime.MinValue.Value.Date;
             if (ParentContract.StartDate.Date < sqlMin || ParentContract.EndDate.Date < sqlMin)
             {
@@ -252,7 +250,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         ShelfTenantContractId = ParentContract?.Id ?? Guid.Empty;
         ShelfId = Guid.Empty;
 
-        // Highest LineNumber among current contract's items (defaults to 1 if none)
         LineNumber = Items
             .Where(l => l.ShelfTenantContractId == ShelfTenantContractId)
             .Select(l => l.LineNumber)
@@ -261,7 +258,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
 
         await EnsurePricingRulesAsync();
 
-        // Determine next price (do NOT retroactively change existing here)
         var existingCount = Items.Count(l => l.ShelfTenantContractId == ShelfTenantContractId);
         PricePerMonth = GetPriceForCount(existingCount + 1);
         PricePerMonthSpecial = null;
@@ -275,8 +271,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         var newCount = existingCount + 1;
         var unitPrice = GetPriceForCount(newCount);
 
-        // Decide whether to adjust existing items:
-        // Only adjust if newCount unlocks a cheaper tier AND that tier is within defined rules.
         if (existingCount > 0 &&
             newCount <= _highestTierStart &&
             unitPrice < Items.Where(i => i.ShelfTenantContractId == ShelfTenantContractId).First().PricePerMonth)
@@ -286,7 +280,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         }
         else if (newCount <= _highestTierStart && unitPrice < _highestTierPrice)
         {
-            // If we reached the highest tier exactly, align all prices
             foreach (var line in Items.Where(i => i.ShelfTenantContractId == ShelfTenantContractId))
                 line.PricePerMonth = unitPrice;
         }
@@ -302,7 +295,7 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
 
         var shelfToRemove = Shelves.FirstOrDefault(s => s.Id == ShelfId);
         if (shelfToRemove != null)
-            _ = Shelves.Remove(shelfToRemove); // remove selected shelf from options
+            _ = Shelves.Remove(shelfToRemove);
 
         return Task.FromResult(entity);
     }
@@ -325,7 +318,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         var countForContract = Items.Count(l => l.ShelfTenantContractId == ShelfTenantContractId);
         var unit = GetPriceForCount(countForContract);
 
-        // Only set if within rule scope (do not lower if already beyond best tier and prices set)
         if (countForContract <= _highestTierStart || unit == _highestTierPrice)
             CurrentEntity.PricePerMonth = unit;
 
@@ -358,7 +350,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         await RebuildDtosAsync();
         await EnsurePricingRulesAsync();
 
-        // Recalculate current price suggestion but do NOT override existing Items if already beyond best tier
         var contractItems = Items.Where(l => l.ShelfTenantContractId == ShelfTenantContractId).ToList();
         var count = contractItems.Count;
 
@@ -401,7 +392,6 @@ public class ManagesShelfTenantContractLineViewModel : ManagesListViewModelBase<
         if (_pricingRules == null || _pricingRules.Count == 0)
             return PricePerMonth > 0 ? PricePerMonth : 0m;
 
-        // Find last rule whose MinShelvesInclusive <= count
         var rule = _pricingRules
             .Where(r => r.MinShelvesInclusive <= count)
             .OrderBy(r => r.MinShelvesInclusive)
