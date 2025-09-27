@@ -10,13 +10,21 @@ namespace ShelfMarket.UI.ViewModels;
 
 public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShelfTenantContractRepository, ShelfTenantContract>
 {
-    public ManagesShelfTenantContractViewModel(IShelfTenantContractRepository? selected = null)
+    // Remove the DbContext sharing semaphore (no longer needed when using short‑lived scopes)
+    private readonly object _refreshQueueLock = new();
+    private Task _refreshQueue = Task.CompletedTask;
+    private readonly IServiceScopeFactory _scopeFactory;
+
+    public ManagesShelfTenantContractViewModel(
+        IShelfTenantContractRepository? selected = null,
+        IServiceScopeFactory? scopeFactory = null)
         : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfTenantContractRepository>())
     {
+        _scopeFactory = scopeFactory ?? App.HostInstance.Services.GetRequiredService<IServiceScopeFactory>();
+
         EntitySaved += async (_, entity) =>
         {
-            await RefreshAsync();
-
+            EnqueueRefresh();
             if (_lastOperationWasAdd && entity is ShelfTenantContract c)
             {
                 _lastOperationWasAdd = false;
@@ -26,11 +34,10 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
 
         CancelContractCommand = new RelayCommand(async () => await CancelContractAsync(), CanCancelContract);
 
-        // Set initial form values
         StartDate = FirstOfMonth(DateTime.Now);
         EndDate = StartDate.AddMonths(1);
 
-        _ = RefreshAsync();
+        EnqueueRefresh();
     }
 
     public ManagesShelfTenantContractViewModel(ShelfTenant shelfTenant, IShelfTenantContractRepository? selected = null)
@@ -42,6 +49,8 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
 
     #region Fields state
     private bool _lastOperationWasAdd;
+
+    public ManagesShelfTenantContractLineViewModel ContractLinesVM { get; } = new();
     #endregion
 
     #region Properties
@@ -55,7 +64,7 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
             _shelfTenant = value;
             OnPropertyChanged();
             ShelfTenantId = _shelfTenant?.Id ?? Guid.Empty;
-            _ = RefreshAsync();
+            // Removed extra direct refresh; ShelfTenantId setter already schedules one.
         }
     }
 
@@ -115,7 +124,7 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
             _shelfTenantId = value;
             OnPropertyChanged();
             RefreshCommandStates();
-            _ = RefreshAsync();
+            EnqueueRefresh(); // replaces _ = RefreshAsync();
         }
     }
 
@@ -130,13 +139,19 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
     #region Load handlers
     protected override async Task<IEnumerable<ShelfTenantContract>> LoadItemsAsync()
     {
-        var all = await _repository.GetAllAsync();
+        // Create a fresh scope (and thus a fresh DbContext) per call to avoid cross-thread DbContext usage
+        using var scope = _scopeFactory.CreateScope();
+        var repo = scope.ServiceProvider.GetRequiredService<IShelfTenantContractRepository>();
+        var all = await repo.GetAllAsync(); // MUST fully materialize inside repository (ensure it returns a List)
         var tenantId = ShelfTenant?.Id ?? ShelfTenantId;
         if (tenantId != Guid.Empty)
-            return all.Where(i => i.ShelfTenantId == tenantId)
-                      .OrderBy(i => i.StartDate);
-
-        return [];
+        {
+            return all
+                .Where(i => i.ShelfTenantId == tenantId)
+                .OrderBy(i => i.StartDate)
+                .ToList();
+        }
+        return Array.Empty<ShelfTenantContract>();
     }
     #endregion
 
@@ -162,10 +177,18 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
 
         CurrentEntity = item;
         IsEditMode = item != null;
+
         if (item != null)
+        {
             await OnLoadFormAsync(item);
+            await ContractLinesVM.SetParentContractAsync(item); // NEW
+        }
         else
+        {
             await OnResetFormAsync();
+            await ContractLinesVM.SetParentContractAsync(null); // NEW (clears)
+        }
+
         OnPropertyChanged(nameof(IsContractCancelled));
         OnPropertyChanged(nameof(IsContractActive));
         RefreshCommandStates();
@@ -245,22 +268,42 @@ public class ManagesShelfTenantContractViewModel : ManagesListViewModelBase<IShe
     private async Task CancelContractAsync()
     {
         if (SelectedItem is null) return;
-
         try
         {
             Error = string.Empty;
             SelectedItem.CancelledAt = DateTime.Today;
             CancelledAt = SelectedItem.CancelledAt;
 
-            await _repository.UpdateAsync(SelectedItem);
+            using var scope = _scopeFactory.CreateScope();
+            var repo = scope.ServiceProvider.GetRequiredService<IShelfTenantContractRepository>();
+            await repo.UpdateAsync(SelectedItem);
+
             OnPropertyChanged(nameof(IsContractCancelled));
             OnPropertyChanged(nameof(IsContractActive));
             (CancelContractCommand as RelayCommand)?.RaiseCanExecuteChanged();
-            await RefreshAsync();
+            EnqueueRefresh();
         }
         catch (Exception ex)
         {
             Error = ex.Message;
+        }
+    }
+
+    // Queue-based refresh (no semaphore now; each refresh uses its own scope)
+    private void EnqueueRefresh()
+    {
+        var dispatcher = System.Windows.Application.Current?.Dispatcher;
+        lock (_refreshQueueLock)
+        {
+            _refreshQueue = _refreshQueue
+                .ContinueWith(async _ =>
+                {
+                    if (dispatcher != null && !dispatcher.CheckAccess())
+                        await dispatcher.InvokeAsync(async () => await RefreshAsync());
+                    else
+                        await RefreshAsync();
+                }, TaskScheduler.Default)
+                .Unwrap();
         }
     }
 
