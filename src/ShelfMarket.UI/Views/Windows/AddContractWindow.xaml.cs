@@ -1,34 +1,28 @@
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ShelfMarket.UI.Views.Windows;
 
+/// <summary>
+/// Contract creation popup.
+/// Uses a per-popup IServiceScope to resolve its ViewModel so the DbContext lifetime
+/// is isolated from other screens, avoiding cross-thread DbContext reuse.
+/// The scope is disposed on Unloaded.
+/// </summary>
 public partial class AddContractWindow : UserControl
 {
+    private readonly IServiceScope _scope;
+
     public AddContractWindow()
     {
         InitializeComponent();
+
+        // Per-popup scope to isolate DbContext lifetime
+        _scope = App.HostInstance.Services.CreateScope();
+        DataContext ??= new ShelfTenantContractViewModel();
+
+        Unloaded += (_, __) => _scope?.Dispose();
     }
 
-    private void Close_Click(object sender, RoutedEventArgs e)
-    {
-        var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
-        var overlay = mainWindow?.FindName("PopupOverlay") as Grid;
-        if (overlay != null)
-        {
-            overlay.Visibility = Visibility.Collapsed;
-        }
-    }
-
-    private void ChooseShelves_Click(object sender, RoutedEventArgs e)
-    {
-        // Luk overlay og tilbage til kortet, så brugeren kan vælge reoler
-        var mainWindow = System.Windows.Application.Current.MainWindow as MainWindow;
-        var overlay = mainWindow?.FindName("PopupOverlay") as Grid;
-        if (overlay != null)
-        {
-            overlay.Visibility = Visibility.Collapsed;
-        }
-        // Eventuel ekstra logik kan tilføjes her (gem midlertidig form state i VM)
-    }
+    // Click handlers are no longer needed - using Commands instead
 }
