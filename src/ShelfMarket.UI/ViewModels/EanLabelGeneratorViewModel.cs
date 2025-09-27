@@ -12,7 +12,7 @@ using ShelfMarket.UI.ViewModels.Abstracts;
 
 namespace ShelfMarket.UI.ViewModels;
 
-public class EanLabelGeneratorViewModel : ModelBase
+public partial class EanLabelGeneratorViewModel : PrintableViewModelBase
 {
     private readonly IEan13Generator _generator;
     private readonly IShelfTenantRepository _tenantRepo;
@@ -21,7 +21,6 @@ public class EanLabelGeneratorViewModel : ModelBase
     public EanLabelGeneratorViewModel(IEan13Generator generator)
     {
         _generator = generator;
-        // resolve repos
         _tenantRepo = App.HostInstance.Services.GetRequiredService<IShelfTenantRepository>();
         _shelfRepo = App.HostInstance.Services.GetRequiredService<IShelfRepository>();
 
@@ -147,6 +146,11 @@ public class EanLabelGeneratorViewModel : ModelBase
             (GenerateCommand as RelayCommand)?.RaiseCanExecuteChanged();
         }
     }
+
+    // REMOVE old observable backing fields for labelWidthMm, labelHeightMm, barcodeImage, canPrint (moved to base)
+
+    // OVERRIDE image provider for PrintableViewModelBase
+    protected override ImageSource? GetImageToPrint() => BarcodeImage;
     #endregion
 
     #region Outputs
@@ -211,11 +215,32 @@ public class EanLabelGeneratorViewModel : ModelBase
             Ean = code;
             var bytes = await _generator.RenderPngAsync(code, scale: 3, barHeight: 60, includeNumbers: true);
             BarcodeImage = ToImage(bytes);
+            UpdateBarcode(code);
+            RefreshPrintState(); // update print availability
         }
         catch (Exception ex)
         {
             Error = ex.Message;
         }
+    }
+
+    private void UpdateBarcode(string ean13)
+    {
+        var bytes = _generator.RenderPng(
+            ean13,
+            scale: 3,
+            barHeight: 60,
+            includeNumbers: true
+        );
+        using var ms = new MemoryStream(bytes);
+        var bmp = new BitmapImage();
+        bmp.BeginInit();
+        bmp.CacheOption = BitmapCacheOption.OnLoad;
+        bmp.StreamSource = ms;
+        bmp.EndInit();
+        bmp.Freeze();
+        BarcodeImage = bmp;
+        RefreshPrintState();
     }
     #endregion
 

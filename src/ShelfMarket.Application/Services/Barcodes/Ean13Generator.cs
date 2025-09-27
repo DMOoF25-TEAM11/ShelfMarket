@@ -8,6 +8,7 @@ namespace ShelfMarket.Application.Services.Barcodes;
 // Defaults: shelf=6 digits, price=6 digits -> 12 data digits + 1 check digit.
 public sealed class Ean13BarcodeGenerator : IEan13Generator
 {
+
     // L (odd), G (even), R patterns
     private static readonly string[] L =
     [
@@ -96,93 +97,149 @@ public sealed class Ean13BarcodeGenerator : IEan13Generator
             throw new ArgumentException("Unable to parse price digits.", nameof(ean13));
         decimal price = priceCents / 100m;
 
-        // Quiet zones (10 modules on each side recommended)
+        // Quiet zones (10 modules each side)
         int quiet = 10;
         int totalModules = quiet + modules.Length + quiet;
-
         int width = totalModules * scale;
 
-        // We will always add the extra lines (Reol / pris)
-        int logicalLines = (includeNumbers ? 1 : 0) + 2;
-        float fontSizePx = 12f;
-        using var tmpTypeface = ResolveTypeface(new[] { "Segoe UI", "Arial", "Liberation Sans", "DejaVu Sans", "Noto Sans", "Ubuntu" });
-        using SKFont tmpFont = new(tmpTypeface, fontSizePx);
-        tmpFont.GetFontMetrics(out var tmpMetrics);
-        float singleLineHeight = tmpMetrics.Descent - tmpMetrics.Ascent;
-        float lineSpacing = 2f;
-        float totalTextHeight = logicalLines * singleLineHeight + (logicalLines - 1) * lineSpacing;
-        int numberArea = (int)Math.Ceiling(totalTextHeight + 4);
-        int height = barHeight + numberArea;
+        // Header (single line) configuration
+        float headerFontSize = 24f;
+        var families = new[] { "Segoe UI", "Arial", "Liberation Sans", "DejaVu Sans", "Noto Sans", "Ubuntu" };
+        var normalTypeface = ResolveTypeface(families);
+
+        // Try to find a bold variant
+        SKTypeface boldTypeface = normalTypeface;
+        foreach (var f in families)
+        {
+            var candidate = SKTypeface.FromFamilyName(f, SKFontStyle.Bold);
+            if (candidate != null)
+            {
+                boldTypeface = candidate;
+                break;
+            }
+        }
+
+        using SKFont fontNormal = new(normalTypeface, headerFontSize);
+        using SKFont fontBold = new(boldTypeface, headerFontSize);
+
+        fontNormal.GetFontMetrics(out var normalMetrics);
+        fontBold.GetFontMetrics(out var boldMetrics);
+
+        // Compute composite line metrics
+        float ascent = Math.Min(normalMetrics.Ascent, boldMetrics.Ascent);   // Ascent values are negative
+        float descent = Math.Max(normalMetrics.Descent, boldMetrics.Descent);
+        float lineHeight = descent - ascent;
+        float headerPaddingTop = 4f;
+        float headerPaddingBottom = 6f;
+        float headerAreaHeight = headerPaddingTop + lineHeight + headerPaddingBottom;
+
+        // Digits line (optional)
+        float digitsFontSize = 12f;
+        int digitsAreaHeight = 0;
+        SKFont? digitsFont = null;
+        SKFontMetrics digitsMetrics = default;
+
+        if (includeNumbers)
+        {
+            digitsFont = new SKFont(normalTypeface, digitsFontSize);
+            digitsFont.GetFontMetrics(out digitsMetrics);
+            float digitsLineHeight = digitsMetrics.Descent - digitsMetrics.Ascent;
+            digitsAreaHeight = (int)Math.Ceiling(digitsLineHeight + 6);
+        }
+
+        int height = (int)Math.Ceiling(headerAreaHeight) + barHeight + digitsAreaHeight;
 
         var info = new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
         using var surface = SKSurface.Create(info);
         var canvas = surface.Canvas;
         canvas.Clear(SKColors.White);
 
-        // Draw bars
-        using (var paint = new SKPaint
-        {
-            Color = SKColors.Black,
-            IsAntialias = false,
-            Style = SKPaintStyle.Fill
-        })
+        // Prepare header text parts
+        var culture = new CultureInfo("da-DK");
+        string shelfDisplayRaw = shelfPart.TrimStart('0');
+        string shelfDisplay = string.IsNullOrEmpty(shelfDisplayRaw) ? "0" : shelfDisplayRaw;
+        string priceDisplay = price.ToString("0.00", culture);
+
+        string part1 = $"Reol: {shelfDisplay}  ";
+        string part2 = $"Pris {priceDisplay} kr."; // 'pris' (whole phrase) bold as requested
+
+        using var paintNormal = new SKPaint { Color = SKColors.Black, IsAntialias = true };
+        using var paintBold = new SKPaint { Color = SKColors.Black, IsAntialias = true };
+
+        float baseline = headerPaddingTop - ascent; // ascent is negative
+        float headerX = 4f;
+
+        // Draw first (normal) part
+        float part1Width = fontNormal.MeasureText(part1, paintNormal);
+        canvas.DrawText(part1, headerX, baseline, SKTextAlign.Left, fontNormal, paintNormal);
+
+        // Draw second (bold) part
+        canvas.DrawText(part2, headerX + part1Width, baseline, SKTextAlign.Left, fontBold, paintBold);
+
+        // Bars start after header
+        int barsTop = (int)Math.Ceiling(headerAreaHeight);
+        using (var barPaint = new SKPaint { Color = SKColors.Black, IsAntialias = false, Style = SKPaintStyle.Fill })
         {
             int x = quiet * scale;
             for (int i = 0; i < modules.Length; i++)
             {
                 if (modules[i] == '1')
                 {
-                    var rect = new SKRect(x, 0, x + scale, barHeight);
-                    canvas.DrawRect(rect, paint);
+                    var rect = new SKRect(x, barsTop, x + scale, barsTop + barHeight);
+                    canvas.DrawRect(rect, barPaint);
                 }
                 x += scale;
             }
         }
 
-        // Draw text block (digits + Reol + pris)
-        using var typeface = ResolveTypeface(new[] { "Segoe UI", "Arial", "Liberation Sans", "DejaVu Sans", "Noto Sans", "Ubuntu" });
-        using SKFont font = new(typeface, fontSizePx);
-        using var textPaint = new SKPaint
+        // Optional EAN digits below
+        if (includeNumbers && digitsFont != null)
         {
-            Color = SKColors.Black,
-            IsAntialias = true,
-            Style = SKPaintStyle.Fill,
-        };
-        font.GetFontMetrics(out var metrics);
-        float textHeight = metrics.Descent - metrics.Ascent;
-
-        var culture = new CultureInfo("da-DK");
-
-        // Remove leading zeros from shelf (keep at least one digit)
-        string shelfDisplayRaw = shelfPart.TrimStart('0');
-        string shelfDisplay = string.IsNullOrEmpty(shelfDisplayRaw) ? "0" : shelfDisplayRaw;
-
-        string priceDisplay = price.ToString("0.00", culture);
-
-        var lines = new List<(string text, bool center)>
-        {
-            // Only include the raw EAN digits line if requested
-        };
-        if (includeNumbers)
-            lines.Add((ean13, true));
-
-        // Add requested custom lines
-        lines.Add(($"Reol: {shelfDisplay}", false));
-        lines.Add(($"pris {priceDisplay} kr,", false));
-
-        float currentBaseline = barHeight + 2 - metrics.Ascent;
-
-        foreach (var (text, center) in lines)
-        {
-            float textWidth = font.MeasureText(text, textPaint);
-            float tx = center ? (width - textWidth) / 2f : 4f;
-            canvas.DrawText(text, tx, currentBaseline, SKTextAlign.Left, font, textPaint);
-            currentBaseline += textHeight + lineSpacing;
+            using var digitsPaint = new SKPaint { Color = SKColors.Black, IsAntialias = true };
+            float digitsBaseline = barsTop + barHeight + 2 - digitsMetrics.Ascent;
+            float textWidth = digitsFont.MeasureText(ean13, digitsPaint);
+            float tx = (width - textWidth) / 2f;
+            canvas.DrawText(ean13, tx, digitsBaseline, SKTextAlign.Left, digitsFont, digitsPaint);
         }
 
         using var image = surface.Snapshot();
         using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        digitsFont?.Dispose();
         return data.ToArray();
+    }
+
+    // New overload to render scaled to a target physical label size
+    public byte[] RenderPng(string ean13,
+                            double targetWidthMm,
+                            double targetHeightMm,
+                            int dpi = 300,
+                            bool includeNumbers = true)
+    {
+        if (targetWidthMm <= 0 || targetHeightMm <= 0) throw new ArgumentOutOfRangeException("Label dimensions must be > 0.");
+        if (dpi < 72) throw new ArgumentOutOfRangeException(nameof(dpi));
+        ValidateEan13(ean13);
+
+        string modules = EncodeModules(ean13);
+        int quiet = 10;
+        int totalModules = quiet + modules.Length + quiet;
+
+        // Convert mm to pixels
+        double targetWidthPx = targetWidthMm / 25.4 * dpi;
+        double targetHeightPx = targetHeightMm / 25.4 * dpi;
+
+        // Choose module scale so barcode fits width
+        int scale = (int)Math.Floor(targetWidthPx / totalModules);
+        if (scale < 1) scale = 1;
+
+        // Reserve ~65% of height to bars (heuristic)
+        int barHeight = (int)Math.Round(targetHeightPx * 0.65);
+        if (barHeight < 30) barHeight = 30;
+
+        // Render with existing logic (falls back to previous method)
+        var png = RenderPng(ean13, scale, barHeight, includeNumbers);
+
+        // If final width is smaller than target, that's acceptable; exact stretching done at print time if needed
+        return png;
     }
 
     public Task<byte[]> RenderPngAsync(string ean13, int scale = 3, int barHeight = 60, bool includeNumbers = true, CancellationToken cancellationToken = default)
