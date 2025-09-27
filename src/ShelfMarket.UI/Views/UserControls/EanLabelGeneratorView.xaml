@@ -17,7 +17,7 @@
 
         <!-- Form -->
         <StackPanel Orientation="Horizontal">
-            <!-- Tenant email search (replaces tenant dropdown) -->
+            <!-- Tenant email -->
             <StackPanel>
                 <TextBlock Text="Lejer email" Margin="0,0,0,4"/>
                 <StackPanel Orientation="Horizontal">
@@ -31,12 +31,8 @@
                             Margin="6,0,0,0"
                             Command="{Binding ClearTenantCommand}"/>
                 </StackPanel>
-                <TextBlock Text="{Binding SearchResultMessage}"
-                           Margin="0,4,0,0"
-                           Foreground="#555"/>
-                <TextBlock Text="{Binding TenantDisplayName}"
-                           Margin="0,2,0,0"
-                           FontWeight="SemiBold"
+                <TextBlock Text="{Binding SearchResultMessage}" Margin="0,4,0,0" Foreground="#555"/>
+                <TextBlock Text="{Binding TenantDisplayName}" Margin="0,2,0,0" FontWeight="SemiBold"
                            Visibility="{Binding HasTenant, Converter={StaticResource BoolToVis}}"/>
             </StackPanel>
 
@@ -66,6 +62,11 @@
                     Margin="16,16,0,0"
                     Padding="14,6"
                     Command="{Binding GenerateCommand}"/>
+            <Button Content="Print"
+                    Margin="6,16,0,0"
+                    Padding="14,6"
+                    Command="{Binding PrintCommand}"
+                    IsEnabled="{Binding CanPrint}"/>
         </StackPanel>
 
         <!-- Preview -->
@@ -82,11 +83,11 @@
                         <TextBlock Text="{Binding ShelfDisplay}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Pris:" FontWeight="SemiBold" Margin="0,0,4,0"/>
+                        <TextBlock Text="Pris:" FontWeight="SemiBold" Margin="16,0,4,0"/>
                         <TextBlock Text="{Binding PriceDisplay}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="EAN:" FontWeight="SemiBold" Margin="0,0,4,0"/>
+                        <TextBlock Text="EAN:" FontWeight="SemiBold" Margin="16,0,4,0"/>
                         <TextBlock Text="{Binding Ean}" FontFamily="Consolas"/>
                     </StackPanel>
                 </StackPanel>
