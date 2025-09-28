@@ -1,76 +1,92 @@
 ﻿erDiagram
     VERSIONINFO {
-        Guid Id
+        int Id
         string Version
         datetime AppliedAt
     }
 
     COMPANYINFO {
-        Guid Id
+        guid Id
         string Name
         string Address
         string PostalCode
         string City
         string Email
         string PhoneNumber
+        string CvrNumber
         boolean IsTaxRegistered
         boolean IsTaxUsedItem
     }
 
-    SHELFTYPE {
-        Guid Id
-        string Name
-    }
-
-    SHELF {
-        Guid Id
-        string Number
-        Guid ShelfTypeId
-    }
-
-    SHELFTENANT {
-        Guid Id
-        string FirstName
-        string LastName
-        string Email
-        string Status
-    }
-
-    SHELFTENANTCONTRACT {
-        Guid Id
-        Guid ShelfTenantId
-        string ContractNumber
-        date StartDate
-        date EndDate
-        datetime CancelledAt
-    }
-
-    SHELFTENANTCONTRACTLINE {
-        Guid Id
-        Guid ShelfTenantContractId
-        Guid ShelfId
-        int LineNumber
-        decimal PricePerMonth
-        decimal PricePerMonthSpecial
-    }
-
-    SHELFPRICINGRULES {
-        Guid Id
-        int MinShelvesInclusive
-        decimal PricePerShelf
-    }
-
-    TAXRATES {
-        Guid Id
+    VATRATES {
+        guid Id
         string Name
         decimal RatePercent
         date EffectiveFrom
         date EffectiveTo
     }
 
+    COMMISSION {
+        guid Id
+        float RateProcent
+        date EffectiveFrom
+        date EffectiveTo
+    }
+
+    SHELFTYPE {
+        guid Id
+        string Name
+        string Description
+    }
+
+    SHELF {
+        guid Id
+        int Number
+        guid ShelfTypeId
+        int LocationX
+        int LocationY
+        boolean OrientationHorizontal
+    }
+
+    SHELFTENANT {
+        guid Id
+        string FirstName
+        string LastName
+        string Address
+        string PostalCode
+        string City
+        string Email
+        string PhoneNumber
+        string Status
+    }
+
+    SHELFTENANTCONTRACT {
+        guid Id
+        guid ShelfTenantId
+        int ContractNumber
+        date StartDate
+        date EndDate
+        date CancelledAt
+    }
+
+    SHELFTENANTCONTRACTLINE {
+        guid Id
+        guid ShelfTenantContractId
+        guid ShelfId
+        int LineNumber
+        decimal PricePerMonth
+        decimal PricePerMonthSpecial
+    }
+
+    SHELFPRICINGRULES {
+        guid Id
+        int MinShelvesInclusive
+        decimal PricePerShelf
+    }
+
     SALESRECEIPT {
-        Guid Id
-        string ReceiptNumber
+        guid Id
+        int ReceiptNumber
         datetime IssuedAt
         decimal TotalAmount
         decimal TaxAmount
@@ -79,9 +95,11 @@
     }
 
     SALESRECEIPTLINE {
-        Guid Id
-        Guid SalesReceiptId
-        string ShelfNumber
+        guid Id
+        guid SalesReceiptId
+        guid VatRatesId
+        guid CommisionId
+        guid ShelfId
         decimal UnitPrice
     }
 
@@ -90,8 +108,6 @@
     SHELFTENANTCONTRACT ||--o{ SHELFTENANTCONTRACTLINE : has
     SHELF ||--o{ SHELFTENANTCONTRACTLINE : referenced
     SALESRECEIPT ||--o{ SALESRECEIPTLINE : has
-    SHELFTENANTCONTRACT ||--o{ SALESRECEIPT : source
-    TAXRATES ||--o{ SALESRECEIPTLINE : taxes
-    SHELFPRICINGRULES ||--o{ SHELFTENANTCONTRACTLINE : pricing
-    COMPANYINFO ||--o{ SALESRECEIPT : issuer
-
+    VATRATES ||--o{ SALESRECEIPTLINE : referenced
+    COMMISSION ||--o{ SALESRECEIPTLINE : referenced
+    SHELF ||--o{ SALESRECEIPTLINE : referenced
