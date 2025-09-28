@@ -22,9 +22,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93399C27-1127-489C-9E8F-7C803315DE2A}"
 	ProjectSection(SolutionItems) = preProject
 		docs\DatabaseSchema.md = docs\DatabaseSchema.md
-		docs\DCD -mvvm.mmd = docs\DCD -mvvm.mmd
 		docs\DCD.mmd = docs\DCD.mmd
-		docs\DDL.sql = docs\DDL.sql
+		docs\DCD-mvvm.mmd = docs\DCD-mvvm.mmd
 		docs\DomainModel.mmd = docs\DomainModel.mmd
 		docs\ER.mmd = docs\ER.mmd
 		README.md = README.md
