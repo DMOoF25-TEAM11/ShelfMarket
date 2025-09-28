@@ -349,7 +349,7 @@ INSERT dbo.SHELFTENANTCONTRACTLINE VALUES
 INSERT dbo.SHELFTENANTCONTRACT VALUES ('20000000-0000-0000-0000-000000000020','21b3c4d5-e6f7-489a-abcd-ef0123456702','2025-02-01','2025-04-30',NULL);
 INSERT dbo.SHELFTENANTCONTRACTLINE VALUES
  ('20000000-0000-0000-0020-000000000001','20000000-0000-0000-0000-000000000020','64f4d5d3-3b56-4666-ba9e-4f64cf7be3fc',1,825.00,NULL),
- ('20000000-0000-0000-0020-000000000002','20000000-0000-0000-0000-000000000020','44100bfd-1bb9-4703-bf46-512baa1fc9a4',2,825.00,NULL);
+ ('20000000-0000-0000-0020-000000000002','20000000-0000-0000-0000-000000000020','44100bfd-1bb9-4703-bf46-512baa1fc9a4',2,825.00,null);
 
 INSERT dbo.SHELFTENANTCONTRACT VALUES ('20000000-0000-0000-0000-000000000021','21b3c4d5-e6f7-489a-abcd-ef0123456702','2025-05-01','2025-07-31',NULL);
 INSERT dbo.SHELFTENANTCONTRACTLINE VALUES
@@ -528,8 +528,8 @@ SELECT @DayCount = COUNT(*) FROM #Calendar;
 PRINT CONCAT('Generating ', @ReceiptCount, ' sales receipts over ', @DayCount, ' sales days.');
 
 /* Insert receipts (totals updated later) */
-INSERT dbo.SALESRECEIPT (Id, IssuedAt, PaidByCash, PaidByMobile)
-SELECT ReceiptId, IssuedAt, PaidByCash, PaidByMobile
+INSERT dbo.SALESRECEIPT (Id, IssuedAt, TotalAmount, VatAmount, PaidByCash, PaidByMobile)
+SELECT ReceiptId, IssuedAt, 0.00, 0.00, PaidByCash, PaidByMobile
 FROM #ReceiptSeed
 ORDER BY DateValue, IssuedAt, ReceiptId;  -- Ensures sequential chronological ReceiptNumber
 GO
@@ -591,4 +591,203 @@ INSERT dbo.SALESRECEIPTLINE (Id, ShelfNumber, SalesReceiptId, UnitPrice)
 SELECT LineId, ShelfNumber, SalesReceiptId, UnitPrice
 FROM #SalesLines;
 
+/* Update totals & tax (VAT 25% => 25/125 of gross) */
+WITH Totals AS (
+    SELECT SalesReceiptId,
+           Gross = SUM(UnitPrice)
+    FROM #SalesLines
+    GROUP BY SalesReceiptId
+)
+UPDATE r
+SET r.TotalAmount = t.Gross,
+    r.VatAmount   = ROUND(t.Gross * 25.00 / 125.00, 2)
+FROM dbo.SALESRECEIPT r
+JOIN Totals t ON t.SalesReceiptId = r.Id;
+
+PRINT 'Sales receipt generation complete.';
 SET NOCOUNT OFF;
+
+/***************************************************************************************************
+  REVISED VAT / COMMISSION TAX CALCULATION
+  Business Rule:
+    - Shelf/customer PRICE (UnitPrice) already includes COMMISSION.
+    - COMMISSION itself is VAT-inclusive (you only remit VAT on the commission portion).
+  Model (commission defined as % of seller net, embedded in price):
+      Let:
+         P  = UnitPrice (customer pays this)
+         c  = Commission rate percent (e.g. 10)
+         v  = VAT rate (e.g. 25% expressed as 0.25)
+      Decomposition:
+         SellerNet = P / (1 + c/100)
+         CommissionGross = P - SellerNet = P * c / (100 + c)
+         VAT (remitted) = CommissionGross * v / (1 + v)
+         Previous logic (VAT on full price) overstated VAT.
+  NOTE: If (in your domain) commission was actually defined as a percent of gross (rare here),
+        use CommissionGross = P * (c/100) instead. Adjust formula accordingly.
+***************************************************************************************************/
+DECLARE @CommissionRate DECIMAL(9,4);
+DECLARE @VatRate        DECIMAL(9,4);
+DECLARE @VatFractionOnCommission DECIMAL(18,10); -- overall factor applied to UnitPrice
+-- Get active commission (simple open-ended selection)
+SELECT TOP(1) @CommissionRate = RateProcent
+FROM dbo.COMMISSION
+WHERE EffectiveFrom <= GETDATE()
+  AND (EffectiveTo IS NULL OR EffectiveTo >= GETDATE())
+ORDER BY EffectiveFrom DESC;
+
+-- Get active VAT rate (whole percent -> convert to fraction)
+SELECT TOP(1) @VatRate = RatePercent
+FROM dbo.VATRATES
+WHERE EffectiveFrom <= GETDATE()
+  AND (EffectiveTo IS NULL OR EffectiveTo >= GETDATE())
+ORDER BY EffectiveFrom DESC;
+
+IF @CommissionRate IS NULL OR @VatRate IS NULL
+BEGIN
+    RAISERROR('Commission or VAT rate not found; cannot compute VAT on commission.',16,1);
+    RETURN;
+END
+
+-- Convert VAT whole percent to fraction
+SET @VatRate = @VatRate / 100.0;
+
+-- Overall tax factor applied directly to UnitPrice:
+-- (c/(100+c)) * (v/(1+v))
+SET @VatFractionOnCommission =
+    (@CommissionRate / (100.0 + @CommissionRate)) * (@VatRate / (1 + @VatRate));
+
+/* Recompute receipt totals & VAT (only on commission portion) */
+;WITH LineAgg AS (
+    SELECT SalesReceiptId,
+           Gross      = SUM(UnitPrice),
+           TaxOnComm  = SUM(UnitPrice * @VatFractionOnCommission)
+    FROM dbo.SALESRECEIPTLINE
+    GROUP BY SalesReceiptId
+)
+UPDATE r
+SET r.TotalAmount = a.Gross,
+    r.VatAmount   = ROUND(a.TaxOnComm, 2)
+FROM dbo.SALESRECEIPT r
+JOIN LineAgg a ON a.SalesReceiptId = r.Id;
+
+PRINT CONCAT('Updated VAT using commission-inclusive model. Factor applied to line price: ',
+             CAST(@VatFractionOnCommission AS VARCHAR(40)));
+
+-- Further revise using unified business logic ( COMPANYINFO.IsTaxUsedItem / IsTaxRegistered )
+-- Residual entries (if any) should all be no-VAT cases (Ida, Anton)
+;WITH NoVatCases AS (
+    SELECT r.Id
+    FROM dbo.SALESRECEIPT r
+    LEFT JOIN dbo.COMPANYINFO c ON 1=1  -- cross join to propagate single company row
+    WHERE r.VatAmount = 0 
+      AND (c.IsTaxUsedItem = 0 OR c.IsTaxRegistered = 0)
+)
+DELETE FROM dbo.SALESRECEIPT
+WHERE Id IN (SELECT Id FROM NoVatCases);
+GO
+
+
+
+/***************************************************************************************************
+  SECTION: SALES RECEIPT TAX & TOTAL CALCULATION (UNIFIED BUSINESS LOGIC)
+  Business Rules (based on COMPANYINFO flags):
+    1) IsTaxUsedItem = 1   (implies IsTaxRegistered = 1 by constraint)
+         - UnitPrice already includes Commission and Commission is VAT-inclusive.
+         - Only VAT due = VAT portion embedded inside the commission.
+         - VAT factor per price:
+              f_used = (c / (100 + c)) * ( (v/100) / (1 + v/100) )
+            where c = commission %, v = VAT %.
+         - TotalAmount (gross shown to customer) = SUM(UnitPrice).
+         - VatAmount = SUM(UnitPrice) * f_used (rounded 2).
+    2) IsTaxUsedItem = 0 AND IsTaxRegistered = 1  (normal VAT regime)
+         - UnitPrice stored as NET (exclusive of VAT, commission not VAT-inclusive).
+         - VAT due on full net price: VatAmount = Net * (v/100).
+         - TotalAmount (gross) = Net + VatAmount.
+    3) IsTaxRegistered = 0
+         - No VAT. TotalAmount = SUM(UnitPrice). VatAmount = 0.
+
+  Implementation details:
+    - Runs AFTER lines inserted.
+    - Single pass update; previous generic VAT updates removed.
+    - Commission & VAT rates picked as “currently active” (GETDATE()).
+      If historical accuracy per receipt IssuedAt is required, adapt the rate lookup to use IssuedAt.
+***************************************************************************************************/
+
+DECLARE @IsTaxUsedItem     bit;
+DECLARE @IsTaxRegistered   bit;
+DECLARE @CommissionRatePct decimal(9,4) = 0;
+DECLARE @VatRatePct        decimal(9,4) = 0;
+
+-- Company flags (assumes single row – refine if multiple company rows)
+SELECT TOP(1)
+    @IsTaxUsedItem   = IsTaxUsedItem,
+    @IsTaxRegistered = IsTaxRegistered
+FROM dbo.COMPANYINFO
+ORDER BY Id;
+
+-- Active commission (current date scope)
+SELECT TOP(1) @CommissionRatePct = RateProcent
+FROM dbo.COMMISSION
+WHERE EffectiveFrom <= GETDATE()
+  AND (EffectiveTo IS NULL OR EffectiveTo >= GETDATE())
+ORDER BY EffectiveFrom DESC;
+
+-- Active VAT (current date scope)
+SELECT TOP(1) @VatRatePct = RatePercent
+FROM dbo.VATRATES
+WHERE EffectiveFrom <= GETDATE()
+  AND (EffectiveTo IS NULL OR EffectiveTo >= GETDATE())
+ORDER BY EffectiveFrom DESC;
+
+-- Defensive defaults
+IF @IsTaxUsedItem IS NULL SET @IsTaxUsedItem = 0;
+IF @IsTaxRegistered IS NULL SET @IsTaxRegistered = 0;
+IF @CommissionRatePct IS NULL SET @CommissionRatePct = 0;
+IF @VatRatePct IS NULL SET @VatRatePct = 0;
+
+-- Precompute factors
+DECLARE @VatFractionOnCommission DECIMAL(18,10) = 0;  -- Case 1 factor (VAT only inside commission)
+DECLARE @VatRateFraction        DECIMAL(18,10) = CASE WHEN @VatRatePct = 0 THEN 0 ELSE @VatRatePct / 100.0 END;
+
+IF @IsTaxUsedItem = 1 AND @CommissionRatePct > 0 AND @VatRatePct > 0
+BEGIN
+    -- (c/(100+c)) * ( (v/100) / (1 + v/100) )
+    SET @VatFractionOnCommission =
+        (@CommissionRatePct / (100.0 + @CommissionRatePct)) *
+        ( @VatRateFraction / (1 + @VatRateFraction) );
+END
+
+;WITH Base AS (
+    SELECT SalesReceiptId, BaseSum = SUM(UnitPrice)
+    FROM dbo.SALESRECEIPTLINE
+    GROUP BY SalesReceiptId
+)
+UPDATE r
+SET
+    r.VatAmount =
+        CASE
+            WHEN @IsTaxRegistered = 0 THEN 0
+            WHEN @IsTaxUsedItem = 1 THEN ROUND(b.BaseSum * @VatFractionOnCommission, 2)
+            ELSE ROUND(b.BaseSum * @VatRateFraction, 2) -- normal VAT on full net base
+        END,
+    r.TotalAmount =
+        CASE
+            WHEN @IsTaxRegistered = 0 THEN b.BaseSum
+            WHEN @IsTaxUsedItem = 1 THEN b.BaseSum          -- price already gross (commission+embedded VAT portion)
+            ELSE ROUND(b.BaseSum * (1 + @VatRateFraction), 2) -- add VAT
+        END
+FROM dbo.SALESRECEIPT r
+JOIN Base b ON b.SalesReceiptId = r.Id;
+
+PRINT CONCAT(
+    'Tax recompute applied. Scenario=',
+    CASE
+        WHEN @IsTaxUsedItem = 1 THEN 'UsedItem_CommissionVATOnly'
+        WHEN @IsTaxRegistered = 1 THEN 'Normal_VAT_FullPrice'
+        ELSE 'NoVAT_NotRegistered'
+    END,
+    '; CommissionRate=', @CommissionRatePct,
+    '; VatRate=', @VatRatePct,
+    '; FactorUsedItem=', FORMAT(@VatFractionOnCommission, '0.############')
+);
+GO
