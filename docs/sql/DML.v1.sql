@@ -50,6 +50,44 @@ USE [ShelfMarket_Dev];
 GO
 
 /***************************************************************************************************
+  SECTION: DATA PURGE (DEV ONLY)
+  Empties all tables in FK-safe order, then reseeds IDENTITY columns.
+  Notes:
+    - FK cascade chains exist (e.g., SHELFTENANT -> CONTRACT -> CONTRACTLINE, SALESRECEIPT -> LINE,
+      SHELFTYPE -> SHELF). We still delete child tables explicitly for clarity & deterministic rowcounts.
+    - TRUNCATE not used because of FK constraints; DELETE is sufficient at this scale.
+    - Receipt / Contract identity values are reseeded to start at 1 on next insert.
+***************************************************************************************************/
+SET XACT_ABORT ON;
+BEGIN TRAN;
+
+    -- Child-first (explicit, though some cascades would handle this).
+    DELETE FROM dbo.SALESRECEIPTLINE;
+    DELETE FROM dbo.SALESRECEIPT;
+
+    DELETE FROM dbo.SHELFTENANTCONTRACTLINE;
+    DELETE FROM dbo.SHELFTENANTCONTRACT;
+    DELETE FROM dbo.SHELFTENANT;
+
+    DELETE FROM dbo.SHELF;             -- FK to SHELFTYPE (cascade defined, still explicit)
+    DELETE FROM dbo.SHELFTYPE;
+
+    DELETE FROM dbo.SHELFPRICINGRULES;
+    DELETE FROM dbo.COMMISSION;
+    DELETE FROM dbo.VATRATES;
+    DELETE FROM dbo.COMPANYINFO;
+    DELETE FROM dbo.VERSIONINFO;       -- Remove version marker so seed can set a clean one
+
+COMMIT;
+
+-- Reseed identity tables (set to 0 so next insert becomes 1)
+DBCC CHECKIDENT ('dbo.SALESRECEIPT', RESEED, 0);
+DBCC CHECKIDENT ('dbo.SHELFTENANTCONTRACT', RESEED, 0);
+GO
+
+
+
+/***************************************************************************************************
   SECTION: COMMISSION
   - Stores the currently active commission rate (open-ended).
   - RateProcent stored as WHOLE percent (10 = 10%).
@@ -490,9 +528,11 @@ SELECT @DayCount = COUNT(*) FROM #Calendar;
 PRINT CONCAT('Generating ', @ReceiptCount, ' sales receipts over ', @DayCount, ' sales days.');
 
 /* Insert receipts (totals updated later) */
-INSERT dbo.SALESRECEIPT (Id, IssuedAt, TotalAmount, TaxAmount, PaidByCash, PaidByMobile)
-SELECT ReceiptId, IssuedAt, 0.00, 0.00, PaidByCash, PaidByMobile
-FROM #ReceiptSeed;
+INSERT dbo.SALESRECEIPT (Id, IssuedAt, PaidByCash, PaidByMobile)
+SELECT ReceiptId, IssuedAt, PaidByCash, PaidByMobile
+FROM #ReceiptSeed
+ORDER BY DateValue, IssuedAt, ReceiptId;  -- Ensures sequential chronological ReceiptNumber
+GO
 
 /* Line count plan */
 IF OBJECT_ID('tempdb..#ReceiptLinePlan') IS NOT NULL DROP TABLE #ReceiptLinePlan;
@@ -551,18 +591,4 @@ INSERT dbo.SALESRECEIPTLINE (Id, ShelfNumber, SalesReceiptId, UnitPrice)
 SELECT LineId, ShelfNumber, SalesReceiptId, UnitPrice
 FROM #SalesLines;
 
-/* Update totals & tax (VAT 25% => 25/125 of gross) */
-WITH Totals AS (
-    SELECT SalesReceiptId,
-           Gross = SUM(UnitPrice)
-    FROM #SalesLines
-    GROUP BY SalesReceiptId
-)
-UPDATE r
-SET r.TotalAmount = t.Gross,
-    r.TaxAmount   = ROUND(t.Gross * 25.00 / 125.00, 2)
-FROM dbo.SALESRECEIPT r
-JOIN Totals t ON t.SalesReceiptId = r.Id;
-
-PRINT 'Sales receipt generation complete.';
 SET NOCOUNT OFF;
