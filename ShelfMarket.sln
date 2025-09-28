@@ -82,12 +82,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase004-AdministrateSale
 	ProjectSection(SolutionItems) = preProject
 		docs\sprint-2\UseCase004-AdministrateSales\DCD.mmd = docs\sprint-2\UseCase004-AdministrateSales\DCD.mmd
 		docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd = docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd
-		C:\Users\HAJFA\Documents\UseCase004-AdministrateSales-UserStory.md = C:\Users\HAJFA\Documents\UseCase004-AdministrateSales-UserStory.md
-		C:\Users\HAJFA\Documents\UseCase004-OperationContractSales.md = C:\Users\HAJFA\Documents\UseCase004-OperationContractSales.md
-		C:\Users\HAJFA\Documents\UseCase004-AdministrererSalg-UCBrief.md = C:\Users\HAJFA\Documents\UseCase004-AdministrererSalg-UCBrief.md
-		C:\Users\HAJFA\Documents\UseCase004-AdministrererSalg-UCCasual.md = C:\Users\HAJFA\Documents\UseCase004-AdministrererSalg-UCCasual.md
-		UseCase004-SSD.mmd = UseCase004-SSD.mmd
+		..\..\..\..\..\HAJFA\Documents\UseCase004-AdministrateSales-UserStory.md = ..\..\..\..\..\HAJFA\Documents\UseCase004-AdministrateSales-UserStory.md
+		..\..\..\..\..\HAJFA\Documents\UseCase004-AdministrererSalg-UCBrief.md = ..\..\..\..\..\HAJFA\Documents\UseCase004-AdministrererSalg-UCBrief.md
+		..\..\..\..\..\HAJFA\Documents\UseCase004-AdministrererSalg-UCCasual.md = ..\..\..\..\..\HAJFA\Documents\UseCase004-AdministrererSalg-UCCasual.md
+		..\..\..\..\..\HAJFA\Documents\UseCase004-OperationContractSales.md = ..\..\..\..\..\HAJFA\Documents\UseCase004-OperationContractSales.md
 		UseCase004-SD.mmd = UseCase004-SD.mmd
+		UseCase004-SSD.mmd = UseCase004-SSD.mmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-3", "sprint-3", "{641EEC39-0EEA-4ED7-9D08-1D2BD751860F}"
@@ -113,7 +113,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{5A48367B-806
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCare002-AdministrateShelfTenant", "UseCare002-AdministrateShelfTenant", "{0714F7E3-4326-4494-B2EC-E10DDD5489A6}"
 	ProjectSection(SolutionItems) = preProject
-		UseCase002-UserStory.md = UseCase002-UserStory.md
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCBrief.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCBrief.md
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCCausal.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCCausal.md
 		UseCase002-DCD.mmd = UseCase002-DCD.mmd
@@ -121,7 +120,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCare002-AdministrateShel
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Operation Contract CRUDShelfTenant.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Operation Contract CRUDShelfTenant.md
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\Usecase002-sequenceDiagram.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Usecase002-sequenceDiagram.mmd
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-SSD.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-SSD.mmd
+		UseCase002-UserStory.md = UseCase002-UserStory.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase004-AdministreteSales", "UseCase004-AdministreteSales", "{ED656670-F75F-4A2F-9FA5-50C0D395FB2B}"
+	ProjectSection(SolutionItems) = preProject
+		docs\sprint-4\UseCase004-AdministreteSales\DomainModel.mmd = docs\sprint-4\UseCase004-AdministreteSales\DomainModel.mmd
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-4", "sprint-4", "{FA662A06-24A2-455E-ACC1-F112F357E1E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -175,6 +182,8 @@ Global
 		{C0916665-D648-425B-BFCE-113B9A4675E2} = {641EEC39-0EEA-4ED7-9D08-1D2BD751860F}
 		{5A48367B-8066-4746-8BC2-76CEA83A5F4B} = {93399C27-1127-489C-9E8F-7C803315DE2A}
 		{0714F7E3-4326-4494-B2EC-E10DDD5489A6} = {641EEC39-0EEA-4ED7-9D08-1D2BD751860F}
+		{ED656670-F75F-4A2F-9FA5-50C0D395FB2B} = {FA662A06-24A2-455E-ACC1-F112F357E1E2}
+		{FA662A06-24A2-455E-ACC1-F112F357E1E2} = {93399C27-1127-489C-9E8F-7C803315DE2A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E3670BE-F107-4641-8608-598441D3E901}

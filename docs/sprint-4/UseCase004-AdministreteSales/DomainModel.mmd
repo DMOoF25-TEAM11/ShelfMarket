@@ -1,0 +1,31 @@
+﻿classDiagram
+    class Tax {
+      +navn
+      +procent
+      +gyldigFra
+      +gyldigTil
+    }
+
+    class SalesReceipt {
+      +kvitteringsNummer
+      +udstedtDato
+      +totalBeloeb
+      +momsBeloeb
+      +betaltKontant
+      +betaltMobil
+    }
+
+    class SalesReceiptLine {
+      +reolnummer
+      +enhedsPris
+    }
+
+    class Avance {
+        +avanceProcent
+        +gyldigFra
+        +gyldigTil
+    }
+
+    SalesReceipt "1" --> "*" SalesReceiptLine : indeholder
+    Tax "1" <-- "*" SalesReceiptLine : anvender sats
+    SalesReceiptLine "*" --> "1" Avance : avance
