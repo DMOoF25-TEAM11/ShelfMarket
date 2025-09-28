@@ -14,28 +14,44 @@ using ShelfMarket.UI.Views.UserControls;
 namespace ShelfMarket.UI.ViewModels;
 
 /// <summary>
-/// ViewModel controlling the side navigation menu behavior:
-/// - Maintains menu items and current selection
-/// - Enforces privilege based visibility and access
-/// - Handles login / logoff transitions
-/// - Navigates the main window content area to the selected view
-/// </summary>
-/// <remarks>
+/// ViewModel controlling the side navigation menu behavior.
+/// Responsibilities:
+///  - Maintains menu items and current selection
+///  - Enforces privilege based visibility and access
+///  - Handles login / logoff transitions
+///  - Navigates the main window content area to the selected view
 /// Optimizations:
-/// - Caches references to special items (login/logoff/default)
-/// - Avoids redundant navigation when the target view is already displayed
-/// - Uses direct loops over LINQ for lower overhead (predictable small collection)
-/// - Reuses instantiated UserControls
-/// </remarks>
+///  - Caches references to special items (login/logoff/default)
+///  - Avoids redundant navigation when the target view is already displayed
+///  - Uses direct loops over LINQ for lower overhead (predictable small collection)
+///  - Reuses instantiated <see cref="UserControl"/> instances where appropriate
+/// </summary>
 public sealed class SideMenuViewModel : ModelBase
 {
+    /// <summary>
+    /// Privilege service used to evaluate and react to privilege changes.
+    /// </summary>
     private readonly IPrivilegeService _privileges;
+
+    /// <summary>
+    /// Command executing navigation of the selected menu item.
+    /// </summary>
     private readonly RelayCommand _menuItemCommand;
 
-    // Cached sentinel items for faster comparison and logic branching
+    /// <summary>
+    /// Cached login menu item (visible only for Guests).
+    /// </summary>
     private readonly SideMenuItem _loginItem;
+
+    /// <summary>
+    /// Cached logoff menu item (hidden for Guests).
+    /// </summary>
     private readonly SideMenuItem _logoffItem;
-    private readonly SideMenuItem _defaultItem; // "Reoler"
+
+    /// <summary>
+    /// Default (home) menu item selected at startup.
+    /// </summary>
+    private readonly SideMenuItem _defaultItem;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SideMenuViewModel"/> class,
@@ -46,18 +62,16 @@ public sealed class SideMenuViewModel : ModelBase
         _privileges = App.HostInstance.Services.GetRequiredService<IPrivilegeService>();
         _privileges.CurrentLevelChanged += OnPrivilegeLevelChanged;
 
-        // Get shared ShelfViewModel instance
+        // Shared ShelfViewModel instance reused across shelf-related views
         var shelfViewModel = App.HostInstance.Services.GetRequiredService<ShelfViewModel>();
-        
-        // Pre-create views once (reuse instances instead of recreating per navigation)
+
+        // Pre-create and cache views (reuse instances instead of recreating per navigation)
         _loginItem = new SideMenuItem("Log på", new LoginView(), PrivilegeLevel.Guest);
-        
-        var logoffShelfView = new ShelfView();
-        logoffShelfView.DataContext = shelfViewModel;
+
+        var logoffShelfView = new ShelfView { DataContext = shelfViewModel };
         _logoffItem = new SideMenuItem("Log af", logoffShelfView, PrivilegeLevel.Guest, isLogoff: true);
-        
-        var defaultShelfView = new ShelfView();
-        defaultShelfView.DataContext = shelfViewModel;
+
+        var defaultShelfView = new ShelfView { DataContext = shelfViewModel };
         _defaultItem = new SideMenuItem("Reoler", defaultShelfView, PrivilegeLevel.Guest);
 
         // Populate (order preserved – bindings may rely on it)
@@ -66,11 +80,11 @@ public sealed class SideMenuViewModel : ModelBase
             _loginItem,
             _logoffItem,
             _defaultItem,
-            new("Salg",            new SalesView(),                 PrivilegeLevel.User),
-            new("Økonomi",         new FinanceView(),               PrivilegeLevel.Admin),
-            new("Arrangementer",   new EventsView(),                PrivilegeLevel.User),
-            new("Lejere",          new ManagesShelfTenantView(),    PrivilegeLevel.User),
-            new("Vedligeholdelse", new MaintenanceView(),           PrivilegeLevel.User)
+            new("Salg",            new SalesView(),               PrivilegeLevel.User),
+            new("Økonomi",         new FinanceView(),             PrivilegeLevel.Admin),
+            new("Arrangementer",   new EventsView(),              PrivilegeLevel.User),
+            new("Lejere",          new ManagesShelfTenantView(),  PrivilegeLevel.User),
+            new("Vedligeholdelse", new MaintenanceView(),         PrivilegeLevel.User)
         ];
 
         _menuItemCommand = new RelayCommand(ExecuteNavigation, CanNavigate);
@@ -79,10 +93,10 @@ public sealed class SideMenuViewModel : ModelBase
         _selectedMenuItem = _defaultItem;
         OnPropertyChanged(nameof(SelectedMenuItem));
 
-        // Immediate attempt (works if MainWindow already created)
+        // Immediate navigation (works if MainWindow already created)
         ExecuteNavigation();
 
-        // Deferred attempt (covers case where MainWindow not yet ready at construction time)
+        // Deferred navigation (covers case where MainWindow not ready at construction time)
         System.Windows.Application.Current?.Dispatcher.BeginInvoke(
             new Action(() =>
             {
@@ -92,10 +106,23 @@ public sealed class SideMenuViewModel : ModelBase
             DispatcherPriority.Loaded);
     }
 
+    /// <summary>
+    /// Gets the current privilege level (proxy for binding).
+    /// </summary>
     public PrivilegeLevel CurrentLevel => _privileges.CurrentLevel;
 
+    /// <summary>
+    /// Represents a navigable side menu entry (title + view + privilege requirement).
+    /// </summary>
     public sealed class SideMenuItem
     {
+        /// <summary>
+        /// Creates a new side menu item.
+        /// </summary>
+        /// <param name="title">Display title shown in the menu.</param>
+        /// <param name="view">Associated view to navigate when selected.</param>
+        /// <param name="privilege">Minimum privilege level required to access.</param>
+        /// <param name="isLogoff">True if this item triggers logout behavior instead of navigation.</param>
         public SideMenuItem(string title, UserControl view, PrivilegeLevel privilege, bool isLogoff = false)
         {
             Title = title;
@@ -120,21 +147,24 @@ public sealed class SideMenuViewModel : ModelBase
         public PrivilegeLevel Privilege { get; }
 
         /// <summary>
-        /// Indicates whether this item triggers logout logic.
+        /// Gets a value indicating whether this item triggers logout logic.
         /// </summary>
         public bool IsLogoff { get; }
 
         /// <summary>
-        /// Optional cached visibility flag (not actively used; available for future virtualization or pre-filtering).
+        /// Optional cached visibility flag (currently unused; available for future filtering optimizations).
         /// </summary>
         public bool IsVisible { get; set; }
     }
 
+    /// <summary>
+    /// Backing field for <see cref="SelectedMenuItem"/>.
+    /// </summary>
     private SideMenuItem? _selectedMenuItem;
 
     /// <summary>
     /// Gets or sets the currently selected menu item.
-    /// Setting this property performs navigation or logout logic as appropriate.
+    /// Setting this property executes navigation or logout logic as appropriate.
     /// </summary>
     public SideMenuItem? SelectedMenuItem
     {
@@ -149,7 +179,7 @@ public sealed class SideMenuViewModel : ModelBase
 
             if (value.IsLogoff)
             {
-                // Sign out and redirect to a valid item without re-processing the logoff item again
+                // Sign out and redirect to a valid item without re-processing the logoff item
                 _privileges.SignOut();
 
                 var next = GetPostLogoffSelection();
@@ -170,12 +200,12 @@ public sealed class SideMenuViewModel : ModelBase
     }
 
     /// <summary>
-    /// Gets the collection of all available menu items (visibility may be determined in bindings via converters).
+    /// Gets the collection of all menu items (visibility enforced at binding via privilege converters or checks).
     /// </summary>
     public ObservableCollection<SideMenuItem> SideMenuItems { get; }
 
     /// <summary>
-    /// Gets the command used by the UI to invoke navigation for the selected menu item.
+    /// Gets the command used by UI elements to invoke navigation of the current selection.
     /// </summary>
     public ICommand MenuItemCommand { get; }
 
@@ -187,7 +217,8 @@ public sealed class SideMenuViewModel : ModelBase
         => _selectedMenuItem is not null && _privileges.CanAccess(_selectedMenuItem.Privilege);
 
     /// <summary>
-    /// Performs navigation to the selected menu item's view if conditions allow and the target differs from current content.
+    /// Performs navigation to the selected menu item's view if conditions allow
+    /// and the target view differs from the currently displayed one.
     /// </summary>
     private void ExecuteNavigation()
     {
@@ -203,25 +234,28 @@ public sealed class SideMenuViewModel : ModelBase
     }
 
     /// <summary>
-    /// Handles privilege level transitions:
-    /// - Raises property notifications
-    /// - Updates command state
-    /// - Reconciles selection if current item becomes inaccessible
+    /// Handles privilege level changes:
+    ///  - Notifies bindings
+    ///  - Updates command state
+    ///  - Revalidates and adjusts current selection if necessary
     /// </summary>
+    /// <param name="sender">Event source (ignored).</param>
+    /// <param name="_">Unused event args.</param>
     private void OnPrivilegeLevelChanged(object? sender, System.EventArgs _)
     {
         OnPropertyChanged(nameof(CurrentLevel));
-        OnPropertyChanged(nameof(SideMenuItems)); // Maintain original contract for potential bindings
+        OnPropertyChanged(nameof(SideMenuItems));
         _menuItemCommand.RaiseCanExecuteChanged();
         RefreshMenuVisibilityAndSelection();
     }
 
     /// <summary>
-    /// Ensures the current selection is valid for the active privilege state; chooses a fallback if necessary.
+    /// Ensures the current selection remains valid for the active privilege level;
+    /// selects the best alternative if it is no longer accessible.
     /// </summary>
     private void RefreshMenuVisibilityAndSelection()
     {
-        // Force an ItemsControl to re-evaluate visibility bindings if using converters.
+        // Refresh any bindings relying on collection view filtering/converters.
         CollectionViewSource.GetDefaultView(SideMenuItems)?.Refresh();
 
         var current = _selectedMenuItem;
@@ -239,9 +273,14 @@ public sealed class SideMenuViewModel : ModelBase
     }
 
     /// <summary>
-    /// Determines the selection to apply immediately after a logoff action.
+    /// Determines the next menu item to select after a logoff action.
+    /// Preference order:
+    ///  1. Login item (if visible)
+    ///  2. First visible non-logoff item
+    ///  3. First visible item (including logoff if unavoidable)
+    ///  4. Login item (fallback)
     /// </summary>
-    /// <returns>The next menu item to select.</returns>
+    /// <returns>The post-logoff selection candidate.</returns>
     private SideMenuItem GetPostLogoffSelection()
     {
         if (IsItemVisibleForCurrentLevel(_loginItem)) return _loginItem;
@@ -251,9 +290,10 @@ public sealed class SideMenuViewModel : ModelBase
     }
 
     /// <summary>
-    /// Computes an appropriate default selection for the current privilege state.
+    /// Computes an appropriate best default selection for the current privilege level.
+    /// For guests, prefers the login item; otherwise first visible non-logoff item.
     /// </summary>
-    /// <returns>The best visible menu item or null if none found.</returns>
+    /// <returns>A suitable visible item or null.</returns>
     private SideMenuItem? GetBestVisibleSelection()
     {
         if (CurrentLevel == PrivilegeLevel.Guest && IsItemVisibleForCurrentLevel(_loginItem))
@@ -264,10 +304,11 @@ public sealed class SideMenuViewModel : ModelBase
     }
 
     /// <summary>
-    /// Returns the first visible item, optionally preferring non-logoff entries.
+    /// Retrieves the first visible item based on privilege visibility rules.
+    /// Optionally skips logoff items on the first pass.
     /// </summary>
-    /// <param name="preferNonLogoff">If true, skip logoff items during the search.</param>
-    /// <returns>The first matching item or null.</returns>
+    /// <param name="preferNonLogoff">When true, logoff items are skipped.</param>
+    /// <returns>The first matching visible item or null.</returns>
     private SideMenuItem? GetFirstVisible(bool preferNonLogoff)
     {
         foreach (var item in SideMenuItems)
@@ -280,10 +321,11 @@ public sealed class SideMenuViewModel : ModelBase
     }
 
     /// <summary>
-    /// Determines whether a menu item should currently be visible given privilege state and special-case rules.
+    /// Evaluates whether a menu item should be visible under current privilege conditions.
+    /// Includes special-case filtering for login/logoff items.
     /// </summary>
-    /// <param name="item">The item to evaluate.</param>
-    /// <returns>True if the item is visible; otherwise false.</returns>
+    /// <param name="item">Item to evaluate.</param>
+    /// <returns>True if visible; otherwise false.</returns>
     private bool IsItemVisibleForCurrentLevel(SideMenuItem item)
     {
         if (!_privileges.CanAccess(item.Privilege))

@@ -5,15 +5,19 @@ using ShelfMarket.Infrastructure.Persistence;
 
 namespace ShelfMarket.Infrastructure.Repositories;
 
+/// <inheritdoc />
 public class ShelfPricingRuleRepository : Repository<ShelfPricingRule>, IShelfPricingRuleRepository
 {
+    /// <inheritdoc />
     public ShelfPricingRuleRepository(ShelfMarketDbContext context) : base(context) { }
 
+    /// <inheritdoc />
     public async Task<IReadOnlyList<ShelfPricingRule>> GetAllOrderedAsync(CancellationToken cancellationToken = default) =>
         await _dbSet.AsNoTracking()
             .OrderBy(r => r.MinShelvesInclusive)
             .ToListAsync(cancellationToken);
 
+    /// <inheritdoc />
     public async Task<decimal> GetUnitPriceAsync(int shelfCount, CancellationToken cancellationToken = default)
     {
         if (shelfCount <= 0) return 0m;

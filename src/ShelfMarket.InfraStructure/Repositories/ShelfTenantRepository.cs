@@ -5,10 +5,13 @@ using ShelfMarket.Infrastructure.Persistence;
 
 namespace ShelfMarket.Infrastructure.Repositories;
 
+/// <inheritdoc />
 public class ShelfTenantRepository : Repository<ShelfTenant>, IShelfTenantRepository
 {
+    /// <inheritdoc />
     public ShelfTenantRepository(ShelfMarketDbContext context) : base(context) { }
 
+    /// <inheritdoc />
     public Task<ShelfTenant?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(email))

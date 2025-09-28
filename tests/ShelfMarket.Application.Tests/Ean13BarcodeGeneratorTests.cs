@@ -18,7 +18,7 @@ public class Ean13BarcodeGeneratorTests
     public void ComputeCheckDigit_KnownExample()
     {
         // Standard example: 5901234123457 -> check digit 7
-        var check = gen.ComputeCheckDigit("590123412345");
+        var check = Ean13BarcodeGenerator.ComputeCheckDigit("590123412345");
         Assert.AreEqual(7, check);
     }
 
@@ -26,7 +26,7 @@ public class Ean13BarcodeGeneratorTests
     public void BuildEan13_UsesComputedCheckDigit()
     {
         string data12 = gen.ComposeData12("123", 4.56m, 6, 6);
-        int check = gen.ComputeCheckDigit(data12);
+        int check = Ean13BarcodeGenerator.ComputeCheckDigit(data12);
         string ean = gen.Build("123", 4.56m, 6, 6);
 
         Assert.AreEqual(data12 + check.ToString(), ean);
@@ -76,6 +76,6 @@ public class Ean13BarcodeGeneratorTests
     [TestMethod]
     public void ComputeCheckDigit_InvalidData12_Throws()
     {
-        Assert.ThrowsExactly<ArgumentException>(() => gen.ComputeCheckDigit("123"));
+        Assert.ThrowsExactly<ArgumentException>(() => Ean13BarcodeGenerator.ComputeCheckDigit("123"));
     }
 }

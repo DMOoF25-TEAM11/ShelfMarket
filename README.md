@@ -5,6 +5,23 @@ A WPF application for managing a shelf market, built with .NET 9 and following C
 This project is a sample implementation of a shelf market management system using WPF for the user interface and .NET 9 for the backend.
 It adheres to Clean Architecture principles, ensuring a clear separation of concerns and maintainability.
 
+## Table of Contents
+- [About](#about)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Clean Architecture Folder Structure](#clean-architecture-folder-structure)
+  - [Layer Responsibilities](#layer-responsibilities)
+    - [Domain Layer](#domain-layer)
+    - [Application Layer](#application-layer)
+    - [Infrastructure Layer](#infrastructure-layer)
+    - [UI Layer](#ui-layer)
+  - [Dependency Flow](#dependency-flow)
+- [Functionality](#functionality)
+  - [Shelf Market Management](#shelf-market-management)
+  - [EAN-13 Barcode Generator (Shelf + Price)](#ean-13-barcode-generator-shelf--price)
+
+
 ## Getting Started
 ### Prerequisites
 - .NET 9 SDK
@@ -81,3 +98,16 @@ ShelfMarket/
 - Infrastructure implements interfaces from Domain/Application
 - No layer should depend on Infrastructure
 Use Dependency Injection to wire everything together, typically in the UI layer's composition root.
+
+
+## Functionality
+
+### Shelf Market Management
+- Manage Tenants.
+- Manage Shelves.
+- Manage Shelf Types
+- Assign Shelves to Tenants.
+
+### EAN‑13 Barcode Generator (Shelf + Price)
+- Generate EAN-13 barcodes for products.
+- Input Tenant shelf id and price.
