@@ -339,7 +339,7 @@ GO
       ReceiptNumber   - Sequential identity for user reference.
       IssuedAt        - Timestamp of issuance.
       TotalAmount     - Gross (or net depending on business rule—see domain decision).
-      TaxAmount       - Tax component (redundant; keep calculation logic consistent).
+      VatAmount       - Tax component (redundant; keep calculation logic consistent).
       PaidByCash      - 1 if cash method used.
       PaidByMobile    - 1 if mobile payment method used (non-exclusive).
   Notes:
@@ -354,9 +354,11 @@ CREATE TABLE [dbo].[SALESRECEIPT] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
     [ReceiptNumber] INT IDENTITY(1,1) NOT NULL UNIQUE,
     [IssuedAt] DATETIME NOT NULL DEFAULT GETDATE(),
+    [TotalAmount] DECIMAL(18,2) NOT NULL,
+    [VatAmount] DECIMAL(18,2) NOT NULL,
     [PaidByCash] BIT NOT NULL CONSTRAINT DF_SalesReceipt_PaidByCash DEFAULT(1),
     [PaidByMobile] BIT NOT NULL CONSTRAINT DF_SalesReceipt_PaidByMobile DEFAULT(0),
-    CONSTRAINT CK_SalesReceipt_ExactlyOnePayment
+    CONSTRAINT CK_SalesReceipt_ExactlyOnePayment 
         CHECK (
               ([PaidByCash] = 1 AND [PaidByMobile] = 0)
            OR ([PaidByCash] = 0 AND [PaidByMobile] = 1)
@@ -374,7 +376,7 @@ GO
       SalesReceiptId - FK to SALESRECEIPT.
       UnitPrice      - Monetary value (interpretation depends on header policy: net or gross).
   Notes:
-      - Extend with Quantity, TaxRateId, TaxAmount, LineNumber, Description as domain matures.
+      - Extend with Quantity, TaxRateId, VatAmount, LineNumber, Description as domain matures.
   Index Strategy:
       NCI on SalesReceiptId supports efficient parent->child retrieval.
   Future:
