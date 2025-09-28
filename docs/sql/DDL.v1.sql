@@ -323,7 +323,6 @@ CREATE TABLE [dbo].[SALESRECEIPT] (
     [TaxAmount] DECIMAL(18,2) NOT NULL,
     [PaidByCash] BIT NOT NULL CONSTRAINT DF_SalesReceipt_PaidByCash DEFAULT(0),
     [PaidByMobile] BIT NOT NULL CONSTRAINT DF_SalesReceipt_PaidByMobile DEFAULT(0),
-    CONSTRAINT [FK_SalesReceipt_ShelfTenantContract] FOREIGN KEY ([ShelfTenantContractId]) REFERENCES [dbo].[SHELFTENANTCONTRACT]([Id]) ON DELETE CASCADE
 );
 GO
 
@@ -346,6 +345,7 @@ GO
 ***************************************************************************************************/
 CREATE TABLE [dbo].[SALESRECEIPTLINE] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+    [ShelfNumber] INT NOT NULL,
     [SalesReceiptId] UNIQUEIDENTIFIER NOT NULL,
     [UnitPrice] DECIMAL(18,2) NOT NULL,
     CONSTRAINT [FK_SalesReceipt_SalesReceiptLine] FOREIGN KEY ([SalesReceiptId]) REFERENCES [dbo].[SALESRECEIPT]([Id]) ON DELETE CASCADE

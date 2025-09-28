@@ -47,10 +47,10 @@
         +gyldigTil
     }
 
-    Reol "*" -- "1" ReolType : har
-    ReolLejeKontrakt "*" -- "1" ReolLejeKontraktLinje : har
-    Salgskvittering "1" -- "*" SalgskvitteringLinie : indeholder
-    Moms "1" -- "*" SalgskvitteringLinie : anvender sats
-    SalgskvitteringLinie "*" -- "1" Avance : avance
-    Reol "1" -- "*" ReolLejeKontrakt : lejes
-    SalgskvitteringLinie "*" -- "1" Reol : for
+    Reol * -- 1 ReolType : har
+    ReolLejeKontrakt * -- 1 ReolLejeKontraktLinje : har
+    Salgskvittering 1 -- * SalgskvitteringLinie : indeholder
+    Moms 1 -- * SalgskvitteringLinie : anvender sats
+    SalgskvitteringLinie * -- 1 Avance : avance
+    Reol 1 -- * ReolLejeKontrakt : lejes
+    SalgskvitteringLinie * -- 1 Reol : for
