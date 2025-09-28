@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docs\DatabaseSchema.md = docs\DatabaseSchema.md
 		docs\DCD -mvvm.mmd = docs\DCD -mvvm.mmd
 		docs\DCD.mmd = docs\DCD.mmd
+		docs\DDL.sql = docs\DDL.sql
 		docs\DomainModel.mmd = docs\DomainModel.mmd
 		docs\ER.mmd = docs\ER.mmd
 		README.md = README.md
@@ -81,7 +82,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase004-AdministrateSale
 	ProjectSection(SolutionItems) = preProject
 		docs\sprint-2\UseCase004-AdministrateSales\DCD.mmd = docs\sprint-2\UseCase004-AdministrateSales\DCD.mmd
 		docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd = docs\sprint-2\UseCase004-AdministrateSales\DomainModel.mmd
-		..\..\..\..\..\HAJFA\Documents\UseCase004 - AdministrateSales - UserStory.md = ..\..\..\..\..\HAJFA\Documents\UseCase004 - AdministrateSales - UserStory.md
+		C:\Users\HAJFA\Documents\UseCase004-AdministrateSales-UserStory.md = C:\Users\HAJFA\Documents\UseCase004-AdministrateSales-UserStory.md
+		C:\Users\HAJFA\Documents\UseCase004-OperationContractSales.md = C:\Users\HAJFA\Documents\UseCase004-OperationContractSales.md
+		C:\Users\HAJFA\Documents\UseCase004-AdministrererSalg-UCBrief.md = C:\Users\HAJFA\Documents\UseCase004-AdministrererSalg-UCBrief.md
+		C:\Users\HAJFA\Documents\UseCase004-AdministrererSalg-UCCasual.md = C:\Users\HAJFA\Documents\UseCase004-AdministrererSalg-UCCasual.md
+		UseCase004-SSD.mmd = UseCase004-SSD.mmd
+		UseCase004-SD.mmd = UseCase004-SD.mmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sprint-3", "sprint-3", "{641EEC39-0EEA-4ED7-9D08-1D2BD751860F}"
@@ -100,7 +106,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{5A48367B-8066-4746-8BC2-76CEA83A5F4B}"
 	ProjectSection(SolutionItems) = preProject
 		docs\sql\DDL.v1.sql = docs\sql\DDL.v1.sql
-		docs\sql\DML.v1-Fiktiive.sql = docs\sql\DML.v1-Fiktiive.sql
 		docs\sql\DML.v1.sql = docs\sql\DML.v1.sql
 		docs\sql\USP.v1.sql = docs\sql\USP.v1.sql
 		docs\sql\View.v1.sql = docs\sql\View.v1.sql
@@ -108,14 +113,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{5A48367B-806
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCare002-AdministrateShelfTenant", "UseCare002-AdministrateShelfTenant", "{0714F7E3-4326-4494-B2EC-E10DDD5489A6}"
 	ProjectSection(SolutionItems) = preProject
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCBrief.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCBrief.md
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCCausal.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Administrerer reol lejer - UCCausal.md
-		Use Case002 - DCD.mmd = Use Case002 - DCD.mmd
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Domain Model.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Domain Model.mmd
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Operation Contract CRUDShelfTenant.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - Operation Contract CRUDShelfTenant.md
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use case002 - sequenceDiagram.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use case002 - sequenceDiagram.mmd
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - SSD.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Use Case002 - SSD.mmd
-		Use Case002 - UserStory.md = Use Case002 - UserStory.md
+		UseCase002-UserStory.md = UseCase002-UserStory.md
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCBrief.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCBrief.md
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCCausal.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCCausal.md
+		UseCase002-DCD.mmd = UseCase002-DCD.mmd
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Domain Model.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Domain Model.mmd
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Operation Contract CRUDShelfTenant.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Operation Contract CRUDShelfTenant.md
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\Usecase002-sequenceDiagram.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Usecase002-sequenceDiagram.mmd
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-SSD.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-SSD.mmd
 	EndProjectSection
 EndProject
 Global
