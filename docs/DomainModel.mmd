@@ -1,5 +1,5 @@
 ﻿classDiagram
-    class reol {
+    class Reol {
         nummer
     }
     class ReolType {
@@ -20,5 +20,37 @@
         MånedligAftalePris
     }
 
-    reol "0..*" -- "1" ReolType : har
-    ReolLejeKontrakt "0..*" -- "1" ReolLejeKontraktLinje : har
+    class Moms {
+      +navn
+      +procent
+      +gyldigFra
+      +gyldigTil
+    }
+
+    class Salgskvittering {
+      +kvitteringsNummer
+      +udstedtDato
+      +totalBeloeb
+      +momsBeloeb
+      +betaltKontant
+      +betaltMobil
+    }
+
+    class SalgskvitteringLinie {
+      +Reolnummer
+      +enhedsPris
+    }
+
+    class Avance {
+        +avanceProcent
+        +gyldigFra
+        +gyldigTil
+    }
+
+    Reol "*" -- "1" ReolType : har
+    ReolLejeKontrakt "*" -- "1" ReolLejeKontraktLinje : har
+    Salgskvittering "1" -- "*" SalgskvitteringLinie : indeholder
+    Moms "1" -- "*" SalgskvitteringLinie : anvender sats
+    SalgskvitteringLinie "*" -- "1" Avance : avance
+    Reol "1" -- "*" ReolLejeKontrakt : lejes
+    SalgskvitteringLinie "*" -- "1" Reol : for
