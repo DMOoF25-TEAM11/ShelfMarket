@@ -135,6 +135,21 @@ CREATE TABLE [dbo].[COMPANYINFO] (
 );
 GO
 
+CREATE TABLE [dbo].[STORERENT] (
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+    [Rent] DECIMAL(18, 2) NOT NULL,
+    [EffectiveFrom] DATE NOT NULL,
+    [EffectiveTo] DATE NULL
+);
+
+CREATE TABLE [dbo].[STAFFSALERY] (
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+    [StaffName] NVARCHAR(255) NOT NULL,
+    [Salary] DECIMAL(18, 2) NOT NULL,
+    [EffectiveFrom] DATE NOT NULL,
+    [EffectiveTo] DATE NULL
+);
+
 /***************************************************************************************************
   TABLE: COMMISSION
   Purpose:
