@@ -19,7 +19,8 @@
     Change Log:
         2025-09-27  Added indexes section with rationale (IX_*).
         2025-09-27  Initial documentation comments added for all objects.
-        2025-09-28  Added documentation blocks for TAXRATES, SALESRECEIPT, SALESRECEIPTLINE.
+        2025-09-28  Added documentation blocks for TAXRATES (renamed physical table VATRATES), SALESRECEIPT, SALESRECEIPTLINE.
+        2025-09-28  Added documentation block for COMMISSION.
 */
 
 -- Treats double quotes (") as identifier delimiters (object names), not as string delimiters.
@@ -55,43 +56,69 @@ GO
   Columns:
       Id          - Static key (e.g., 1) for initial seed row.
       Version     - Semantic version or descriptive label.
-      AppliedOn   - Timestamp when record inserted (defaults to current date/time).
+      AppliedAt   - Timestamp when record inserted (defaults to current date/time).
   Notes:
       Not intended to replace a formal migration system; acts as a checkpoint.
 ***************************************************************************************************/
 CREATE TABLE [dbo].[VERSIONINFO] (
     [Id] INT NOT NULL PRIMARY KEY,
     [Version] NVARCHAR(50) NOT NULL,
-    [AppliedOn] DATETIME NOT NULL DEFAULT GETDATE()
+    [AppliedAt] DATETIME NOT NULL DEFAULT GETDATE()
+);
+GO
+
+/***************************************************************************************************
+  TABLE: VATRATES   (Logical concept: Tax Rates)
+  Purpose:
+      Stores named tax (VAT) rate definitions with effective dating to allow historical reconstruction
+      of tax calculations (audit / reproduction of historical receipts).
+  Naming Note:
+      Documentation earlier referred to TAXRATES. Physical table name here is VATRATES.
+  Columns:
+      Id            - PK (GUID).
+      Name          - Logical tax code (e.g., 'VAT', 'ReducedVAT', 'ExemptCodeX').
+      RatePercent   - Whole percent (25.00 represents 25%).
+      EffectiveFrom - First valid date (inclusive).
+      EffectiveTo   - Last valid date (inclusive). NULL = open ended.
+  Constraints:
+      UQ_TaxRates_Name_EffectiveFrom prevents duplicate concurrent starting definitions per Name.
+  Usage Pattern:
+      SELECT TOP(1) * FROM VATRATES
+        WHERE Name = @Name
+          AND EffectiveFrom <= @UsageDate
+          AND (EffectiveTo IS NULL OR EffectiveTo >= @UsageDate)
+        ORDER BY EffectiveFrom DESC;
+  Future Enhancements:
+      - Add exclusion logic (filtered unique index) to prevent overlapping effective periods.
+      - Add Jurisdiction / Country / Currency columns for multi-region use.
+***************************************************************************************************/
+CREATE TABLE [dbo].[VATRATES] (
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+    [Name] NVARCHAR(255) NOT NULL,
+    [RatePercent] DECIMAL(5,2) NOT NULL,
+    [EffectiveFrom] DATE NOT NULL,
+    [EffectiveTo] DATE NULL,
+    CONSTRAINT [UQ_TaxRates_Name_EffectiveFrom] UNIQUE ([Name], [EffectiveFrom])
 );
 GO
 
 /***************************************************************************************************
   TABLE: COMPANYINFO
   Purpose:
-      Stores high-level company / organizational information that governs global taxation behavior
-      or identifies the operating entity (e.g., for invoice headers).
+      Stores high-level company / organizational profile and tax enablement flags.
   Columns:
-      Id               - PK (GUID).
-      Name             - Company legal or display name.
-      Address/PostalCode/City - Optional physical location data.
-      Email / PhoneNumber     - Contact channels (not constrained unique here).
-      IsTaxRegistered  - Indicates whether the company is registered for the applicable tax regime.
-                         0 = Not registered (no tax should be applied).
-                         1 = Registered (tax may be applied to qualifying items).
-      IsTaxUsedItem    - Indicates whether taxable items usage / logic is enabled at the company level.
-                         Must NOT be 1 when IsTaxRegistered = 0 (enforced by check constraint).
+      Id                 - PK.
+      Name               - Legal/display name.
+      Address/Postal/City- Optional location.
+      Email/PhoneNumber  - Contact channels (not enforced unique).
+      IsTaxRegistered    - 1 if registered for VAT regime (prerequisite for any tax application).
+      IsTaxUsedItem      - 1 if item-level tax logic enabled. Must be 0 when IsTaxRegistered = 0.
   Constraints:
-      DF_CompanyInfo_IsTaxRegistered  - Default 0 (conservative; opt-in to tax registration).
-      DF_CompanyInfo_IsTaxUsedItem    - Default 0 (no taxable item usage unless explicitly enabled).
-      CK_CompanyInfo_TaxUsageConsistency:
-            Ensures IsTaxUsedItem <= IsTaxRegistered
-            Equivalent logic: (IsTaxRegistered = 1 OR IsTaxUsedItem = 0).
-  Notes:
-      Removed prior erroneous foreign key reference (there is no ShelfTenantContractId column here).
-      Future:
-        - Consider UNIQUE (Email) if one authoritative contact address is required.
-        - Consider adding TaxNumber / VATNumber columns and effective dating for registration changes.
+      CK_CompanyInfo_TaxUsageConsistency ensures IsTaxUsedItem <= IsTaxRegistered.
+      Defaults conservatively disable tax features until explicitly turned on.
+  Future:
+      - Add VatNumber / RegistrationEffectiveFrom/To for regulatory audits.
+      - Optional unique constraint on Email for canonical contact address.
 ***************************************************************************************************/
 CREATE TABLE [dbo].[COMPANYINFO] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
@@ -101,6 +128,7 @@ CREATE TABLE [dbo].[COMPANYINFO] (
     [City] NVARCHAR(100) NULL,
     [Email] NVARCHAR(255) NULL,
     [PhoneNumber] NVARCHAR(50) NULL,
+    [CvrNumber] NVARCHAR(50) NULL,
     [IsTaxRegistered] BIT NOT NULL CONSTRAINT DF_CompanyInfo_IsTaxRegistered DEFAULT(0),
     [IsTaxUsedItem] BIT NOT NULL CONSTRAINT DF_CompanyInfo_IsTaxUsedItem DEFAULT(0),
     CONSTRAINT CK_CompanyInfo_TaxUsageConsistency CHECK ([IsTaxUsedItem] <= [IsTaxRegistered])
@@ -108,15 +136,66 @@ CREATE TABLE [dbo].[COMPANYINFO] (
 GO
 
 /***************************************************************************************************
+  TABLE: COMMISSION
+  Purpose:
+      Defines commission rates (percentage-based) with effective dating to support historical
+      calculation of commissionable amounts (e.g., sales settlement).
+  Columns:
+      Id            - PK (GUID).
+      RateProcent   - Commission percentage stored as floating whole percent (e.g., 10 = 10%).
+                      NOTE: Consider changing to DECIMAL(5,2) for financial precision in future.
+      EffectiveFrom - First date (inclusive) the commission rate becomes active.
+      EffectiveTo   - Last date (inclusive) the rate is valid. NULL = still active / open ended.
+  Business Rules (not enforced here):
+      - Periods for the same logical commission program should not overlap (application responsibility).
+  Future:
+      - Add Name/ProgramCode if multiple commission schemes are required.
+      - Add CreatedBy / Audit columns for administrative traceability.
+***************************************************************************************************/
+CREATE TABLE [dbo].[COMMISSION] (
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+    [RateProcent] FLOAT NOT NULL,
+    [EffectiveFrom] DATE NOT NULL,
+    [EffectiveTo] DATE NULL
+);
+GO
+
+/***************************************************************************************************
+  TABLE: SHELFPRICINGRULES
+  Purpose:
+      Tiered pricing rules based on shelf count thresholds (volume discount logic).
+  Columns:
+      Id                  - PK.
+      MinShelvesInclusive - Threshold (inclusive) activating this price tier.
+      PricePerShelf       - Applied unit price for counts >= threshold until next tier threshold.
+  Constraints:
+      Unique on MinShelvesInclusive prevents duplicate thresholds.
+  Notes:
+      - Current design assumes non-overlapping, increasing thresholds (1,2,4,...).
+  Future:
+      - Add EffectiveFrom / EffectiveTo for temporal evolution of pricing.
+      - Add IsActive or soft retirement mechanism.
+***************************************************************************************************/
+CREATE TABLE [dbo].[SHELFPRICINGRULES] (
+    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+    [MinShelvesInclusive] INT NOT NULL,
+    [PricePerShelf] DECIMAL(5,2) NOT NULL,
+    CONSTRAINT [UQ_ShelfPricingRules_MinShelvesInclusive] UNIQUE ([MinShelvesInclusive])
+);
+GO
+
+/***************************************************************************************************
   TABLE: SHELFTYPE
   Purpose:
-      Master data defining classification / physical or pricing grouping for shelves.
+      Master data classifying shelves (physical configuration or marketing category).
   Columns:
-      Id          - PK (GUID).
-      Name        - Unique logical name (enforced UNIQUE).
-      Description - Optional explanatory text.
+      Id          - PK.
+      Name        - Unique logical name.
+      Description - Optional descriptive text.
   Constraints:
-      UNIQUE(Name) ensures no duplicates for type references.
+      UNIQUE(Name) ensures consistent referencing and prevents duplicate labels.
+  Future:
+      - Add Dimensions / Capacity metadata if needed for allocation algorithms.
 ***************************************************************************************************/
 CREATE TABLE [dbo].[SHELFTYPE] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
@@ -128,18 +207,21 @@ GO
 /***************************************************************************************************
   TABLE: SHELF
   Purpose:
-      Represents individual rentable physical shelves / units.
+      Represents a rentable physical storage/display shelf.
   Columns:
-      Id                    - PK (GUID).
-      Number                - Business-assigned shelf number (not enforced unique; may allow reuse).
-      ShelfTypeId           - FK to SHELFTYPE.
-      LocationX / LocationY - Grid / coordinate mapping for UI or physical layout.
-      OrientationHorizontal - 1 = horizontal, 0 = vertical (layout rendering hint).
+      Id                   - PK.
+      Number               - Business-facing shelf number (not enforced unique to allow reuse).
+      ShelfTypeId          - FK to SHELFTYPE.
+      LocationX / LocationY- Grid coordinates for layout rendering.
+      OrientationHorizontal- 1 = horizontal layout, 0 = vertical.
   Constraints:
-      FK_SHELF_SHELFTYPE    - Cascades on delete (removes shelves when type removed).
-      UNIQUE(LocationX, LocationY) - Prevents positional overlap.
+      UNIQUE(LocationX, LocationY) prevents positional overlap.
+      FK_SHELF_SHELFTYPE cascades deletes (dev convenience).
   Index Strategy:
-      Separate nonclustered index on Number (see below) to support ordered listings.
+      Separate NCI on Number supports ordered listings & direct numeric lookups.
+  Future:
+      - Consider UNIQUE(Number) if re-use must be prevented.
+      - Add Active flag for soft retirement.
 ***************************************************************************************************/
 CREATE TABLE [dbo].[SHELF] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
@@ -156,15 +238,18 @@ GO
 /***************************************************************************************************
   TABLE: SHELFTENANT
   Purpose:
-      Stores tenant/customer metadata used for contract associations.
+      Stores tenant/customer identity & contact data for rental contracts.
   Columns:
-      Id, FirstName, LastName - Identity & contact.
-      Address / PostalCode / City - Optional physical contact.
-      Email - Optional but unique if present (business lookup).
+      Id, FirstName, LastName - Identity attributes.
+      Address, PostalCode, City - Contact location (optional).
+      Email - Optional; enforced unique when provided (NULLs allowed).
       PhoneNumber - Optional contact channel.
-      Status - Arbitrary state (e.g., Active, Suspended); no enforced domain table yet.
+      Status - Arbitrary state (e.g., Active / Inactive).
   Constraints:
-      UQ_SHELF_TENANT_EMAIL enforces uniqueness of email when provided (NULLs allowed).
+      UQ_SHELF_TENANT_EMAIL enforces uniqueness across non-null emails.
+  Future:
+      - Add CreatedAt / UpdatedAt for auditing.
+      - Introduce Status domain table for controlled vocabulary.
 ***************************************************************************************************/
 CREATE TABLE [dbo].[SHELFTENANT] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
@@ -183,18 +268,24 @@ GO
 /***************************************************************************************************
   TABLE: SHELFTENANTCONTRACT
   Purpose:
-      Captures contract periods for a tenant, including lifecycle (cancellation).
+      Contract header capturing a tenant's rental period & lifecycle state.
   Columns:
       Id             - PK.
-      ShelfTenantId  - FK to SHELFTENANT (contracts are tenant-scoped).
-      ContractNumber - Sequential IDENTITY (stable human reference).
-      StartDate / EndDate - Planned contract period (inclusive).
-      CancelledAt    - Early termination date (<= EndDate) if contract cancelled.
-  Business Rules (Not enforced here):
+      ShelfTenantId  - FK to SHELFTENANT.
+      ContractNumber - Human-friendly sequential unique number (IDENTITY).
+      StartDate      - Planned start (inclusive).
+      EndDate        - Planned end (inclusive).
+      CancelledAt    - If set, earlier termination date (inclusive).
+  Business Rules (application enforced):
       - StartDate <= EndDate.
-      - CancelledAt must be between StartDate and EndDate (if provided).
+      - CancelledAt BETWEEN StartDate AND EndDate.
+      - Contracts for same tenant should not overlap (unless business allows).
   Index Strategy:
-      Composite index added post creation covering tenant & date access patterns.
+      Composite NCI (see IX_ShelfTenantContract_Tenant_Contract_Dates) supports date range filtering
+      + ordering by ContractNumber.
+  Future:
+      - Add Status or Reason codes for cancellation classification.
+      - Add CreatedAt / CreatedBy for audit.
 ***************************************************************************************************/
 CREATE TABLE [dbo].[SHELFTENANTCONTRACT] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
@@ -210,20 +301,22 @@ GO
 /***************************************************************************************************
   TABLE: SHELFTENANTCONTRACTLINE
   Purpose:
-      Associates specific shelves with a contract. Supports multi-shelf contracts.
+      Associates one or more shelves with a contract header.
   Columns:
-      Id                    - PK.
-      ShelfTenantContractId - FK to contract header.
-      ShelfId               - Shelf being rented.
-      LineNumber            - Logical ordering / line identity within contract (unique per contract).
-      PricePerMonth         - Standard pricing value.
-      PricePerMonthSpecial  - Optional negotiated override (NULL => use standard price).
+      Id                     - PK.
+      ShelfTenantContractId  - FK to SHELFTENANTCONTRACT.
+      ShelfId                - Shelf being rented.
+      LineNumber             - Sequential line ordering (unique within contract).
+      PricePerMonth          - Standard monthly price.
+      PricePerMonthSpecial   - Optional negotiated override (NULL => use standard tier pricing).
   Notes:
-      - No uniqueness constraint across (ShelfId, Contract period). Overlapping allocations must be
-        handled in application logic if exclusivity is required.
-      - Consider future constraint or exclusion logic if double-booking should be prevented.
+      - No enforcement preventing the same ShelfId across overlapping contracts; application logic
+        must ensure exclusivity if required.
   Index Strategy:
-      See IX_ShelfTenantContractLine_Contract_Shelf covering join + projection needs.
+      Covering NCI includes pricing fields to avoid key lookups (see IX_ShelfTenantContractLine_Contract_Shelf).
+  Future:
+      - Add EffectiveFrom / EffectiveTo for mid-contract shelf changes.
+      - Add DiscountReason / Notes metadata.
 ***************************************************************************************************/
 CREATE TABLE [dbo].[SHELFTENANTCONTRACTLINE] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
@@ -238,82 +331,24 @@ CREATE TABLE [dbo].[SHELFTENANTCONTRACTLINE] (
 GO
 
 /***************************************************************************************************
-  TABLE: SHELFPRICINGRULES
-  Purpose:
-      Tiered pricing rules based on shelf count thresholds (e.g., volume discount logic).
-  Columns:
-      Id                  - PK.
-      MinShelvesInclusive - Threshold (inclusive) that activates this tier.
-      PricePerShelf       - Applied unit price from this threshold until next tier.
-  Constraints:
-      Unique on MinShelvesInclusive to prevent duplicate tier definitions.
-  Future:
-      - Add EffectiveFrom / EffectiveTo for temporal pricing evolution.
-      - Potential IsActive flag for soft retirement of tiers.
-***************************************************************************************************/
-CREATE TABLE [dbo].[SHELFPRICINGRULES] (
-    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
-    [MinShelvesInclusive] INT NOT NULL,
-    [PricePerShelf] DECIMAL(5,2) NOT NULL,
-    CONSTRAINT [UQ_ShelfPricingRules_MinShelvesInclusive] UNIQUE ([MinShelvesInclusive])
-);
-GO
-
-/***************************************************************************************************
-  TABLE: TAXRATES
-  Purpose:
-      Stores named tax rate definitions with effective dating to allow historical reconstruction
-      of tax calculations (e.g., for audit or reproducing historical receipts).
-  Columns:
-      Id            - PK (GUID).
-      Name          - Logical tax identifier (e.g., 'VAT', 'ReducedVAT', 'ExemptCodeX').
-      RatePercent   - Percentage expressed as whole percent (e.g., 25.00 for 25%).
-      EffectiveFrom - First date (inclusive) this rate version is valid.
-      EffectiveTo   - Last date (inclusive) this rate version is valid. NULL = still active / open ended.
-  Constraints:
-      UQ_TaxRates_Name_EffectiveFrom ensures no duplicate rate versions start on same date for a name.
-  Usage:
-      - Application should select the single row where Name = ? AND EffectiveFrom <= @UsageDate
-        AND (EffectiveTo IS NULL OR EffectiveTo >= @UsageDate).
-  Future:
-      - Consider filtered unique index preventing overlapping periods per Name.
-      - Consider adding Jurisdiction / CountryCode if multi-region.
-***************************************************************************************************/
-CREATE TABLE [dbo].[TAXRATES] (
-    [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
-    [Name] NVARCHAR(255) NOT NULL,
-    [RatePercent] DECIMAL(5,2) NOT NULL,
-    [EffectiveFrom] DATE NOT NULL,
-    [EffectiveTo] DATE NULL,
-    CONSTRAINT [UQ_TaxRates_Name_EffectiveFrom] UNIQUE ([Name], [EffectiveFrom])
-);
-GO
-
-/***************************************************************************************************
   TABLE: SALESRECEIPT
   Purpose:
-      Header record for a sales transaction (e.g., rental charge group or point-of-sale operation).
+      Header record for a sales transaction (e.g., monthly rental charge batch or POS receipt).
   Columns:
-      Id                   - PK (GUID).
-      ReceiptNumber        - Human friendly sequential identifier (IDENTITY).
-      IssuedAt             - Timestamp of issuance (defaults current date/time).
-      TotalAmount          - Gross total including tax (or net? depends on domain decision).
-      TaxAmount            - Tax component of the total (redundant; ensure consistency).
-      PaidByCash           - Flag indicating cash settlement method used.
-      PaidByMobile         - Flag indicating mobile payment method used (not mutually exclusive).
-      (Missing) ShelfTenantContractId - Referenced by defined FK; column not presently declared.
-  Constraints:
-      FK_SalesReceipt_ShelfTenantContract - References SHELFTENANTCONTRACT (ON DELETE CASCADE).
-        NOTE: The referenced column ShelfTenantContractId does not exist in this table and must
-              be added (e.g., UNIQUEIDENTIFIER NULL/NOT NULL) for the FK to function.
-  Data Integrity Considerations:
-      - Either PaidByCash, PaidByMobile (or future methods) should have at least one = 1; can enforce
-        via CHECK constraint later.
-      - TotalAmount >= TaxAmount >= 0 expected (potential future CHECK).
+      Id              - PK.
+      ReceiptNumber   - Sequential identity for user reference.
+      IssuedAt        - Timestamp of issuance.
+      TotalAmount     - Gross (or net depending on business rule—see domain decision).
+      TaxAmount       - Tax component (redundant; keep calculation logic consistent).
+      PaidByCash      - 1 if cash method used.
+      PaidByMobile    - 1 if mobile payment method used (non-exclusive).
+  Notes:
+      - Currently no FK to contract; add ShelfTenantContractId if correlating receipts to a contract.
+      - Payment method flags could later be replaced by a normalized table or bitmask.
   Future:
-      - Add PaymentMethod normalization (separate table) or bitmask style.
-      - Add NetAmount if required to disambiguate calculation logic.
-      - Add CurrencyCode if multi-currency scenarios emerge.
+      - Add NetAmount for explicit separation of tax vs net base.
+      - Add CurrencyCode for multi-currency environments.
+      - Add CHECK enforcing at least one payment flag = 1.
 ***************************************************************************************************/
 CREATE TABLE [dbo].[SALESRECEIPT] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
@@ -321,27 +356,32 @@ CREATE TABLE [dbo].[SALESRECEIPT] (
     [IssuedAt] DATETIME NOT NULL DEFAULT GETDATE(),
     [TotalAmount] DECIMAL(18,2) NOT NULL,
     [TaxAmount] DECIMAL(18,2) NOT NULL,
-    [PaidByCash] BIT NOT NULL CONSTRAINT DF_SalesReceipt_PaidByCash DEFAULT(0),
+    [PaidByCash] BIT NOT NULL CONSTRAINT DF_SalesReceipt_PaidByCash DEFAULT(1),
     [PaidByMobile] BIT NOT NULL CONSTRAINT DF_SalesReceipt_PaidByMobile DEFAULT(0),
+    CONSTRAINT CK_SalesReceipt_ExactlyOnePayment
+        CHECK (
+              ([PaidByCash] = 1 AND [PaidByMobile] = 0)
+           OR ([PaidByCash] = 0 AND [PaidByMobile] = 1)
+        )
 );
 GO
 
 /***************************************************************************************************
   TABLE: SALESRECEIPTLINE
   Purpose:
-      Line-level monetary components belonging to a SALESRECEIPT header.
+      Line-level monetary entries belonging to a SALESRECEIPT.
   Columns:
-      Id             - PK (GUID).
+      Id             - PK.
+      ShelfNumber    - Snapshot of shelf number (denormalized to preserve historical view).
       SalesReceiptId - FK to SALESRECEIPT.
-      UnitPrice      - Monetary value for the line (net or gross depending on domain rule).
-  Constraints:
-      FK_SalesReceipt_SalesReceiptLine - Cascades on delete of parent receipt.
+      UnitPrice      - Monetary value (interpretation depends on header policy: net or gross).
   Notes:
-      - Extend with Quantity, TaxRateId, Description for richer invoice detail.
-      - Consider adding LineNumber for deterministic ordering.
-      - If tax details vary per line, storing TaxAmount per line recommended.
+      - Extend with Quantity, TaxRateId, TaxAmount, LineNumber, Description as domain matures.
   Index Strategy:
-      IX_SalesReceiptLine_SalesReceipt (see below) enables efficient receipt -> lines retrieval.
+      NCI on SalesReceiptId supports efficient parent->child retrieval.
+  Future:
+      - Add constraint verifying UnitPrice >= 0.
+      - Consider storing ShelfId instead (plus snapshot fields) for traceability.
 ***************************************************************************************************/
 CREATE TABLE [dbo].[SALESRECEIPTLINE] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
@@ -355,7 +395,7 @@ GO
 /***************************************************************************************************
   SEED DATA
 ***************************************************************************************************/
-INSERT [dbo].[VERSIONINFO] ([Id], [Version], [AppliedOn]) VALUES (1, 'Initial', CAST('2025-10-06' AS date));
+INSERT [dbo].[VERSIONINFO] ([Id], [Version], [AppliedAt]) VALUES (1, 'Initial', CAST('2025-10-06' AS date));
 GO
 
 /***************************************************************************************************
@@ -363,18 +403,21 @@ GO
   Rationale Summary:
     IX_ShelfTenantContract_Tenant_Contract_Dates
         - Pattern: WHERE ShelfTenantId = ? AND StartDate/EndDate range logic (active windows).
-        - ContractNumber included in key for rapid drill-down (ORDER / direct lookup).
-        - CancelledAt INCLUDED to satisfy COALESCE predicates without key expansion.
+        - ContractNumber included for ordering / efficient drill-down.
+        - CancelledAt INCLUDED so COALESCE/filters avoid lookups.
     IX_ShelfTenantContractLine_Contract_Shelf
-        - Supports joins from contract -> shelves and projection of pricing info without lookup.
+        - Supports joins contract -> shelves with pricing projection (covering).
     IX_Shelf_Number
-        - Supports ordered shelf listing & numeric search (e.g., barcode generation reference).
+        - Supports ordered shelf list & direct numeric searches.
     IX_ShelfTenant_Email
-        - Rapid tenant lookup by email (login/admin screens).
+        - Fast lookup by email (admin / login flows).
     IX_SalesReceip_IssuedAt
-        - Supports chronological listing / paging by issue date + secondary order by receipt number.
+        - Enables chronological paging (IssuedAt, ReceiptNumber tiebreak).
     IX_SalesReceiptLine_SalesReceipt
-        - Optimizes retrieval of all lines for a receipt without scan.
+        - Efficient retrieval of all lines for a receipt.
+  Future:
+    - Consider filtered indexes for active (non-cancelled) contracts.
+    - Potential index on SHELFTENANT(Status) if frequently filtered by status.
 ***************************************************************************************************/
 CREATE NONCLUSTERED INDEX IX_ShelfTenantContract_Tenant_Contract_Dates
     ON dbo.SHELFTENANTCONTRACT (ShelfTenantId, ContractNumber, StartDate, EndDate)
