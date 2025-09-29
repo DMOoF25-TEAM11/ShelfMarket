@@ -40,7 +40,7 @@ public partial class App : System.Windows.Application
                 services.AddScoped<ManagesShelfTenantContractViewModel>();
                 //services.AddTransient<ManagesShelfTanentContractListViewModel>();
                 //services.AddTransient<ManagesShelfTenantContractListViewModel>();
-                
+
                 // ManagesShelfTenant
                 services.AddTransient<ManagesShelfTenantViewModel>();
 

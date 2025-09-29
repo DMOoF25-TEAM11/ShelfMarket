@@ -25,6 +25,7 @@
             </MenuItem>
             <MenuItem Header="Rapporter">
                 <MenuItem IsEnabled="False" Header="Dagligt"/>
+                <MenuItem Header="Kasserapport" Click="MenuCashReport_Click"/>
                 <MenuItem Header="Omsætning"/>
                 <Separator/>
                 <MenuItem IsEnabled="False" Header="Månedligt"/>
