@@ -36,6 +36,8 @@ public static class DependencyInjection
         services.AddScoped<IShelfTenantContractRepository, ShelfTenantContractRepository>();
         services.AddScoped<IShelfTenantContractLineRepository, ShelfTenantContractLineRepository>();
         services.AddSingleton<IShelfPricingRuleRepository, ShelfPricingRuleRepository>();
+        services.AddScoped<ISalesRepository, SalesRepository>();
+        //services.AddScoped<ISalesLineRepository, SalesLineRepository>();
 
         return services;
     }

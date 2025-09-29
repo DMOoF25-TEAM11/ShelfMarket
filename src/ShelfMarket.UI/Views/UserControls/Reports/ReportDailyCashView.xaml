@@ -37,7 +37,8 @@
             </Grid.ColumnDefinitions>
             <StackPanel>
                 <TextBlock Text="Dato:" Margin="0,0,8,0"/>
-                <DatePicker SelectedDate="{Binding Date}" Width="150" Margin="0,0,8,0"/>
+                <DatePicker SelectedDate="{Binding Date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Width="150" Margin="0,0,8,0"/>
             </StackPanel>
             <TextBlock Text="Åbningsbeholdning:" VerticalAlignment="Center" Margin="0,0,8,0" Grid.Row="2"/>
             <TextBox Text="{Binding OpeningCash, UpdateSourceTrigger=PropertyChanged, StringFormat=F2}" Width="120" Grid.Column="1" Grid.Row="2"/>

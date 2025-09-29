@@ -108,6 +108,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{5A48367B-806
 		docs\sql\DML.v1.sql = docs\sql\DML.v1.sql
 		docs\sql\uspCreateSalesReceipt.sql = docs\sql\uspCreateSalesReceipt.sql
 		docs\sql\uspGetAvailableShelves.v1.sql = docs\sql\uspGetAvailableShelves.v1.sql
+		docs\sql\uspGetDailyCashSalesSum.v1.sql = docs\sql\uspGetDailyCashSalesSum.v1.sql
 		docs\sql\uspGetShelfTenantCurrentShelves.v1.sql = docs\sql\uspGetShelfTenantCurrentShelves.v1.sql
 		docs\sql\uspShelvesForShelfTenantThatTenantRent.v1.sql = docs\sql\uspShelvesForShelfTenantThatTenantRent.v1.sql
 	EndProjectSection
@@ -118,8 +119,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCare002-AdministrateShel
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCCausal.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCCausal.md
 		UseCase002-DCD.mmd = UseCase002-DCD.mmd
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Domain-Model.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Domain-Model.mmd
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\Usecase002-sequenceDiagram.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Usecase002-sequenceDiagram.mmd
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Operation-Contract-CRUDShelfTenant.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Operation-Contract-CRUDShelfTenant.md
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\Usecase002-sequenceDiagram.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Usecase002-sequenceDiagram.mmd
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-SSD.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-SSD.mmd
 		UseCase002-UserStory.md = UseCase002-UserStory.md
 	EndProjectSection

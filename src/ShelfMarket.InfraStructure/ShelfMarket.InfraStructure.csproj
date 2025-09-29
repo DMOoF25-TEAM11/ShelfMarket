@@ -18,6 +18,7 @@
 
     <ItemGroup>
         <Folder Include="ExternalServices\" />
+        <Folder Include="Services\" />
     </ItemGroup>
 
     <ItemGroup>

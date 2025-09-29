@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using ShelfMarket.Application.Abstract.Services;
+using ShelfMarket.Application.Abstract;
 using ShelfMarket.UI.Commands;
 using ShelfMarket.UI.Models;
 
@@ -7,11 +7,13 @@ namespace ShelfMarket.UI.ViewModels.Reports;
 
 public class ReportDailyCashViewModel : ReportViewModelBase
 {
-    public ReportDailyCashViewModel() : base("Kasserapport")
+    private readonly ISalesRepository _repository;
+    private CancellationTokenSource? _loadCts;
+
+    public ReportDailyCashViewModel(ISalesRepository repository) : base("Kasserapport")
     {
-        // Initialize properties if needed
-        _service ??= new Services.CashReportServiceStub();
-        Date = DateTime.Today; // Ensure a valid date before first load
+        _repository = repository;
+        Date = DateTime.Now;
         RefreshCommand = new RelayCommand(async () => await LoadAsync());
 
         var values = new decimal[]
@@ -30,8 +32,6 @@ public class ReportDailyCashViewModel : ReportViewModelBase
         _ = LoadAsync();
     }
 
-    private readonly ICashReportService _service;
-
     public ObservableCollection<CashDenomination> Denominations { get; } = new();
 
     private DateTime _date = DateTime.Today;
@@ -40,10 +40,11 @@ public class ReportDailyCashViewModel : ReportViewModelBase
         get => _date;
         set
         {
-            if (_date == value) return;
-            _date = value;
+            var normalized = value.Date;
+            if (_date == normalized) return;
+            _date = normalized;
             OnPropertyChanged();
-            _ = LoadAsync(); // Reload when date changes
+            _ = LoadAsync();
         }
     }
 
@@ -115,9 +116,22 @@ public class ReportDailyCashViewModel : ReportViewModelBase
 
     private async Task LoadAsync()
     {
-        // Defensive: ensure service not null (should always be set)
-        CashSalesSystem = await _service.GetCashSalesAsync(Date);
-        Recalculate();
+        _loadCts?.Cancel();
+        var cts = new CancellationTokenSource();
+        _loadCts = cts;
+
+        var snapshotDate = Date;
+        try
+        {
+            var sales = await _repository.GetCashSalesAsync(snapshotDate);
+            if (!cts.IsCancellationRequested && snapshotDate == Date)
+            {
+                CashSalesSystem = sales;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 
     private void Recalculate()

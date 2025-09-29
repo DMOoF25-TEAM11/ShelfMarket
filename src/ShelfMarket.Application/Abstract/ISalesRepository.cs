@@ -2,4 +2,7 @@
 
 namespace ShelfMarket.Application.Abstract;
 
-public interface ISalesRepository : IRepository<Sales> { }
+public interface ISalesRepository : IRepository<Sales>
+{
+    Task<decimal> GetCashSalesAsync(DateTime date);
+}
