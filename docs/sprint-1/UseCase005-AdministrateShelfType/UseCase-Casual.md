@@ -23,17 +23,17 @@
 1. Systemet validerer input og opretter reoltypen og gemmer den i databasen.
 1. Systemet viser en bekræftelse.
 1. Ejer ser den nye reoltype.
-1. Gentag trin 4-7 for at tilføje flere reoltyper.
+1. 
 1. Hvis ejer vælger en reoltype.
 1. Hvis ejer vælger slette.
 1. Systemet fjerner reoltypen.
 1. Systemet viser en bekræftelse på sletningen.
-1. Gentag trin 9-12 for at slette flere reoltyper.
+1. 
 1. Hvis ejer vælger en reoltype fra listen og formularen udfyldes med reoltypens oplysninger
 1. Ejer redigerer oplysningerne og vælger gem
 1. Systemet opdaterer reoltypen i databasen.
 1. Systemet viser en bekræftelse og opdaterer reoltypelisten.
-1. Gentag trin 9, 14-17 for at redigere flere reoltyper.
+1. Gentag trin 2-17 for at redigere/tilføje flere reoltyper.
 1. Ejer går tilbage til forsiden ved at navigere til "Forside"
 
 **Extensions (alternatives):**  

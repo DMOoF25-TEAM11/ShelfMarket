@@ -7,6 +7,7 @@
     loop for valg af handling (tilføj, vælg reol) (0..*)
 
         alt tilføj mode
+            Ejer-->>System: tilføj(reoltype, beskrivelse)
             alt ReolNavn er unik og type er valgt
                 System-->>Ejer: TilføjKnap
                 Ejer->>System: Tilføj(ReolNavn, Beskrivelse)
