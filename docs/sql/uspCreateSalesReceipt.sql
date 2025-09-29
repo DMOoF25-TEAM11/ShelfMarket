@@ -1,6 +1,6 @@
 ﻿/*
     Procedure:   uspCreateSalesReceipt
-    Purpose:     Insert a new SALESRECEIPT and its lines; auto-calculate TotalAmount & VatAmount.
+    Purpose:     Insert a new SALESRECEIPT and its lines; auto-calculate VatAmount.
 
     VAT / Commission Business Rules (single COMPANYINFO row assumed):
       1) IsTaxUsedItem = 1 (and IsTaxRegistered = 1):
@@ -11,7 +11,6 @@
       2) IsTaxUsedItem = 0 AND IsTaxRegistered = 1:
             UnitPrice is NET (ex VAT).
             Tax = Net * (v/100).
-            Total = Net + Tax.
       3) IsTaxRegistered = 0:
             No VAT (Tax = 0; Total = sum UnitPrice).
 
@@ -28,9 +27,7 @@
     Returns: Inserted receipt row with applied scenario & rates.
 
     Change Log:
-      2025-09-28 Added procedure.
-      2025-09-28 FIX: Replaced BIT addition (@PaidByCash + @PaidByMobile) with
-                      integer coercion to avoid Msg 402 (bit+bit invalid).
+        30-09-2024  v1.0  Initial version.
 */
 
 SET QUOTED_IDENTIFIER ON;
@@ -155,8 +152,8 @@ BEGIN
     BEGIN TRAN;
         SET @ReceiptId = NEWID();
 
-        INSERT dbo.SALESRECEIPT (Id, IssuedAt, TotalAmount, VatAmount, PaidByCash, PaidByMobile)
-        VALUES (@ReceiptId, @IssuedAt, @TotalAmount, @VatAmount, @PaidByCash, @PaidByMobile);
+        INSERT dbo.SALESRECEIPT (Id, IssuedAt, VatAmount, PaidByCash, PaidByMobile)
+        VALUES (@ReceiptId, @IssuedAt, @VatAmount, @PaidByCash, @PaidByMobile);
 
         SELECT @ReceiptNumber = ReceiptNumber
         FROM dbo.SALESRECEIPT
@@ -171,12 +168,11 @@ BEGIN
         r.Id,
         r.ReceiptNumber,
         r.IssuedAt,
-        r.TotalAmount,
+        -- Calculated TotalAmount (sum of lines)
+        (SELECT SUM(l.UnitPrice) FROM dbo.SALESRECEIPTLINE l WHERE l.SalesReceiptId = r.Id) AS TotalAmount,
         r.VatAmount,
-        @Scenario AS GrossModelScenario,
-        @CommissionRatePct AS CommissionRateApplied,
-        @VatRatePct AS VatRateApplied,
-        @LineSum AS BaseLineSum
+        r.PaidByCash,
+        r.PaidByMobile
     FROM dbo.SALESRECEIPT r
     WHERE r.Id = @ReceiptId;
 END

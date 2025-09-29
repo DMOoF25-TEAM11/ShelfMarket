@@ -114,19 +114,19 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
 
     #region Error and State Management
     /// <summary>
-    /// Backing field for the <see cref="Error"/> property.
+    /// Backing field for the <see cref="ErrorMessage"/> property.
     /// </summary>
-    protected string? _error;
+    protected string? _errorMessage;
 
     /// <summary>
     /// Gets or sets the error message for the view model.
     /// </summary>
-    public string? Error
+    public string? ErrorMessage
     {
-        get => _error;
+        get => _errorMessage;
         protected set
         {
-            if (_error == value) return; _error = value;
+            if (_errorMessage == value) return; _errorMessage = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(HasError));
         }
@@ -135,25 +135,25 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// <summary>
     /// Gets a value indicating whether the view model currently has an error.
     /// </summary>
-    public bool HasError => !string.IsNullOrEmpty(Error);
+    public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
 
     /// <summary>
-    /// Backing field for the <see cref="InfoMessage"/> property.
+    /// Backing field for the <see cref="StatusMessage"/> property.
     /// </summary>
-    protected string? _infoMessage;
+    protected string? _statusMessage;
 
     /// <summary>
     /// Gets or sets the informational message for the view model.
     /// When set to a non-null or non-empty value, the message will automatically clear after a short delay.
     /// </summary>
-    public string? InfoMessage
+    public string? StatusMessage
     {
-        get => _infoMessage;
+        get => _statusMessage;
         protected set
         {
-            if (_infoMessage == value) return;
-            _infoMessage = value;
-            OnPropertyChanged();                   // InfoMessage
+            if (_statusMessage == value) return;
+            _statusMessage = value;
+            OnPropertyChanged();                   // StatusMessage
             OnPropertyChanged(nameof(HasInfoMessage)); // ensure Visibility updates
             if (!string.IsNullOrEmpty(value))
                 _ = AutoClearInfoMessageAsync();
@@ -163,7 +163,7 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// <summary>
     /// Gets a value indicating whether the view model currently has an informational message.
     /// </summary>
-    public bool HasInfoMessage => !string.IsNullOrEmpty(InfoMessage);
+    public bool HasInfoMessage => !string.IsNullOrEmpty(StatusMessage);
 
     /// <summary>
     /// Backing field for the <see cref="IsSaving"/> property.
@@ -235,14 +235,14 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     #region Load method
     public async Task LoadAsync(Guid id)
     {
-        Error = null;
+        ErrorMessage = null;
         _currentEntity = null;
         try
         {
             var entity = await _repository.GetByIdAsync(id);
             if (entity is null)
             {
-                Error = _errorEntityNotFound;
+                ErrorMessage = _errorEntityNotFound;
                 await OnResetAsync();
                 return;
             }
@@ -252,7 +252,7 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
         }
         catch (Exception ex)
         {
-            Error = ex.Message;
+            ErrorMessage = ex.Message;
         }
         finally
         {
@@ -311,18 +311,18 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     {
         if (!CanAdd()) return;
         IsSaving = true;
-        Error = null;
+        ErrorMessage = null;
         var entity = await OnAddFormAsync();
         try
         {
             await _repository.AddAsync(entity);
             EntitySaved?.Invoke(this, entity);
-            InfoMessage = _infoSaved;
+            StatusMessage = _infoSaved;
             await OnResetAsync();
         }
         catch (Exception ex)
         {
-            Error = ex.Message;
+            ErrorMessage = ex.Message;
         }
         finally
         {
@@ -339,19 +339,19 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     {
         if (!CanSave()) return;
         IsSaving = true;
-        Error = null;
+        ErrorMessage = null;
         try
         {
             if (_currentEntity is null) throw new InvalidOperationException("No current entity to save.");
             await OnSaveFormAsync();
             await _repository.UpdateAsync(_currentEntity);
             EntitySaved?.Invoke(this, _currentEntity);
-            InfoMessage = _infoSaved;
+            StatusMessage = _infoSaved;
             await OnResetAsync();
         }
         catch (Exception ex)
         {
-            Error = ex.Message;
+            ErrorMessage = ex.Message;
         }
         finally
         {
@@ -396,12 +396,12 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
 
             await _repository.DeleteAsync(id.Value);
             EntitySaved?.Invoke(this, null);
-            InfoMessage = _infoDeleted;
+            StatusMessage = _infoDeleted;
             await OnResetAsync();
         }
         catch (Exception ex)
         {
-            Error = ex.Message;
+            ErrorMessage = ex.Message;
         }
         finally
         {
@@ -416,7 +416,7 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     /// <returns>A task representing the asynchronous operation.</returns>
     protected async Task OnResetAsync()
     {
-        Error = null;
+        ErrorMessage = null;
         _currentEntity = null; // switched from _currentId to _currentEntity
         await OnResetFormAsync();
         IsEditMode = false;
@@ -459,10 +459,10 @@ public abstract class ViewModelBase<TRepos, TEntity> : ModelBase
     private async Task AutoClearInfoMessageAsync()
     {
         await Task.Delay(_infoMessageDuration);
-        if (!string.IsNullOrEmpty(_infoMessage))
+        if (!string.IsNullOrEmpty(_statusMessage))
         {
-            _infoMessage = null;
-            OnPropertyChanged(nameof(InfoMessage));
+            _statusMessage = null;
+            OnPropertyChanged(nameof(StatusMessage));
             OnPropertyChanged(nameof(HasInfoMessage));
         }
     }

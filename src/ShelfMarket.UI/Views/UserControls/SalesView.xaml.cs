@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using ShelfMarket.UI.ViewModels;
 
 namespace ShelfMarket.UI.Views.UserControls;
 
@@ -12,6 +14,8 @@ public partial class SalesView : UserControl
     {
         InitializeComponent();
 
+        DataContext = new SalesViewModel();
+
         Loaded += SalesView_Loaded;
     }
 
@@ -23,6 +27,26 @@ public partial class SalesView : UserControl
             if (mw.FindName("PageTitle") is TextBlock title)
             {
                 title.Text = "Salg";
+            }
+        }
+    }
+
+    private void ReolTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            // Ensure the latest value is pushed to the ViewModel
+            var binding = ReolTextBox.GetBindingExpression(TextBox.TextProperty);
+            binding?.UpdateSource();
+
+            if (DataContext is SalesViewModel vm)
+            {
+                vm.OnShelfNumberEnteredCommand.Execute(null);
+                if (vm.ShelfNumber != string.Empty)
+                {
+                    PriceTextBox.Focus();
+                    PriceTextBox.SelectAll();
+                }
             }
         }
     }

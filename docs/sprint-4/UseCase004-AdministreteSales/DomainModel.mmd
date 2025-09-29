@@ -1,5 +1,5 @@
 ﻿classDiagram
-    class Tax {
+    class Moms {
       +navn
       +procent
       +gyldigFra
@@ -20,12 +20,12 @@
       +enhedsPris
     }
 
-    class Avance {
+    class Kommision {
         +avanceProcent
         +gyldigFra
         +gyldigTil
     }
 
     SalesReceipt "1" -- "*" SalesReceiptLine : indeholder
-    Tax "1" -- "*" SalesReceiptLine : anvender sats
-    SalesReceiptLine "*" -- "1" Avance : avance
+    Moms "1" -- "*" SalesReceiptLine : anvender sats
+    SalesReceiptLine "*" -- "1" Kommision : avance

@@ -72,13 +72,14 @@ public sealed class SideMenuViewModel : ModelBase
         _logoffItem = new SideMenuItem("Log af", logoffShelfView, PrivilegeLevel.Guest, isLogoff: true);
 
         var defaultShelfView = new ShelfView { DataContext = shelfViewModel };
-        _defaultItem = new SideMenuItem("Reoler", defaultShelfView, PrivilegeLevel.Guest);
+        _defaultItem = new SideMenuItem("Reoler", defaultShelfView, PrivilegeLevel.User);
 
         // Populate (order preserved – bindings may rely on it)
         SideMenuItems =
         [
             _loginItem,
             _logoffItem,
+            new("EAN Label",       new EanLabelGeneratorView(),   PrivilegeLevel.Guest),
             _defaultItem,
             new("Salg",            new SalesView(),               PrivilegeLevel.User),
             new("Økonomi",         new FinanceView(),             PrivilegeLevel.Admin),

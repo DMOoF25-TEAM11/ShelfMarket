@@ -27,11 +27,7 @@
         - Seed data limited to initial structural version marker (VERSIONINFO); bulk seed handled by separate DML script.
 
     Change Log:
-        2025-09-27  Added indexes section with rationale (IX_*).
-        2025-09-27  Initial documentation comments added for core objects.
-        2025-09-28  Added documentation blocks for VATRATES, SALESRECEIPT, SALESRECEIPTLINE, COMMISSION.
-        2025-09-28  Added documentation blocks for STORERENT, STAFFSALERY and extended index documentation.
-        2025-09-28  Added extended property stubs (can be toggled on as needed).
+        30-09-2024  v1.0  Initial version.
 */
 
 -- Treats double quotes (") as identifier delimiters (object names), not as string delimiters.
@@ -335,7 +331,6 @@ CREATE TABLE [dbo].[SALESRECEIPT] (
     [Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
     [ReceiptNumber] INT IDENTITY(1,1) NOT NULL UNIQUE,
     [IssuedAt] DATETIME NOT NULL DEFAULT GETDATE(),
-    [TotalAmount] DECIMAL(18,2) NOT NULL,
     [VatAmount] DECIMAL(18,2) NOT NULL,
     [PaidByCash] BIT NOT NULL CONSTRAINT DF_SalesReceipt_PaidByCash DEFAULT(1),
     [PaidByMobile] BIT NOT NULL CONSTRAINT DF_SalesReceipt_PaidByMobile DEFAULT(0),

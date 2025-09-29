@@ -18,6 +18,9 @@
           logic is performed in this script.
         - Contract dataset models overlapping temporal scenarios (yearly, seasonal, phased usage).
         - Shelf exclusivity (no overlapping allocations across tenants) is manually respected.
+
+    Change Log:
+        30-09-2024  v1.0  Initial version.
 */
 
 /***************************************************************************************************
@@ -528,8 +531,8 @@ SELECT @DayCount = COUNT(*) FROM #Calendar;
 PRINT CONCAT('Generating ', @ReceiptCount, ' sales receipts over ', @DayCount, ' sales days.');
 
 /* Insert receipts (totals updated later) */
-INSERT dbo.SALESRECEIPT (Id, IssuedAt, TotalAmount, VatAmount, PaidByCash, PaidByMobile)
-SELECT ReceiptId, IssuedAt, 0.00, 0.00, PaidByCash, PaidByMobile
+INSERT dbo.SALESRECEIPT (Id, IssuedAt, VatAmount, PaidByCash, PaidByMobile)
+SELECT ReceiptId, IssuedAt, 0.00, PaidByCash, PaidByMobile
 FROM #ReceiptSeed
 ORDER BY DateValue, IssuedAt, ReceiptId;  -- Ensures sequential chronological ReceiptNumber
 GO
@@ -599,8 +602,7 @@ WITH Totals AS (
     GROUP BY SalesReceiptId
 )
 UPDATE r
-SET r.TotalAmount = t.Gross,
-    r.VatAmount   = ROUND(t.Gross * 25.00 / 125.00, 2)
+SET r.VatAmount   = ROUND(t.Gross * 25.00 / 125.00, 2)
 FROM dbo.SALESRECEIPT r
 JOIN Totals t ON t.SalesReceiptId = r.Id;
 
@@ -665,8 +667,7 @@ SET @VatFractionOnCommission =
     GROUP BY SalesReceiptId
 )
 UPDATE r
-SET r.TotalAmount = a.Gross,
-    r.VatAmount   = ROUND(a.TaxOnComm, 2)
+SET r.VatAmount   = ROUND(a.TaxOnComm, 2)
 FROM dbo.SALESRECEIPT r
 JOIN LineAgg a ON a.SalesReceiptId = r.Id;
 
@@ -769,12 +770,6 @@ SET
             WHEN @IsTaxRegistered = 0 THEN 0
             WHEN @IsTaxUsedItem = 1 THEN ROUND(b.BaseSum * @VatFractionOnCommission, 2)
             ELSE ROUND(b.BaseSum * @VatRateFraction, 2) -- normal VAT on full net base
-        END,
-    r.TotalAmount =
-        CASE
-            WHEN @IsTaxRegistered = 0 THEN b.BaseSum
-            WHEN @IsTaxUsedItem = 1 THEN b.BaseSum          -- price already gross (commission+embedded VAT portion)
-            ELSE ROUND(b.BaseSum * (1 + @VatRateFraction), 2) -- add VAT
         END
 FROM dbo.SALESRECEIPT r
 JOIN Base b ON b.SalesReceiptId = r.Id;

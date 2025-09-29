@@ -87,7 +87,7 @@ public class CashReportViewModel : ViewBase
 
     //            DrawText("Kasserapport", x, y, fsHeader, typeHeader);
     //            y += fsHeader + 10;
-    //            DrawText($"Dato: {Date:yyyy-MM-dd}", x, y, fs, typeNormal);
+    //            DrawText($"Dato: {IssuedAt:yyyy-MM-dd}", x, y, fs, typeNormal);
     //            y += fs + 4;
 
     //            DrawText($"Åbningsbeholdning: {OpeningCash:C}", x, y, fs, typeNormal);

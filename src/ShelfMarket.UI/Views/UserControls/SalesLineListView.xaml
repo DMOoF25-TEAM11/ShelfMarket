@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ShelfMarket.UI.Views.UserControls"
              mc:Ignorable="d" 
-             xmlns:viewmodels="clr-namespace:ShelfMarket.UI.ViewModels" 
+             xmlns:viewmodels="clr-namespace:ShelfMarket.UI.ViewModels;assembly=ShelfMarket.UI"
              d:DataContext="{d:DesignInstance Type=viewmodels:SalesLineListViewModel}">
     <Grid>
         <Grid>

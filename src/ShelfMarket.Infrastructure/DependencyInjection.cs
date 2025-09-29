@@ -16,6 +16,8 @@ public static class DependencyInjection
         var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 #if DEBUG
         var connectionString = configuration.GetConnectionString("ShelfMarketDb_Dev");
+#elif LOCALDB
+        var connectionString = configuration.GetConnectionString("ShelfMarketDb_LocalDB");
 #else
         var connectionString = configuration.GetConnectionString("ShelfMarketDb");
 #endif
@@ -36,6 +38,8 @@ public static class DependencyInjection
         services.AddScoped<IShelfTenantContractRepository, ShelfTenantContractRepository>();
         services.AddScoped<IShelfTenantContractLineRepository, ShelfTenantContractLineRepository>();
         services.AddSingleton<IShelfPricingRuleRepository, ShelfPricingRuleRepository>();
+        services.AddScoped<ISalesRepository, SalesRepository>();
+        services.AddScoped<ISalesLineRepository, SalesLineRepository>();
 
         return services;
     }

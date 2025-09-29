@@ -8,6 +8,7 @@ namespace ShelfMarket.Application.Services.Barcodes;
 /// <inheritdoc />
 public sealed class Ean13BarcodeGenerator : IEan13Generator
 {
+    #region Static Data Tables
     /// <summary>
     /// Left side (odd parity) encoding patterns for digits 0–9 (L-codes).
     /// </summary>
@@ -44,6 +45,7 @@ public sealed class Ean13BarcodeGenerator : IEan13Generator
         "LLLLLL","LLGLGG","LLGGLG","LLGGGL","LGLLGG",
         "LGGLLG","LGGGLL","LGLGLG","LGLGGL","LGGLGL",
     ];
+    #endregion
 
     /// <summary>
     /// Danish culture used for price formatting in header text.
@@ -250,7 +252,7 @@ public sealed class Ean13BarcodeGenerator : IEan13Generator
     /// </summary>
     /// <param name="ean13">EAN string to validate.</param>
     /// <exception cref="ArgumentException">If the value is not 13 digits or the check digit mismatches.</exception>
-    private static void ValidateEan13(string ean13)
+    public void ValidateEan13(string ean13)
     {
         if (ean13 is null || ean13.Length != 13)
             throw new ArgumentException("ean13 must be exactly 13 digits.", nameof(ean13));
@@ -354,4 +356,5 @@ public sealed class Ean13BarcodeGenerator : IEan13Generator
 
     /// <inheritdoc />
     int IEan13Generator.ComputeCheckDigit(string data12) => ComputeCheckDigit(data12);
+    void IEan13Generator.ValidateEan13(string ean) => ValidateEan13(ean);
 }

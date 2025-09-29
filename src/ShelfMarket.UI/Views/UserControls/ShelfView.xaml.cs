@@ -26,12 +26,12 @@ public partial class ShelfView : UserControl
 
     #region variables
     /// <summary>
-    /// Number of columns in the shelf grid.
+    /// ReceiptNumber of columns in the shelf grid.
     /// </summary>
     private const int GridColumns = 19;
 
     /// <summary>
-    /// Number of rows in the shelf grid.
+    /// ReceiptNumber of rows in the shelf grid.
     /// Note: Change this if your layout requires a different row count.
     /// </summary>
     private const int GridRows = 28;
@@ -163,7 +163,7 @@ public partial class ShelfView : UserControl
     //{
     //    try
     //    {
-    //        var existingByNumber = existing.ToDictionary(s => s.Number, s => s);
+    //        var existingByNumber = existing.ToDictionary(s => s.ReceiptNumber, s => s);
     //        var allButtons = FindVisualChildren<Button>(ShelfGrid).Where(b => b.Name.StartsWith("Shelf")).ToList();
 
     //        // Resolve style references once
@@ -175,7 +175,7 @@ public partial class ShelfView : UserControl
     //        }
     //        catch { }
 
-    //        var missing = new List<(int Number, int Col, int Row, bool IsHorizontal)>();
+    //        var missing = new List<(int ReceiptNumber, int Col, int Row, bool IsHorizontal)>();
     //        var updates = new List<(ShelfMarket.Domain.Entities.Shelf Shelf, int Col, int Row, bool? NewHorizontal)>();
 
     //        foreach (var b in allButtons)

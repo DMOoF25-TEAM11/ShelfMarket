@@ -39,15 +39,15 @@ public abstract class ReportViewModelBase : ModelBase
     //        }
     //    }
 
-    //    private string? _error;
+    //    private string? _errorMessage;
     //    /// <summary>Current error message, if any.</summary>
-    //    public string? Error
+    //    public string? ErrorMessage
     //    {
-    //        get => _error;
+    //        get => _errorMessage;
     //        protected set
     //        {
-    //            if (_error == value) return;
-    //            _error = value;
+    //            if (_errorMessage == value) return;
+    //            _errorMessage = value;
     //            OnPropertyChanged();
     //            OnPropertyChanged(nameof(HasError));
     //            RaiseCommandStates();
@@ -55,7 +55,7 @@ public abstract class ReportViewModelBase : ModelBase
     //    }
 
     //    /// <summary>True when an error message is present.</summary>
-    //    public bool HasError => !string.IsNullOrEmpty(Error);
+    //    public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
 
     //    private bool _useDateRange;
     //    /// <summary>
@@ -96,12 +96,12 @@ public abstract class ReportViewModelBase : ModelBase
     #endregion
 
     #region Properties
-    private string _title;
+    private string _title = string.Empty;
 
     public string Title
     {
         get { return _title; }
-        init { _title = value; }
+        init { _title = value ?? string.Empty; }
     }
     private DateTime _fromDate = DateTime.Today;
     /// <summary>Starting date (inclusive) for the report.</summary>
@@ -182,7 +182,7 @@ public abstract class ReportViewModelBase : ModelBase
     //        toCancel?.Dispose();
 
     //        IsLoading = true;
-    //        Error = null;
+    //        ErrorMessage = null;
 
     //        try
     //        {
@@ -195,7 +195,7 @@ public abstract class ReportViewModelBase : ModelBase
     //        }
     //        catch (Exception ex)
     //        {
-    //            Error = ex.Message;
+    //            ErrorMessage = ex.Message;
     //        }
     //        finally
     //        {
@@ -224,16 +224,16 @@ public abstract class ReportViewModelBase : ModelBase
     //                    WriteIndented = true
     //                });
     //                System.Windows.Clipboard.SetText(json);
-    //                InfoMessage = "Rapport export kopieret til udklipsholder.";
+    //                StatusMessage = "Rapport export kopieret til udklipsholder.";
     //            }
     //            catch (Exception ex)
     //            {
-    //                Error = "Export mislykkedes: " + ex.Message;
+    //                ErrorMessage = "Export mislykkedes: " + ex.Message;
     //            }
     //        }
     //        catch (Exception ex)
     //        {
-    //            Error = ex.Message;
+    //            ErrorMessage = ex.Message;
     //        }
     //        await Task.CompletedTask;
     //    }
@@ -243,7 +243,7 @@ public abstract class ReportViewModelBase : ModelBase
     #region Hooks (override in derived classes)
 
     //    /// <summary>
-    //    /// Perform the actual data loading. Throwing sets <see cref="Error"/>.
+    //    /// Perform the actual data loading. Throwing sets <see cref="ErrorMessage"/>.
     //    /// Use <paramref name="ct"/> for cancellation.
     //    /// </summary>
     //    protected abstract Task LoadCoreAsync(CancellationToken ct);
@@ -317,13 +317,13 @@ public abstract class ReportViewModelBase : ModelBase
     #region Helpers
 
     //    /// <summary>
-    //    /// Override for custom parameter validation. Set <see cref="Error"/> and return false to abort refresh.
+    //    /// Override for custom parameter validation. Set <see cref="ErrorMessage"/> and return false to abort refresh.
     //    /// </summary>
     //    protected virtual bool ValidateParameters()
     //    {
     //        if (UseDateRange && FromDate > ToDate)
     //        {
-    //            Error = "Fra-dato må ikke være efter Til-dato.";
+    //            ErrorMessage = "Fra-dato må ikke være efter Til-dato.";
     //            return false;
     //        }
     //        return true;
@@ -340,13 +340,13 @@ public abstract class ReportViewModelBase : ModelBase
     //    /// Convenience for derived classes to set an informational message (not persisted here,
     //    /// but you can add property if desired).
     //    /// </summary>
-    //    protected string? InfoMessage
+    //    protected string? StatusMessage
     //    {
-    //        get => _infoMessage;
+    //        get => _statusMessage;
     //        set
     //        {
-    //            if (_infoMessage == value) return;
-    //            _infoMessage = value;
+    //            if (_statusMessage == value) return;
+    //            _statusMessage = value;
     //            OnPropertyChanged();
     //        }
     //    }

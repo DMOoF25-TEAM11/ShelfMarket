@@ -5,7 +5,7 @@ namespace ShelfMarket.UI.Converters;
 
 public sealed class MonthEnabledConverter : IMultiValueConverter
 {
-    // values[0] = SelectedYear (int), values[1] = Month Number (int 1..12)
+    // values[0] = SelectedYear (int), values[1] = Month ReceiptNumber (int 1..12)
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         if (values is null || values.Length < 2) return true;

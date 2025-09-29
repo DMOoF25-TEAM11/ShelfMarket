@@ -3,7 +3,7 @@
 public class SalesLine
 {
     public Guid? Id { get; set; }
-    public string? EAN { get; set; }
+    public Guid? SalesReceiptId { get; set; }
     public uint ShelfNumber { get; set; }
     public decimal Price { get; set; } = decimal.Zero;
 
@@ -11,9 +11,8 @@ public class SalesLine
     {
     }
 
-    public SalesLine(uint shelfNumber, decimal price, string? ean = null)
+    public SalesLine(uint shelfNumber, decimal price)
     {
-        EAN = ean;
         ShelfNumber = shelfNumber;
         Price = price;
     }

@@ -31,7 +31,7 @@ public partial class MonthYearPicker : UserControl
         UpdateYearControlsEnabledState();
     }
 
-    // Expose month list (Number = 1..12, Name = Danish month)
+    // Expose month list (ReceiptNumber = 1..12, Name = Danish month)
     public IReadOnlyList<MonthItem> Months { get; }
 
     public static readonly DependencyProperty SelectedDateProperty =

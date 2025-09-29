@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Configurations>Debug;Release;LocalDb</Configurations>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,6 +19,7 @@
 
     <ItemGroup>
         <Folder Include="ExternalServices\" />
+        <Folder Include="Services\" />
     </ItemGroup>
 
     <ItemGroup>

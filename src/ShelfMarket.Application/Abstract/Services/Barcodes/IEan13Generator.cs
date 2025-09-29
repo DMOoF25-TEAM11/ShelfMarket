@@ -93,4 +93,6 @@ public interface IEan13Generator
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A task producing PNG binary data.</returns>
     Task<byte[]> RenderPngAsync(string ean13, int scale = 3, int barHeight = 60, bool includeNumbers = true, CancellationToken cancellationToken = default);
+    void ValidateEan13(string ean13);
+
 }

@@ -88,7 +88,7 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
         }
         catch (Exception ex)
         {
-            Error = $"Fejl ved indlæsning af reoltyper: {ex.Message}";
+            ErrorMessage = $"Fejl ved indlæsning af reoltyper: {ex.Message}";
         }
         finally
         {
@@ -132,7 +132,7 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
     {
         if (CurrentEntity == null)
         {
-            Error = _errorEntityNotFound;
+            ErrorMessage = _errorEntityNotFound;
             return;
         }
         CurrentEntity.Number = ShelfNumber;

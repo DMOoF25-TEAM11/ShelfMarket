@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using ShelfMarket.Application;
 using ShelfMarket.Infrastructure;
 using ShelfMarket.UI.ViewModels;
+using ShelfMarket.UI.ViewModels.Reports;
 
 namespace ShelfMarket.UI;
 
@@ -49,7 +50,7 @@ public partial class App : System.Windows.Application
                 //services.AddTransient<TenantsViewModel>();
                 //services.AddTransient<MainWindowViewModel>();
 
-
+                services.AddTransient<ReportDailyCashViewModel>();
             })
             .Build();
 
