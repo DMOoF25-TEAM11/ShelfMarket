@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using ShelfMarket.UI.ViewModels.Reports;
 
 namespace ShelfMarket.UI.Views.UserControls.Reports;
 
@@ -10,6 +11,8 @@ public partial class ReportDailyCashView : UserControl
     public ReportDailyCashView()
     {
         InitializeComponent();
-        DataContext ??= new ViewModels.Reports.ReportDailyCashViewModel();
+        var vm = new ReportDailyCashViewModel(); // or resolve via DI
+
+        DataContext ??= vm;
     }
 }

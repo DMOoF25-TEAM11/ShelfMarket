@@ -7,9 +7,10 @@ namespace ShelfMarket.UI.ViewModels.Reports;
 
 public class ReportDailyCashViewModel : ReportViewModelBase
 {
-    public ReportDailyCashViewModel(ICashReportService? service = null) : base("Kasserapport")
+    public ReportDailyCashViewModel() : base("Kasserapport")
     {
-        _service = service ?? new Services.CashReportServiceStub();
+        // Initialize properties if needed
+        _service ??= new Services.CashReportServiceStub();
         Date = DateTime.Today; // Ensure a valid date before first load
         RefreshCommand = new RelayCommand(async () => await LoadAsync());
 
