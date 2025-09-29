@@ -22,8 +22,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{93399C27-1127-489C-9E8F-7C803315DE2A}"
 	ProjectSection(SolutionItems) = preProject
 		docs\DatabaseSchema.md = docs\DatabaseSchema.md
-		docs\DCD.mmd = docs\DCD.mmd
 		docs\DCD-mvvm.mmd = docs\DCD-mvvm.mmd
+		docs\DCD.mmd = docs\DCD.mmd
 		docs\DomainModel.mmd = docs\DomainModel.mmd
 		docs\ER.mmd = docs\ER.mmd
 		README.md = README.md
@@ -106,10 +106,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{5A48367B-806
 	ProjectSection(SolutionItems) = preProject
 		docs\sql\DDL.v1.sql = docs\sql\DDL.v1.sql
 		docs\sql\DML.v1.sql = docs\sql\DML.v1.sql
+		docs\sql\uspCreateSalesReceipt.sql = docs\sql\uspCreateSalesReceipt.sql
 		docs\sql\uspGetAvailableShelves.v1.sql = docs\sql\uspGetAvailableShelves.v1.sql
 		docs\sql\uspGetShelfTenantCurrentShelves.v1.sql = docs\sql\uspGetShelfTenantCurrentShelves.v1.sql
 		docs\sql\uspShelvesForShelfTenantThatTenantRent.v1.sql = docs\sql\uspShelvesForShelfTenantThatTenantRent.v1.sql
-		docs\sql\uspCreateSalesReceipt.sql = docs\sql\uspCreateSalesReceipt.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCare002-AdministrateShelfTenant", "UseCare002-AdministrateShelfTenant", "{0714F7E3-4326-4494-B2EC-E10DDD5489A6}"
@@ -117,9 +117,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCare002-AdministrateShel
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCBrief.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCBrief.md
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCCausal.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-AdministrererReolLejer-UCCausal.md
 		UseCase002-DCD.mmd = UseCase002-DCD.mmd
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Domain Model.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Domain Model.mmd
-		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Operation Contract CRUDShelfTenant.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Operation Contract CRUDShelfTenant.md
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Domain-Model.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Domain-Model.mmd
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\Usecase002-sequenceDiagram.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\Usecase002-sequenceDiagram.mmd
+		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Operation-Contract-CRUDShelfTenant.md = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-Operation-Contract-CRUDShelfTenant.md
 		docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-SSD.mmd = docs\sprint-3\UseCase002-AdministrateShelfTenant\UseCase002-SSD.mmd
 		UseCase002-UserStory.md = UseCase002-UserStory.md
 	EndProjectSection
