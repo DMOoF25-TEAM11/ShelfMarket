@@ -106,10 +106,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{5A48367B-806
 	ProjectSection(SolutionItems) = preProject
 		docs\sql\DDL.v1.sql = docs\sql\DDL.v1.sql
 		docs\sql\DML.v1.sql = docs\sql\DML.v1.sql
-		docs\sql\uspGetAvailableShelves.sql = docs\sql\uspGetAvailableShelves.sql
-		docs\sql\uspGetShelfTenantCurrentShelves.sql = docs\sql\uspGetShelfTenantCurrentShelves.sql
-		docs\sql\uspShelvesForShelfTenantThatTenantRent.sql = docs\sql\uspShelvesForShelfTenantThatTenantRent.sql
-		docs\sql\View.v1.sql = docs\sql\View.v1.sql
+		docs\sql\uspGetAvailableShelves.v1.sql = docs\sql\uspGetAvailableShelves.v1.sql
+		docs\sql\uspGetShelfTenantCurrentShelves.v1.sql = docs\sql\uspGetShelfTenantCurrentShelves.v1.sql
+		docs\sql\uspShelvesForShelfTenantThatTenantRent.v1.sql = docs\sql\uspShelvesForShelfTenantThatTenantRent.v1.sql
 		docs\sql\uspCreateSalesReceipt.sql = docs\sql\uspCreateSalesReceipt.sql
 	EndProjectSection
 EndProject
