@@ -46,14 +46,14 @@ public class ShelfMarketDbContext : DbContext
     public DbSet<ShelfTenantContractLine> ShelfTenantContractLines { get; set; }
 
     /// <summary>
-    /// Sales line items (per shelf / EAN sale details).
+    /// SalesReceipt line items (per shelf / EAN sale details).
     /// </summary>
-    public DbSet<SalesLine> SalesLines { get; set; }
+    public DbSet<SalesReceiptLine> SalesLines { get; set; }
 
     /// <summary>
-    /// Sales headers (grouping sales lines, with payment metadata).
+    /// SalesReceipt headers (grouping sales lines, with payment metadata).
     /// </summary>
-    public DbSet<Sales> Sales { get; set; }
+    public DbSet<SalesReceipt> Sales { get; set; }
 
     /// <summary>
     /// Tiered pricing rules used to determine per-shelf pricing based on quantity.
@@ -83,8 +83,8 @@ public class ShelfMarketDbContext : DbContext
         modelBuilder.Entity<ShelfTenant>().ToTable("SHELFTENANT");
         modelBuilder.Entity<ShelfTenantContract>().ToTable("SHELFTENANTCONTRACT");
         modelBuilder.Entity<ShelfTenantContractLine>().ToTable("SHELFTENANTCONTRACTLINE");
-        modelBuilder.Entity<SalesLine>().ToTable("SALESLINE");
-        modelBuilder.Entity<Sales>().ToTable("SALES");
+        modelBuilder.Entity<SalesReceiptLine>().ToTable("SALESRECEIPTLINE");
+        modelBuilder.Entity<SalesReceipt>().ToTable("SALESRECEIPT");
 
     }
 }

@@ -81,7 +81,7 @@ public sealed class Ean13BarcodeGenerator : IEan13Generator
             throw new ArgumentException($"Shelf number has more than {shelfDigits} digits.", nameof(shelfNumberDigits));
 
         if (cents.Length > priceDigits)
-            throw new ArgumentException($"Price (in cents) has more than {priceDigits} digits.", nameof(price));
+            throw new ArgumentException($"UnitPrice (in cents) has more than {priceDigits} digits.", nameof(price));
 
         shelf = shelf.PadLeft(shelfDigits, '0');
         cents = cents.PadLeft(priceDigits, '0');

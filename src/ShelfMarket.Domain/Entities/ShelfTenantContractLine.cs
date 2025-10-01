@@ -6,7 +6,7 @@ public class ShelfTenantContractLine
     public Guid ShelfTenantContractId { get; set; } = Guid.Empty;
     public Guid ShelfId { get; set; } = Guid.Empty;
     public int LineNumber { get; set; }
-    public decimal PricePerMonth { get; set; } /* Price per month in the contract from autocalculate */
+    public decimal PricePerMonth { get; set; } /* UnitPrice per month in the contract from autocalculate */
     public decimal? PricePerMonthSpecial { get; set; }
 
     public ShelfTenantContractLine()

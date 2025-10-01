@@ -9,6 +9,9 @@
              xmlns:conv="clr-namespace:ShelfMarket.UI.Converters"
              d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <conv:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid>
         <!--
             Layout root:
@@ -37,8 +40,9 @@
 
             <TextBlock Text="Pris:"/>
             <TextBox x:Name="PriceTextBox"
-                     DataContext="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,0,0,10"/>
+                     Text="{Binding UnitPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,10"
+                     KeyDown="PriceTextBox_KeyDown"/>
         </StackPanel>
 
         <!-- Action Buttons: Horizontal StackPanel with Add, Save, Delete, and Cancel buttons -->
@@ -48,14 +52,53 @@
             - Commands should be implemented in the ViewModel.
             - "Annuller" (Cancel) is always visible to reset or leave edit state.
         -->
+        <!-- Action Buttons: Horizontal StackPanel with Add, Save, Delete, and Cancel buttons -->
         <StackPanel Grid.Row="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     Margin="0,10,0,0">
-
+            <!-- New sale Button -->
+            <Button Content="Nyt salg"
+                    Command="{Binding BeginNewSaleCommand}"
+                    Margin="5,0"/>
+            <!-- Cancel Button (from CrudViewModel) -->
+            <Button Content="Annuller"
+                    Command="{Binding CancelCommand}"
+                    Margin="5,0"/>
+            <!-- Paid by Mobile -->
+            <Button Content="Betalt med MobilePay"
+                    Command="{Binding MobilePayCommand}"
+                    Margin="5,0"/>
+            <!-- Paid by Cash -->
+            <Button Content="Betalt med Kontanter"
+                    Command="{Binding CashPayCommand}"
+                    Margin="5,0"/>
+            <!-- Print Receipt -->
+            <Button Content="Udskriv Kvittering"
+                    Command="{Binding PrintReceiptCommand}"
+                    Margin="5,0"/>
         </StackPanel>
 
-        <uc:SalesLineListView Grid.Row="3" Margin="0,10,0,0"/>
+
+        <ListView ItemsSource="{Binding SalesLines}" Grid.Row="3" Margin="0,10,0,10">
+            <ListView.Resources>
+                <Style TargetType="GridViewColumnHeader">
+                    <Setter Property="Background" Value="{x:Null}"/>
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Reol Number" DisplayMemberBinding="{Binding ShelfNumber}" />
+                    <GridViewColumn Header="Pris">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding UnitPrice, StringFormat={}{0:C2}, ConverterCulture=da-DK}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
 
         <StackPanel Grid.Row="4" Margin="0,10,0,0">
             <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource Brush.TextDim}"/>

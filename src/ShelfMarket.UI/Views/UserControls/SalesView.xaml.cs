@@ -47,7 +47,38 @@ public partial class SalesView : UserControl
                     PriceTextBox.Focus();
                     PriceTextBox.SelectAll();
                 }
+                else
+                {
+                    ReolTextBox.Focus();
+                    ReolTextBox.SelectAll();
+                }
             }
+        }
+    }
+    private async void PriceTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            // Ensure the latest value is pushed to the ViewModel
+            var binding = PriceTextBox.GetBindingExpression(TextBox.TextProperty);
+            binding?.UpdateSource();
+
+            if (DataContext is SalesViewModel vm)
+            {
+                // Check if shelf number exists (assuming a method ExistsShelfNumber)
+                if (await vm.IsShelfNumberValid(vm.ShelfNumber))
+                {
+                    // Add price and shelf number to SalesLines (assuming AddSalesLine method)
+                    vm.OnPriceEnteredCommand.Execute(null);
+                }
+                else
+                {
+                    // Optionally, show a message or handle the case where shelf number does not exist
+                    MessageBox.Show("Shelf number does not exist.");
+                }
+            }
+            ReolTextBox.Focus();
+            ReolTextBox.SelectAll();
         }
     }
 }

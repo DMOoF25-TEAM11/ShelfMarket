@@ -85,4 +85,6 @@ public interface IShelfRepository : IRepository<Shelf>
         Guid tenantId,
         DateTime startDate,
         CancellationToken cancellationToken = default);
+
+    Task<bool> ExistsShelfNumberAsync(int shelfNumber, CancellationToken cancellationToken = default);
 }

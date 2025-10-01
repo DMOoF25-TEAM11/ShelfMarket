@@ -167,4 +167,6 @@ public class ShelfRepository : Repository<Shelf>, IShelfRepository
         }
         return shelves.Count == 0 ? Array.Empty<AvailableShelfDto>() : shelves;
     }
+    public async Task<bool> ExistsShelfNumberAsync(int shelfNumber, CancellationToken cancellationToken = default) =>
+        await _dbSet.AnyAsync(s => s.Number == shelfNumber, cancellationToken);
 }

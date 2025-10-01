@@ -8,7 +8,7 @@ using ShelfMarket.Infrastructure.Persistence;
 
 namespace ShelfMarket.Infrastructure.Repositories;
 
-public class SalesRepository : Repository<Sales>, ISalesRepository
+public class SalesRepository : Repository<SalesReceipt>, ISalesRepository
 {
     public SalesRepository(ShelfMarketDbContext context) : base(context)
     {
@@ -39,15 +39,15 @@ public class SalesRepository : Repository<Sales>, ISalesRepository
         return (result == null || result == DBNull.Value) ? 0m : Convert.ToDecimal(result);
     }
 
-    public async Task<SalesReceiptWithTotalAmountDto> SetSaleAsync(IEnumerable<SalesLine> lines, bool paidByCash, bool paidByMobile)
+    public async Task<SalesReceiptWithTotalAmountDto> SetSaleAsync(SalesReceipt salesRecord, IEnumerable<SalesReceiptLine> lines)
     {
         var connection = _context.Database.GetDbConnection();
         await using var command = connection.CreateCommand();
         command.CommandText = "uspCreateSalesReceipt";
         command.CommandType = CommandType.StoredProcedure;
 
-        command.Parameters.Add(new SqlParameter("@PaidByCash", paidByCash));
-        command.Parameters.Add(new SqlParameter("@PaidByMobile", paidByMobile));
+        command.Parameters.Add(new SqlParameter("@PaidByCash", salesRecord.PaidByCash));
+        command.Parameters.Add(new SqlParameter("@PaidByMobile", salesRecord.PaidByMobile));
         command.Parameters.Add(new SqlParameter("@IssuedAt", DateTime.Now));
 
         var linesParam = new SqlParameter("@Lines", SqlDbType.Structured)
@@ -75,24 +75,27 @@ public class SalesRepository : Repository<Sales>, ISalesRepository
         await command.ExecuteNonQueryAsync();
 
         // Create and return the DTO
-        return new SalesReceiptWithTotalAmountDto
+        SalesReceiptWithTotalAmountDto salesCreated = new()
         {
             Id = receiptId.Value != DBNull.Value ? (Guid?)receiptId.Value : null,
-            ReceiptNumber = receiptNumber.Value != DBNull.Value ? (uint?)(int)receiptNumber.Value : null,
+            ReceiptNumber = receiptNumber.Value != DBNull.Value ? (int)receiptNumber.Value : null,
             IssuedAt = DateTime.Now,
-            PaidByCash = paidByCash,
-            PaidByMobile = paidByMobile
-            // VatAmount and TotalAmount can be set if you have output parameters for them
+            PaidByCash = salesRecord.PaidByCash,
+            PaidByMobile = salesRecord.PaidByMobile,
+
         };
+        var salesLineRepo = new SalesLineRepository(_context);
+        salesCreated.SalesLines = await salesLineRepo.GetLinesByReceiptIdAsync((Guid)receiptId.Value);
+        return await Task.FromResult(salesCreated);
     }
 
-    private DataTable ToDataTable(IEnumerable<SalesLine> lines)
+    private DataTable ToDataTable(IEnumerable<SalesReceiptLine> lines)
     {
         var table = new DataTable();
         table.Columns.Add("ShelfNumber", typeof(int));
         table.Columns.Add("UnitPrice", typeof(decimal));
         foreach (var line in lines)
-            table.Rows.Add((int)line.ShelfNumber, line.Price);
+            table.Rows.Add((int)line.ShelfNumber, line.UnitPrice);
         return table;
     }
 

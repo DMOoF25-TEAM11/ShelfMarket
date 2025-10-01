@@ -2,4 +2,4 @@
 
 namespace ShelfMarket.Application.Abstract;
 
-public interface ISalesLineRepository : IRepository<SalesLine> { }
+public interface ISalesLineRepository : IRepository<SalesReceiptLine> { }

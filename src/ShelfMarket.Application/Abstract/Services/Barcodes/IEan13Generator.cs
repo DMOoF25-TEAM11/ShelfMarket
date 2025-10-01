@@ -27,7 +27,7 @@ public interface IEan13Generator
     /// and <paramref name="priceDigits"/>.
     /// </summary>
     /// <param name="shelfNumberDigits">Raw shelf number string (non-digits ignored).</param>
-    /// <param name="price">Price as decimal value; rounded to nearest cent (away from zero).</param>
+    /// <param name="price">UnitPrice as decimal value; rounded to nearest cent (away from zero).</param>
     /// <param name="shelfDigits">Total digits allocated to shelf segment (must be &gt;= 1).</param>
     /// <param name="priceDigits">Total digits allocated to price (in cents) segment (must be &gt;= 1).</param>
     /// <returns>A 12-character numeric string.</returns>
@@ -47,7 +47,7 @@ public interface IEan13Generator
     /// Builds the full 13-digit EAN by composing data and appending the computed check digit.
     /// </summary>
     /// <param name="shelfNumberDigits">Shelf number string (non-digits removed).</param>
-    /// <param name="price">Price value (converted to cents).</param>
+    /// <param name="price">UnitPrice value (converted to cents).</param>
     /// <param name="shelfDigits">Digits allotted to shelf part.</param>
     /// <param name="priceDigits">Digits allotted to price (cents) part.</param>
     /// <returns>The 13-digit EAN code.</returns>
