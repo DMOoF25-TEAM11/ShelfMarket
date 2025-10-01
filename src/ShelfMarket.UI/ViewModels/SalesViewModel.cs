@@ -13,6 +13,16 @@ namespace ShelfMarket.UI.ViewModels;
 
 public class SalesViewModel : ViewModelBase<ISalesRepository, SalesReceipt>
 {
+
+    #region Fields Commands
+    private readonly RelayCommand _cashPayCommand;
+    private readonly RelayCommand _mobilePayCommand;
+    private readonly RelayCommand _beginNewSaleCommand;
+    private readonly RelayCommand _printReceiptCommand;
+    private readonly RelayCommand _onShelfNumberEnteredCommand;
+    private readonly RelayCommand _onPriceEnteredCommand;
+    #endregion
+
     public ObservableCollection<SalesReceiptLine> SalesLines { get; set; } = new ObservableCollection<SalesReceiptLine>();
 
     // Add a private readonly field for IEan13Generator
@@ -25,11 +35,16 @@ public class SalesViewModel : ViewModelBase<ISalesRepository, SalesReceipt>
         {
             RefreshCommandStates();
         };
+
+        _cashPayCommand = new RelayCommand(OnCashPay, CanCashPay);
+        _mobilePayCommand = new RelayCommand(OnMobilePay, CanMobilePay);
+        _beginNewSaleCommand = new RelayCommand(OnNewSale);
+        _printReceiptCommand = new RelayCommand(OnPrintReceipt, CanPrintReceipt);
+        _onShelfNumberEnteredCommand = new RelayCommand(OnShelfNumberEntered, CanShelfNumberEntered);
+        _onPriceEnteredCommand = new RelayCommand(OnPriceEntered);
     }
 
     public SalesReceiptWithTotalAmountDto? SalesCommit { get; set; } = null;
-
-
 
     #region Form Fields
     private string _shelfNumber = string.Empty;
@@ -73,12 +88,12 @@ public class SalesViewModel : ViewModelBase<ISalesRepository, SalesReceipt>
     #endregion
 
     #region Commands
-    public ICommand CashPayCommand => new RelayCommand(OnCashPay, CanCashPay);
-    public ICommand MobilePayCommand => new RelayCommand(async () => await OnMobilePayAsync(), CanMobilePay);
-    public ICommand BeginNewSaleCommand => new RelayCommand(OnNewSale);
-    public ICommand PrintReceiptCommand => new RelayCommand(OnPrintReceipt, CanPrintReceipt);
-    public ICommand OnShelfNumberEnteredCommand => new RelayCommand(OnShelfNumberEntered, CanShelfNumberEntered);
-    public ICommand OnPriceEnteredCommand => new RelayCommand(OnPriceEntered);
+    public ICommand CashPayCommand => _cashPayCommand;
+    public ICommand MobilePayCommand => _mobilePayCommand;
+    public ICommand BeginNewSaleCommand => _beginNewSaleCommand;
+    public ICommand PrintReceiptCommand => _printReceiptCommand;
+    public ICommand OnShelfNumberEnteredCommand => _onShelfNumberEnteredCommand;
+    public ICommand OnPriceEnteredCommand => _onPriceEnteredCommand;
     #endregion
 
     #region CanXXX Command
@@ -86,9 +101,9 @@ public class SalesViewModel : ViewModelBase<ISalesRepository, SalesReceipt>
         => base.CanCancel()
         && ShelfNumber != string.Empty;
 
-    private bool CanCashPay() => true;
+    private bool CanCashPay() => SalesLines.Count > 0;
 
-    private bool CanMobilePay() => true;
+    private bool CanMobilePay() => SalesLines.Count > 0;
     private bool CanPrintReceipt()
     {
         // Enable only if there is a confirmed sale
@@ -191,13 +206,9 @@ public class SalesViewModel : ViewModelBase<ISalesRepository, SalesReceipt>
     }
     private void OnPriceEntered()
     {
-        int shelfNumber;
-        decimal unitPrice;
-
-        int.TryParse(ShelfNumber, out shelfNumber);
+        _ = int.TryParse(ShelfNumber, out int shelfNumber);
         var normalizedPrice = UnitPrice.Replace(',', '.');
-        decimal.TryParse(normalizedPrice, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out unitPrice);
-        //decimal.TryParse(UnitPrice.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out unitPrice);
+        decimal.TryParse(normalizedPrice, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal unitPrice);
 
         SalesLines.Add(new SalesReceiptLine
         {
@@ -219,10 +230,9 @@ public class SalesViewModel : ViewModelBase<ISalesRepository, SalesReceipt>
         //return Task.CompletedTask;
     }
 
-    private async Task OnMobilePayAsync()
+    private void OnMobilePay()
     {
         AddSalesLineToReposAndConfirmSale(PaymentMethod.MobilePay);
-        await Task.CompletedTask;
     }
     #endregion
 
