@@ -29,6 +29,7 @@
                 <MenuItem Header="Omsætning"/>
                 <Separator/>
                 <MenuItem IsEnabled="False" Header="Månedligt"/>
+                <MenuItem Header="Reol lejer udbetaling" Click="MenuShelfTenantPayoutReport_Click"/>
             </MenuItem>
             <MenuItem Header="_Hjælp">
                 <MenuItem Header="Om" />
