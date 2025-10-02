@@ -52,6 +52,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCase005-AdministrateShel
 		docs\sprint-1\UseCase005-AdministrateShelfType\DatabaseSchema.md = docs\sprint-1\UseCase005-AdministrateShelfType\DatabaseSchema.md
 		docs\sprint-1\UseCase005-AdministrateShelfType\DDL.sql = docs\sprint-1\UseCase005-AdministrateShelfType\DDL.sql
 		docs\sprint-1\UseCase005-AdministrateShelfType\DomainModel.mmd = docs\sprint-1\UseCase005-AdministrateShelfType\DomainModel.mmd
+		docs\sprint-1\UseCase005-AdministrateShelfType\ER.mmd = docs\sprint-1\UseCase005-AdministrateShelfType\ER.mmd
 		docs\sprint-1\UseCase005-AdministrateShelfType\OC.md = docs\sprint-1\UseCase005-AdministrateShelfType\OC.md
 		docs\sprint-1\UseCase005-AdministrateShelfType\SD.mmd = docs\sprint-1\UseCase005-AdministrateShelfType\SD.mmd
 		docs\sprint-1\UseCase005-AdministrateShelfType\SSD.mmd = docs\sprint-1\UseCase005-AdministrateShelfType\SSD.mmd
