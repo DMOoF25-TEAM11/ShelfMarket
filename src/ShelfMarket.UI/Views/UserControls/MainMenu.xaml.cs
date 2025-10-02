@@ -25,18 +25,23 @@ public partial class MainMenu : UserControl
     {
         if (_mainWindow != null)
         {
-            // Use ContentControl to host different views
             _mainWindow.MainContent.Content = new EanLabelGeneratorView();
         }
     }
-
 
     private void MenuCashReport_Click(object sender, System.Windows.RoutedEventArgs e)
     {
         if (_mainWindow != null)
         {
-            // Use ContentControl to host different views
             _mainWindow.MainContent.Content = new ReportDailyCashView();
+        }
+    }
+
+    private void MenuShelfTenantPayoutReport_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (_mainWindow != null)
+        {
+            _mainWindow.MainContent.Content = new ReportShelfTenantPayoutView();
         }
     }
 
