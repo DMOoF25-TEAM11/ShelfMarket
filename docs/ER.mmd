@@ -1,12 +1,12 @@
 ﻿erDiagram
     VERSIONINFO {
-        int Id
+        int Id PK
         string Version
         datetime AppliedAt
     }
 
     COMPANYINFO {
-        guid Id
+        guid Id PK
         string Name
         string Address
         string PostalCode
@@ -19,7 +19,7 @@
     }
 
     VATRATES {
-        guid Id
+        guid Id PK
         string Name
         decimal RatePercent
         date EffectiveFrom
@@ -27,29 +27,29 @@
     }
 
     COMMISSION {
-        guid Id
+        guid Id PK
         float RateProcent
         date EffectiveFrom
         date EffectiveTo
     }
 
     SHELFTYPE {
-        guid Id
+        guid Id PK
         string Name
         string Description
     }
 
     SHELF {
-        guid Id
+        guid Id PK
         int Number
-        guid ShelfTypeId
+        guid ShelfTypeId FK
         int LocationX
         int LocationY
         boolean OrientationHorizontal
     }
 
     SHELFTENANT {
-        guid Id
+        guid Id PK
         string FirstName
         string LastName
         string Address
@@ -61,8 +61,8 @@
     }
 
     SHELFTENANTCONTRACT {
-        guid Id
-        guid ShelfTenantId
+        guid Id PK
+        guid ShelfTenantId FK
         int ContractNumber
         date StartDate
         date EndDate
@@ -70,22 +70,22 @@
     }
 
     SHELFTENANTCONTRACTLINE {
-        guid Id
-        guid ShelfTenantContractId
-        guid ShelfId
+        guid Id PK
+        guid ShelfTenantContractId FK
+        guid ShelfId FK
         int LineNumber
         decimal PricePerMonth
         decimal PricePerMonthSpecial
     }
 
     SHELFPRICINGRULES {
-        guid Id
+        guid Id PK
         int MinShelvesInclusive
         decimal PricePerShelf
     }
 
     SALESRECEIPT {
-        guid Id
+        guid Id PK
         int ReceiptNumber
         datetime IssuedAt
         decimal TotalAmount
@@ -95,7 +95,7 @@
     }
 
     SALESRECEIPTLINE {
-        guid Id
+        guid Id PK
         guid SalesReceiptId
         guid VatRatesId
         guid CommisionId
