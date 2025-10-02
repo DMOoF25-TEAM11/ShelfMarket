@@ -1,0 +1,27 @@
+sequenceDiagram
+
+    actor Employee
+    participant System as "Sales System"
+    participant Scanner as "Barcode Scanner"
+    participant DB as "Database"
+
+    Employee->>System: Log in (username/password)
+    System->>DB: Validate user
+    DB-->>System: OK
+    System-->>Employee: Login confirmed
+
+    Employee->>System: Navigate to "Sales"
+
+    Employee->>Scanner: Scan item barcode
+    Scanner-->>System: EAN read
+
+    System->>DB: Look up item by EAN
+    alt Valid input
+        DB-->>System: Item data {shelfNumber, price}
+        System->>System: Create Salesline(shelfNumber, quantity=1, price)
+        System->>System: Add price to total
+        System-->>Employee: Show item price and updated total
+    else Invalid input
+        DB-->>System: Not found / invalid EAN
+        System-->>Employee: Error message: Invalid input<br/>Price is not shown and not added to total
+    end
