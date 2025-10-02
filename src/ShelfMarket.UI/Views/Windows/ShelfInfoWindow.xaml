@@ -45,11 +45,11 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Fornavn" Style="{StaticResource Text.Body}"/>                    
-                    <TextBox Grid.Row="1" Grid.Column="0" Margin="0,4,0,0"/>
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Efternavn" Style="{StaticResource Text.Body}"/>                    
-                    <TextBox Grid.Row="1" Grid.Column="2" Margin="0,4,0,0"/>                    
-                </Grid>                
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Fornavn" Style="{StaticResource Text.Body}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,4,0,0" Text="{Binding TenantFirstName, Mode=OneWay}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Efternavn" Style="{StaticResource Text.Body}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Margin="0,4,0,0" Text="{Binding TenantLastName, Mode=OneWay}"/>
+                </Grid>
             </StackPanel>
 
             <!-- Lejeperiode -->
@@ -72,15 +72,16 @@
                                                 Margin="0,4,0,12"
                                                 IsFlexible="True"
                                                 VerticalAlignment="Center"
-                                                SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                SelectedDate="{Binding SelectedDate, Mode=TwoWay}"/>
                     
                     <!-- Afslutning for nuværende kontrakt -->
                     <TextBlock Grid.Row="2" Text="Afslutning for nuværende kontrakt" HorizontalAlignment="Left" Style="{StaticResource Text.Label}"/>
-                    <components:MonthYearPicker Grid.Row="3" 
+                    <components:MonthYearPicker Grid.Row="3"
                                                 Margin="0,4,0,0"
                                                 IsFlexible="True"
                                                 VerticalAlignment="Center"
-                                                x:Name="EndDatePicker"/>
+                                                x:Name="EndDatePicker"
+                                                SelectedDate="{Binding ContractEndDate, Mode=OneWay}"/>
                 </Grid>
             </StackPanel>
 
@@ -103,7 +104,13 @@
                         <ComboBoxItem Content="Horizontal"/>                        
                     </ComboBox>
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="Type Reol" Style="{StaticResource Text.Label}"/>
-                    <ComboBox Grid.Row="1" Grid.Column="2" SelectedIndex="0" Margin="0,4,0,0" />
+                    <ComboBox Grid.Row="1"
+                              Grid.Column="2"
+                              Margin="0,4,0,0"
+                              ItemsSource="{Binding ShelfTypes}"
+                              DisplayMemberPath="Name"
+                              SelectedValuePath="Id"
+                              SelectedValue="{Binding SelectedShelfTypeId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </StackPanel>
 
@@ -141,5 +148,4 @@
         </Grid>
     </Border>
 </UserControl>
- 
 

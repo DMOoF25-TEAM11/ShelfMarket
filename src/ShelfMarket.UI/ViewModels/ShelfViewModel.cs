@@ -25,6 +25,7 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
                 _shelfNumber = value;
                 OnPropertyChanged();
                 RefreshCommandStates();
+                _ = UpdateTenantInfoAsync();
             }
         }
     }
@@ -44,8 +45,8 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
         }
     }
 
-    private DateTime? _selectedDate;
-    public DateTime? SelectedDate
+    private DateTime _selectedDate;
+    public DateTime SelectedDate
     {
         get => _selectedDate;
         set
@@ -54,6 +55,37 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
             {
                 _selectedDate = value;
                 OnPropertyChanged();
+                _ = UpdateTenantInfoAsync();
+            }
+        }
+    }
+
+    private int _currentMonth;
+    private int _currentYear;
+    public int CurrentMonth
+    {
+        get => _currentMonth;
+        set
+        {
+            if (_currentMonth != value)
+            {
+                _currentMonth = value;
+                OnPropertyChanged();
+                SelectedDate = new DateTime(CurrentYear, _currentMonth, 1);
+            }
+        }
+    }
+
+    public int CurrentYear
+    {
+        get => _currentYear;
+        set
+        {
+            if (_currentYear != value)
+            {
+                _currentYear = value;
+                OnPropertyChanged();
+                SelectedDate = new DateTime(_currentYear, CurrentMonth, 1);
             }
         }
     }
@@ -63,10 +95,35 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
     public ObservableCollection<ShelfType> ShelfTypes { get; private set; } = [];
     #endregion
 
+    #region Tenant Info
+    private string? _tenantFirstName;
+    public string? TenantFirstName
+    {
+        get => _tenantFirstName;
+        private set { if (_tenantFirstName == value) return; _tenantFirstName = value; OnPropertyChanged(); }
+    }
+
+    private string? _tenantLastName;
+    public string? TenantLastName
+    {
+        get => _tenantLastName;
+        private set { if (_tenantLastName == value) return; _tenantLastName = value; OnPropertyChanged(); }
+    }
+
+    private DateTime? _contractEndDate;
+    public DateTime? ContractEndDate
+    {
+        get => _contractEndDate;
+        private set { if (_contractEndDate == value) return; _contractEndDate = value; OnPropertyChanged(); }
+    }
+    #endregion
+
     public ShelfViewModel(IShelfRepository? selected = null) : base(selected ?? App.HostInstance.Services.GetRequiredService<IShelfRepository>())
     {
         // Initialize with current month/year
-        _selectedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+        _currentMonth = DateTime.Now.Month;
+        _currentYear = DateTime.Now.Year;
+        SelectedDate = new DateTime(_currentYear, _currentMonth, 1);
         _ = LoadShelfTypeOptionAsync();
     }
 
@@ -147,4 +204,53 @@ public class ShelfViewModel : ViewModelBase<IShelfRepository, Shelf>
         return Task.CompletedTask;
     }
     #endregion
+
+    private async Task UpdateTenantInfoAsync()
+    {
+        try
+        {
+            using var scope = App.HostInstance.Services.CreateScope();
+            var contractRepo = scope.ServiceProvider.GetRequiredService<IShelfTenantContractRepository>();
+            var lineRepo = scope.ServiceProvider.GetRequiredService<IShelfTenantContractLineRepository>();
+            var tenantRepo = scope.ServiceProvider.GetRequiredService<IShelfTenantRepository>();
+            var shelfRepo = scope.ServiceProvider.GetRequiredService<IShelfRepository>();
+
+            var shelves = await shelfRepo.GetAllAsync();
+            var shelf = shelves.FirstOrDefault(s => s.Number == ShelfNumber);
+            if (shelf == null || shelf.Id == null) { TenantFirstName = null; TenantLastName = null; ContractEndDate = null; return; }
+            var shelfId = shelf.Id.Value;
+
+            var lines = await lineRepo.GetAllAsync();
+            var linesForShelf = lines.Where(l => l.ShelfId == shelfId);
+            if (!linesForShelf.Any()) { TenantFirstName = null; TenantLastName = null; ContractEndDate = null; return; }
+
+            var contracts = await contractRepo.GetAllAsync();
+            var month = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
+            var activeLine =
+                (from l in linesForShelf
+                 join c in contracts on l.ShelfTenantContractId equals c.Id!.Value
+                 where c.StartDate.Date <= month.Date && c.EndDate.Date >= month.Date && c.CancelledAt == null
+                 orderby c.StartDate descending
+                 select new { Line = l, Contract = c }).FirstOrDefault();
+
+            if (activeLine == null)
+            {
+                TenantFirstName = null;
+                TenantLastName = null;
+                ContractEndDate = null;
+                return;
+            }
+
+            var tenant = await tenantRepo.GetByIdAsync(activeLine.Contract.ShelfTenantId);
+            TenantFirstName = tenant?.FirstName;
+            TenantLastName = tenant?.LastName;
+            ContractEndDate = activeLine.Contract.EndDate;
+        }
+        catch
+        {
+            TenantFirstName = null;
+            TenantLastName = null;
+            ContractEndDate = null;
+        }
+    }
 }
