@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Extensions.DependencyInjection;
 using ShelfMarket.Application.Abstract.Services;
+using ShelfMarket.Application.Abstract;
 using ShelfMarket.UI.ViewModels;
 using ShelfMarket.UI.Views.Windows;
 
@@ -54,6 +55,7 @@ public partial class ShelfView : UserControl
     // For click vs drag detection
     private DateTime _clickStart;
     private Button? _clickedButton;
+    private readonly ShelfViewModel _viewModel;
     #endregion
 
     #region Initialization
@@ -63,8 +65,12 @@ public partial class ShelfView : UserControl
     public ShelfView()
     {
         InitializeComponent();
+        _viewModel = (ShelfViewModel)(DataContext ?? App.HostInstance.Services.GetRequiredService<ShelfViewModel>());
         // Wait until the UI has loaded to ensure all visual elements are present in the visual tree.
         this.Loaded += ShelfView_Loaded;
+        
+        // Subscribe to month changes to update shelf colors
+        _viewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
     /// <summary>
@@ -78,6 +84,20 @@ public partial class ShelfView : UserControl
         ConfigureShelfGridShape();
         SetupDragAndDrop();
         await LoadShelvesFromDatabaseAsync();
+    }
+
+    /// <summary>
+    /// Handles property changes from the ViewModel, specifically month changes.
+    /// </summary>
+    /// <param name="sender">The ViewModel.</param>
+    /// <param name="e">Property change event arguments.</param>
+    private async void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ShelfViewModel.SelectedDate))
+        {
+            // Reload shelves when month changes to update colors
+            await LoadShelvesFromDatabaseAsync();
+        }
     }
     #endregion
 
@@ -95,6 +115,15 @@ public partial class ShelfView : UserControl
             using var scope = App.HostInstance.Services.CreateScope();
             var layoutService = scope.ServiceProvider.GetRequiredService<IShelfLayoutService>();
             var shelves = await layoutService.GetAllAsync();
+
+            // Get selected month from ViewModel for contract checking
+            var currentMonth = _viewModel.SelectedDate;
+            
+            // Get contract data for checking occupancy
+            var contractRepo = scope.ServiceProvider.GetRequiredService<IShelfTenantContractRepository>();
+            var lineRepo = scope.ServiceProvider.GetRequiredService<IShelfTenantContractLineRepository>();
+            var contracts = await contractRepo.GetAllAsync();
+            var lines = await lineRepo.GetAllAsync();
 
             foreach (var shelf in shelves)
             {
@@ -116,7 +145,6 @@ public partial class ShelfView : UserControl
 
                     // Attach drag/drop events so it behaves like existing buttons
                     button.PreviewMouseLeftButtonDown += Button_MouseLeftButtonDown;
-                    button.PreviewMouseMove += Button_MouseMove;
                     button.PreviewMouseLeftButtonUp += Button_MouseLeftButtonUp;
                     button.MouseLeftButtonDown += Button_MouseLeftButtonDown;
                     button.MouseMove += Button_MouseMove;
@@ -126,13 +154,40 @@ public partial class ShelfView : UserControl
                     ShelfGrid.Children.Add(button);
                 }
 
-                // Apply style based on orientation
+                // Check if shelf has active contract
+                bool hasActiveContract = false;
+                if (shelf.Id.HasValue)
+                {
+                    var linesForShelf = lines.Where(l => l.ShelfId == shelf.Id.Value);
+                    var activeLine = (from l in linesForShelf
+                                     join c in contracts on l.ShelfTenantContractId equals c.Id!.Value
+                                     where c.StartDate.Date <= currentMonth.Date && c.EndDate.Date >= currentMonth.Date && c.CancelledAt == null
+                                     orderby c.StartDate descending
+                                     select new { Line = l, Contract = c }).FirstOrDefault();
+                    
+                    hasActiveContract = activeLine != null;
+                }
+
+                // Apply style based on orientation and contract status
                 try
                 {
                     var styleKey = shelf.OrientationHorizontal ? "Stand.Horizontal" : "Stand.Vertical";
                     if (FindResource(styleKey) is Style s)
                     {
                         button.Style = s;
+                    }
+                    
+                    // Override background color if shelf has active contract
+                    if (hasActiveContract)
+                    {
+                        button.Background = new SolidColorBrush(Color.FromRgb(220, 120, 120)); // Naturlig rødlig farve
+                        button.ToolTip = $"Reol {shelf.Number} - Optaget";
+                    }
+                    else
+                    {
+                        // Reset to default style background color
+                        button.ClearValue(Button.BackgroundProperty);
+                        button.ToolTip = $"Reol {shelf.Number}";
                     }
                 }
                 catch { }
@@ -420,9 +475,8 @@ public partial class ShelfView : UserControl
             var chooseShelfType = mainWindow.FindName("ChooseShelfTypePopupContent") as ChooseShelfTypeWindow;
             if (chooseShelfType != null) chooseShelfType.Visibility = Visibility.Collapsed;
 
-            // Get the shared ShelfViewModel instance
-            var shelfViewModel = App.HostInstance.Services.GetRequiredService<ShelfViewModel>();
-            info.SetShelfViewModel(shelfViewModel);
+            // Brug SetViewModel og SetShelfNumber for at dele ViewModel
+            info.SetViewModel(_viewModel); // _viewModel er ShelfViewModel-instansen brugt i ShelfView
             info.SetShelfNumber(number);
 
             // Vis ShelfInfoWindow

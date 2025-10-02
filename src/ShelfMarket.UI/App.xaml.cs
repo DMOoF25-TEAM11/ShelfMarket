@@ -30,6 +30,7 @@ public partial class App : System.Windows.Application
 
                 // Register Shelf
                 services.AddSingleton<ShelfViewModel>();
+                services.AddTransient<ShelfInfoWindowViewModel>();
 
                 // ShelfType
                 //services.AddTransient<ManagesShelfTypeListViewModel>();
