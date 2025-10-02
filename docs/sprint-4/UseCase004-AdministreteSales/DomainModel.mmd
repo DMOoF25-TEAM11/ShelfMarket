@@ -1,31 +1,24 @@
 ﻿classDiagram
-    class Moms {
-      +navn
-      +procent
-      +gyldigFra
-      +gyldigTil
-    }
 
     class SalesReceipt {
-      +kvitteringsNummer
-      +udstedtDato
-      +totalBeloeb
-      +momsBeloeb
-      +betaltKontant
-      +betaltMobil
+      kvitteringsNummer
+      udstedtDato
+      totalBeloeb
+      momsBeloeb
+      betaltKontant
+      betaltMobil
     }
 
     class SalesReceiptLine {
-      +reolnummer
-      +enhedsPris
+      reolnummer
+      enhedsPris
     }
 
     class Kommision {
-        +avanceProcent
-        +gyldigFra
-        +gyldigTil
+        avanceProcent
+        gyldigFra
+        gyldigTil
     }
 
     SalesReceipt "1" -- "*" SalesReceiptLine : indeholder
-    Moms "1" -- "*" SalesReceiptLine : anvender sats
     SalesReceiptLine "*" -- "1" Kommision : avance
