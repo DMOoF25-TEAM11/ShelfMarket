@@ -4,6 +4,8 @@
             +Guid Id
             +string Name
             +string Description
+            +ShelfType()
+            +ShelfType(string name, string description)
         }
 
         class Shelf {
@@ -13,6 +15,8 @@
             +uint LocationX
             +uint LocationY
             +bool OrientationHorizontal
+            +Shelf()
+            +Shelf(int number, Guid shelfTypeId, int locationX, int locationY, bool orientationHorizontal = true)
         }
 
         class ShelfTenantContract {
@@ -22,6 +26,8 @@
             +DateTime StartDate
             +DateTime EndDate
             +nullable~DateTime~ CancelledAt
+            ShelfTenantContract()
+            ShelfTenantContract(Guid shelfTenantId, DateTime startDate, DateTime endDate, DateTime? cancelledAt = null)
         }
 
         class ShelfTenantContractLine {
@@ -31,10 +37,53 @@
             +uint LineNumber
             +decimal PricePerMonth
             +decimal PricePerMonthSpecial
+            +ShelfTenantContractLine()
+            +ShelfTenantContractLine(Guid shelfTenantContractId, Guid shelfId, decimal pricePerMonth, decimal? pricePerMonthSpecial = null)
+        }
+
+        class SalesReceipt {
+            +Guid Id
+            +int ReceiptNumber
+            +DateTime IssuedAt
+            +decimal VatAmount
+            +bool PaidByCash
+            +bool PaidByMobile
+            +SalesReceipt()
+            +SalesReceipt(bool paidByCash = true, bool paidByMobile = false)
+        }
+
+        class SalesReceiptLine {
+            +Guid Id
+            +Guid SalesReceiptId
+            +int ShelfNumber
+            +decimal UnitPrice
+            +SalesReceiptLine()
+            +SalesReceiptLine(int shelfNumber, decimal price)
+        }
+
+        class ShelfTenant {
+            +Guid Id
+            +string FirstName
+            +string LastName
+            +string Address
+            +string PostalCode
+            +string City
+            +string Email
+            +string PhoneNumber
+            +string Status
+            -ShelfTenant()
+            +ShelfTenant(string firstName, string lastName, string address, string postalCode, string city, string email, string phoneNumber)
+        }
+
+        class ShelfPricingRule {
+            +Guid Id
+            +int MinShelvesInclusive
+            +decimal PricePerShelf
+            +GetUnitPrice(int shelfCount, IEnumerable<ShelfPricingRule> rules) decimal
         }
     }
 
-    namespace ShelfMarket.Application.Interfaces {
+    namespace ShelfMarket.Application.Abstract {
         class IRepository~TEntity~ {
             <<interface>>
             +GetByIdAsync(Guid id) Task~TEntity~
@@ -43,40 +92,42 @@
             +UpdateAsync(TEntity entity) Task
             +DeleteAsync(Guid id) Task
         }
+
+        class ISalesLineRepository {
+            <<interface>>
+        }
+
+        class ISalesRepository {
+            <<interface>>
+            +GetCashSalesAsync(DateTime date) Task~decimal~
+            +SetSaleAsync(SalesReceipt salesRecord, IEnumerable<SalesReceiptLine> lines)
+        }
+
+        class IShelfPricingRuleRepository {
+            <<interface>>
+            +GetAllOrderedAsync() Task~IReadOnlyList__ShelfPricingRule~
+            +GetUnitPriceAsync(int shelfCount) Task~decimal~
+        }
+
         class IShelfTypeRepository {
             <<interface>>
-            +GetByIdAsync(Guid id) Task~ShelfType~
-            +GetAllAsync() Task~List__ShelfType~
-            +AddAsync(ShelfType shelfType) Task
-            +UpdateAsync(ShelfType shelfType) Task
-            +DeleteAsync(Guid id) Task
         }
 
         class IShelfRepository {
             <<interface>>
-            +GetByIdAsync(Guid id) Task~Shelf~
-            +GetAllAsync() Task~List__Shelf~
-            +AddAsync(Shelf shelf) Task
-            +UpdateAsync(Shelf shelf) Task
-            +DeleteAsync(Guid id) Task
+        }
+
+        class IShelfTenantRepository {
+            <<interface>>
+            +GetByEmailAsync(string email) Task~ShelfTenant~
         }
 
         class IShelfTenantContractRepository {
             <<interface>>
-            +GetByIdAsync(Guid id) Task~ShelfTenantContract~
-            +GetAllAsync() Task~List__ShelfTenantContract~
-            +AddAsync(ShelfTenantContract shelfTenantContract) Task
-            +UpdateAsync(ShelfTenantContract shelfTenantContract) Task
-            +DeleteAsync(Guid id) Task
         }
 
         class IShelfTenantContractLineRepository {
             <<interface>>
-            +GetByIdAsync(Guid id) Task~ShelfTenantContractLine~
-            +GetAllAsync() Task~List__ShelfTenantContractLine~
-            +AddAsync(ShelfTenantContractLine shelfTenantContractLine) Task
-            +UpdateAsync(ShelfTenantContractLine shelfTenantContractLine) Task
-            +DeleteAsync(Guid id) Task
         }
     }
 
@@ -105,6 +156,36 @@
             +UpdateAsync(ShelfType shelfType) Task
             +DeleteAsync(Guid id) Task
         }
+
+        class SalesRepository {
+            +SalesRepository(ShelfMarketDbContext context)
+            +GetCashSalesAsync(DateTime date) Task~decimal~
+            +SetSaleAsync(SalesReceipt salesRecord, IEnumerable~SalesReceiptLine~ lines) Task~SalesReceiptWithTotalAmountDto~
+        }
+
+        class SalesLineRepository {
+            +SalesLineRepository(ShelfMarketDbContext context)
+            +GetLinesByReceiptIdAsync(Guid receiptId) Task~IEnumerable__SalesReceiptLine~)
+        }
+
+        class ShelfTenantContractRepository {
+            +ShelfTenantContractRepository(ShelfMarketDbContext context)
+        }
+
+        class ShelfTenantContractLineRepository {
+            +ShelfTenantContractLineRepository(ShelfMarketDbContext context)
+        }
+
+        class ShelfTenantRepository {
+            +ShelfTenantRepository(ShelfMarketDbContext context)
+            +GetByEmailAsync(string email) Task~ShelfTenant~
+        }
+
+        class ShelfPricingRuleRepository {
+            +ShelfPricingRuleRepository(ShelfMarketDbContext context)
+            +GetAllOrderedAsync() Task~IReadOnlyList__ShelfPricingRule~
+            +GetUnitPriceAsync(int shelfCount) Task~decimal~)
+        }
     }
 
     %% Associations
@@ -112,25 +193,48 @@
     ShelfType --* ShelfTypeRepository : manages
     ShelfTenantContract --* ShelfTenantContractRepository : manages
     ShelfTenantContractLine --* IShelfTenantContractLineRepository : manages
+    SalesReceipt --* ISalesRepository : manages
+    SalesReceiptLine --* ISalesLineRepository : manages
+    ShelfTenant --* IShelfTenantRepository : manages
+    ShelfPricingRule --* IShelfPricingRuleRepository : manages
+
+
 
     %% Composition
     Shelf --* ShelfType : has a
     ShelfTenantContract *-- ShelfTenantContractLine : has
+    SalesReceipt *-- SalesReceiptLine : has
+    SalesRepository --* SalesLineRepository : has
+
     
     Repository o-- ShelfMarketDbContext : uses
 
 
     %% Inheritance and Implementation
+    SalesRepository --|> ISalesRepository : implements
+    SalesLineRepository --|> ISalesLineRepository : implements
+    ShelfPricingRuleRepository --|> IShelfPricingRuleRepository : implements
     ShelfRepository --|> IShelfRepository : implements
     ShelfTypeRepository --|> IShelfTypeRepository : implements
     ShelfTenantContractRepository --|> IShelfTenantContractRepository : implements
+    ShelfTenantContractLineRepository --|> IShelfTenantContractLineRepository : implements
     Repository --|> IRepository : implements
 
     IShelfRepository --|> IRepository : implements
     IShelfTypeRepository --|> IRepository : implements
     IShelfTenantContractRepository --|> IRepository : implements
+    IShelfTenantContractLineRepository --|> IRepository : implements
+    ISalesRepository --|> IRepository : implements
+    ISalesLineRepository --|> IRepository : implements
+    ShelfTenantRepository --|> IShelfTenantRepository : implements
+    IShelfPricingRuleRepository --|> IRepository : implements
 
     ShelfRepository ..|> Repository : inheritance
     ShelfTypeRepository ..|> Repository : inheritance
     ShelfTenantContractRepository ..|> Repository : inheritance
+    ShelfTenantContractLineRepository ..|> Repository : inheritance
+    SalesRepository ..|> Repository : inheritance
+    SalesLineRepository ..|> Repository : inheritance
+    ShelfTenantRepository ..|> Repository : inheritance
+    ShelfPricingRuleRepository ..|> Repository : inheritance
 
