@@ -41,7 +41,7 @@
 
     SHELF {
         guid Id PK
-        int Number
+        int Number "UNIQUE"
         guid ShelfTypeId FK
         int LocationX
         int LocationY
@@ -55,7 +55,7 @@
         string Address
         string PostalCode
         string City
-        string Email
+        string Email "UNIQUE"
         string PhoneNumber
         string Status
     }
@@ -63,7 +63,7 @@
     SHELFTENANTCONTRACT {
         guid Id PK
         guid ShelfTenantId FK
-        int ContractNumber
+        int ContractNumber "UNIQUE"
         date StartDate
         date EndDate
         date CancelledAt
@@ -73,7 +73,7 @@
         guid Id PK
         guid ShelfTenantContractId FK
         guid ShelfId FK
-        int LineNumber
+        int LineNumber 
         decimal PricePerMonth
         decimal PricePerMonthSpecial
     }
@@ -86,7 +86,7 @@
 
     SALESRECEIPT {
         guid Id PK
-        int ReceiptNumber
+        int ReceiptNumber "UNIQUE"
         datetime IssuedAt
         decimal TotalAmount
         decimal VatAmount
@@ -96,10 +96,10 @@
 
     SALESRECEIPTLINE {
         guid Id PK
-        guid SalesReceiptId
-        guid VatRatesId
-        guid CommisionId
-        guid ShelfId
+        guid SalesReceiptId FK
+        guid VatRatesId FK
+        guid CommisionId FK
+        guid ShelfId FK
         decimal UnitPrice
     }
 

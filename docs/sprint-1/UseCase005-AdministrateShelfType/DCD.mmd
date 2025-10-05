@@ -1,0 +1,49 @@
+﻿classDiagram
+    namespace ShelfMarket.Domain.Entities {
+        class ShelfType {
+            +Guid Id
+            +string Name
+            +string Description
+            +ShelfType()
+            +ShelfType(string name, string description)
+        }
+    }
+
+    namespace ShelfMarket.Application.Abstract {
+        class IRepository~TEntity~ {
+            <<interface>>
+            +GetByIdAsync(Guid id) Task~TEntity~
+            +GetAllAsync() Task~List__TEntity~
+            +AddAsync(TEntity entity) Task
+            +UpdateAsync(TEntity entity) Task
+            +DeleteAsync(Guid id) Task
+        }
+
+        class IShelfTypeRepository {
+            <<interface>>
+        }
+    }
+
+    namespace ShelfMarket.Infrastructure.Data.Repositories {
+        class Repository~TEntity~ {
+            +GetByIdAsync(Guid id) Task~TEntity~
+            +GetAllAsync() Task~List__TEntity~
+            +AddAsync(TEntity entity) Task
+            +UpdateAsync(TEntity entity) Task
+            +DeleteAsync(Guid id) Task
+        }
+        class ShelfTypeRepository {
+            +ShelfTypeRepository(DbContext context)
+        }
+    }
+
+    %% Associations
+    ShelfType --* ShelfTypeRepository : manages
+
+    Repository o-- ShelfMarketDbContext : uses
+
+    ShelfTypeRepository --|> IShelfTypeRepository : implements
+
+    IShelfTypeRepository --|> IRepository : implements
+
+    ShelfTypeRepository ..|> Repository : inheritance
