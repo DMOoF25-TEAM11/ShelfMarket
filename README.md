@@ -1,6 +1,12 @@
 ﻿# Reol marked projekt (Shelf Market project)
 A WPF application for managing a shelf market, built with .NET 9 and following Clean Architecture principles.
 
+[![Screenshot-frontpage][Screenshot-frontpage]][Screenshot-frontpage-url]
+[![Screenshot-ean][Screenshot-ean]][Screenshot-ean-url]
+[![Screenshot-shelfContract][Screenshot-shelfContract]][Screenshot-shelfContract-url]
+[![Screenshot-shelftTenant][Screenshot-shelftTenant]][Screenshot-shelftTenant-url]
+
+
 ## About
 This project is a sample implementation of a shelf market management system using WPF for the user interface and .NET 9 for the backend.
 It adheres to Clean Architecture principles, ensuring a clear separation of concerns and maintainability.
@@ -111,3 +117,12 @@ Use Dependency Injection to wire everything together, typically in the UI layer'
 ### EAN‑13 Barcode Generator (Shelf + Price)
 - Generate EAN-13 barcodes for products.
 - Input Tenant shelf id and price.
+
+[Screenshot-frontpage]: https://raw.githubusercontent.com/DMOoF25-TEAM11/ShelfMarket/master/images/small/Screenshot_2025-10-05_114719.png
+[Screenshot-frontpage-url]: https://github.com/DMOoF25-TEAM11/ShelfMarket/blob/master/images/Screenshot_2025-10-05_114719.png
+[Screenshot-ean]: https://raw.githubusercontent.com/DMOoF25-TEAM11/ShelfMarket/master/images/small/Screenshot_2025-10-05_121048.png
+[Screenshot-ean-url]: https://github.com/DMOoF25-TEAM11/ShelfMarket/blob/master/images/Screenshot_2025-10-05_121048.png
+[Screenshot-shelfContract]: https://raw.githubusercontent.com/DMOoF25-TEAM11/ShelfMarket/master/images/small/Screenshot_2025-10-05_121134.png
+[Screenshot-shelfContract-url]: https://github.com/DMOoF25-TEAM11/ShelfMarket/blob/master/images/Screenshot_2025-10-05_121134.png
+[Screenshot-shelftTenant]: https://raw.githubusercontent.com/DMOoF25-TEAM11/ShelfMarket/master/images/small/Screenshot_2025-10-05_121144.png
+[Screenshot-shelftTenant-url]: https://github.com/DMOoF25-TEAM11/ShelfMarket/blob/master/images/Screenshot_2025-10-05_121144.png
